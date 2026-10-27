@@ -1,7 +1,7 @@
 // 뉴키즈 레터 카드뉴스 렌더러: cards.json → out/<호>/NN.png (1080×1350)
 // 실행: node render.js [호 id]   (Pretendard 폰트가 시스템에 설치되어 있어야 합니다)
 // 다른 데이터 파일: CARDS=cards-weekly.json node render.js
-// 세트별 선택 필드: series(하단 라벨), chip(표지 칩), cta(질문 카드 안내 문구)
+// 세트별 선택 필드: series(하단 라벨), chip(표지 칩), cta(질문 카드 안내 문구), qlabel(질문 카드 칩)
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
@@ -109,7 +109,7 @@ function body(c, set, i, n) {
         .map(([h, d], k) => `<li><span class="n">${k + 1}</span><div><div class="h">${br(h)}</div><div class="d">${br(d)}</div></div></li>`)
         .join('')}</ol>${foot(series)}</div>`;
     case 'question':
-      return `<div class="card grad question">${top}<span class="chip">이번 달의 질문</span><p class="q">${br(c.q)}</p>
+      return `<div class="card grad question">${top}<span class="chip">${set.qlabel || '이번 달의 질문'}</span><p class="q">${br(c.q)}</p>
         <div class="cta"><div><div class="t">전문은 뉴스레터에서</div><div class="s">${set.cta || '매월 마지막 목요일 아침 8시 · 프로필 링크에서 구독'}</div></div></div></div>`;
   }
   throw new Error('unknown type ' + c.type);
