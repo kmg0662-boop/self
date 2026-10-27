@@ -1,11 +1,13 @@
 // 뉴키즈 레터 카드뉴스 렌더러: cards.json → out/<호>/NN.png (1080×1350)
-// 실행: node render.js   (Pretendard 폰트가 시스템에 설치되어 있어야 합니다)
+// 실행: node render.js [호 id]   (Pretendard 폰트가 시스템에 설치되어 있어야 합니다)
+// 다른 데이터 파일: CARDS=cards-weekly.json node render.js
+// 세트별 선택 필드: series(하단 라벨), chip(표지 칩), cta(질문 카드 안내 문구)
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
 
 const ROOT = __dirname;
-const sets = JSON.parse(fs.readFileSync(path.join(ROOT, 'cards.json'), 'utf8'));
+const sets = JSON.parse(fs.readFileSync(path.join(ROOT, process.env.CARDS || 'cards.json'), 'utf8'));
 const logo = (n) => 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', n + '.png')).toString('base64');
 const LOGO_DARK = logo('logo_dark');
 const LOGO_WHITE = logo('logo_white');
@@ -82,11 +84,11 @@ function body(c, set, i, n) {
   const dark = ['cover', 'key', 'question'].includes(c.type);
   const top = `<div class="top"><img src="${dark ? LOGO_WHITE : LOGO_DARK}"><span class="page">${page}</span></div>`;
   const foot = (label) => `<div class="foot"><span>${label}</span><span class="arrow">→</span></div>`;
-  const series = `뉴키즈 레터 · ${set.issue}`;
+  const series = `${set.series || '뉴키즈 레터'} · ${set.issue}`;
   switch (c.type) {
     case 'cover':
       return `<div class="card grad cover"><div class="dot"></div><div class="dot2"></div>${top}
-        <span class="chip issue">NEWKIDS LETTER · ${set.issue}</span>
+        <span class="chip issue">${set.chip || 'NEWKIDS LETTER'} · ${set.issue}</span>
         <h1>${br(c.title)}</h1><p class="sub">${br(c.sub)}</p>${foot('옆으로 넘겨보세요')}</div>`;
     case 'hook':
       return `<div class="card hook">${top}<div class="text">${br(c.text)}</div><div class="rule"></div>
@@ -108,7 +110,7 @@ function body(c, set, i, n) {
         .join('')}</ol>${foot(series)}</div>`;
     case 'question':
       return `<div class="card grad question">${top}<span class="chip">이번 달의 질문</span><p class="q">${br(c.q)}</p>
-        <div class="cta"><div><div class="t">전문은 뉴스레터에서</div><div class="s">매월 마지막 목요일 아침 8시 · 프로필 링크에서 구독</div></div></div></div>`;
+        <div class="cta"><div><div class="t">전문은 뉴스레터에서</div><div class="s">${set.cta || '매월 마지막 목요일 아침 8시 · 프로필 링크에서 구독'}</div></div></div></div>`;
   }
   throw new Error('unknown type ' + c.type);
 }
