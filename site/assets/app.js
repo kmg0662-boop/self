@@ -213,47 +213,67 @@
     return out;
   }
 
+  // 손으로 그린 듯한 선 (화살표, 등고선)
+  var ARROW = '<svg class="draw arrow" viewBox="0 0 120 60" aria-hidden="true"><path d="M112 8 C 80 6, 40 14, 18 44"/><path d="M8 34 L18 46 L30 38"/></svg>';
+  function contour() {
+    return '<svg class="draw contour" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">' +
+      '<path d="M0 110 C 90 108 150 70 230 62 C 300 55 340 88 420 84 C 500 80 540 60 600 58"/>' +
+      '<path d="M40 112 C 120 106 170 82 238 76 C 300 70 336 98 412 96 C 486 94 530 78 600 76"/>' +
+      '<path d="M90 114 C 150 110 190 94 246 90 C 300 86 330 104 404 104 C 470 104 520 96 600 94"/>' +
+      '<path d="M190 66 C 206 40 262 34 282 52"/><path d="M212 62 C 224 50 250 46 266 56"/></svg>';
+  }
+
+  function polaroid(key, caption, tilt) {
+    return '<figure class="polaroid" style="--tilt:' + tilt + 'deg"><span class="tape t1"></span><span class="tape t2"></span>' +
+      '<div class="pic st-' + key + '">' + (key === "hero" ? landscape() : "") + photo(key, "story-photo", key === "hero") + "</div>" +
+      '<figcaption class="hand">' + esc(caption) + "</figcaption></figure>";
+  }
+
   views.home = function () {
-    var stats = [
-      { n: 20, unit: "시간", cap: "멈추지 않는 빌드" },
-      { n: 6, unit: "단계", cap: "아이디어에서 배포까지" },
-      { n: 4, unit: "D", cap: "AI를 잘 쓰는 네 가지 힘" },
-      { n: 1, unit: "개", cap: "내가 만든 작동하는 서비스" }
+    var log = [
+      ["걸리는 시간", "20시간", "토 15:00 → 일 11:30"],
+      ["만드는 것", "작동하는 서비스 1개", "링크로 제출"],
+      ["거쳐 갈 길", "6단계", "아이디어 → 배포"],
+      ["챙길 힘", "4D", "맡기기 · 설명 · 판단 · 책임"]
     ];
-    return '<div class="view">' +
+    return '<div class="view notebook">' +
       '<section class="landing">' +
-      '<div class="land-bg" aria-hidden="true">' + landscape() + photo("hero", "land-photo", true) + '<span class="land-veil"></span><span class="mist m1"></span><span class="mist m2"></span>' + petals() + '<div class="orb"><span class="orb-core"></span><span class="orb-ring"></span></div>' + "</div>" +
-      '<div class="landing-inner">' +
-      '<div class="chips" aria-hidden="true">' + CHIPS.map(function (c, i) { return '<span class="float-chip fc' + (i + 1) + '">' + esc(c) + "</span>"; }).join("") + "</div>" +
+      '<div class="page-meta mono"><span>No.10 · 오름 야장</span><span>2026.11.07 (토) — 11.08 (일) · 제주시 서광로 192</span><span>p.01</span></div>' +
+      '<div class="landing-grid">' +
       '<div class="landing-copy">' +
-      '<span class="eyebrow chip rise" style="--d:0">PLAN_Be 시즌10 · 바이브코딩 해커톤 · 1조</span>' +
+      '<p class="mono dateline">새벽 4:10, 아직 안개. 오늘의 기록을 시작합니다.</p>' +
       '<h1 class="mega" aria-label="내가 만들고 싶은 것을, 내가 AI로 직접 만든다">' +
-      '<span class="line l1">' + kinetic("내가", 0) + ' <span class="roll" aria-hidden="true">' +
+      '<span class="line">내가 <span class="roll" aria-hidden="true">' +
       ROLL.map(function (w, i) { return '<span class="roll-w' + (i === 0 ? " on" : "") + '">' + esc(w) + "</span>"; }).join("") +
-      "</span> " + kinetic("것을,", 2) + "</span>" +
-      '<span class="line l2">' + kinetic("내가 AI로", 5) + "</span>" +
-      '<span class="line l3"><em>' + kinetic("직접 만든다", 11) + "</em></span>" +
+      "</span></span>" +
+      '<span class="line">것을, 내가 AI로</span>' +
+      '<span class="line"><mark class="hl">직접 만든다</mark></span>' +
       "</h1>" +
-      '<p class="lede big rise" style="--d:6">코딩을 몰라도 괜찮아요. 오늘 20시간 동안 LLM과 대화하고, 에이전트에게 맡기고, 내 손으로 작동하는 서비스를 세상에 내놓습니다.</p>' +
-      '<div class="hero-cta rise" style="--d:7"><a class="btn big" href="#lecture">강의 시작하기 <span aria-hidden="true">→</span></a><a class="btn ghost big" href="#prep">사전 준비 체크</a></div>' +
+      '<p class="lede big">코딩을 몰라도 괜찮아요. 오늘 20시간 동안 LLM과 대화하고, 에이전트에게 맡기고, 내 손으로 작동하는 서비스를 하나 세상에 내놓습니다. 이 노트는 그 길에 펼쳐두는 야장이에요.</p>' +
+      '<div class="hero-cta"><a class="btn" href="#lecture">강의 노트 펼치기 →</a><a class="btn ghost" href="#prep">준비물 확인</a></div>' +
       "</div>" +
+      '<aside class="landing-side">' +
+      polaroid("hero", "새벽 오름, 안개. 여기서 시작!", -3) +
+      '<div class="margin-note hand">' + ARROW + '<span>막히면 15분까지만 혼자,<br>그다음엔 손 들기!</span></div>' +
+      '<div class="stamp" aria-hidden="true"><span>PLAN_Be</span><b>S10</b><span>JEJU · 2026</span></div>' +
+      "</aside>" +
       "</div>" +
-      '<button type="button" class="scroll-cue" data-scroll="now-card" aria-label="지금 진행 상황 보기"><span></span></button>' +
-      "</div></section>" +
-      '<div class="marquees">' + marquee(KEYWORDS, false) + marquee(KEYWORDS.slice().reverse(), true) + "</div>" +
-      '<section class="stats">' + stats.map(function (s) {
-        return '<div class="stat"><span class="stat-n"><b data-count="' + s.n + '">' + s.n + "</b><small>" + esc(s.unit) + '</small></span><span class="stat-cap">' + esc(s.cap) + "</span></div>";
-      }).join("") + "</section>" +
-      nowCard() +
-      '<section class="stories">' + C.stories.map(function (st, i) {
-        return '<article class="story' + (i % 2 ? " flip" : "") + '"><div class="story-media st-' + st.img + '">' + photo(st.img, "story-photo", false) + '<span class="story-kicker">' + esc(st.kicker) + '</span></div>' +
-          '<div class="story-card"><h2>' + esc(st.title) + '</h2><p>' + esc(st.text) + '</p><a class="btn ghost small" href="' + st.link + '">' + esc(st.cta) + "</a></div></article>";
-      }).join("") + "</section>" +
-      '<section class="section"><h2>만들기 6단계</h2><p class="lede">모든 내용이 이 순서를 따라가요. 각 단계가 끝났다는 신호를 확인하고 다음으로 넘어가세요.</p>' +
+      contour() +
+      "</section>" +
+      '<section class="section"><h2 class="sec-title"><span class="mono">기록 01</span>오늘의 개요</h2>' +
+      '<dl class="ledger">' + log.map(function (r) { return "<div><dt>" + esc(r[0]) + "</dt><dd><b>" + esc(r[1]) + '</b><span class="mono">' + esc(r[2]) + "</span></dd></div>"; }).join("") + "</dl></section>" +
+      '<section class="section"><h2 class="sec-title"><span class="mono">기록 02</span>지금 우리는 어디쯤</h2>' + nowCard() + "</section>" +
+      '<section class="section"><h2 class="sec-title"><span class="mono">기록 03</span>만들기 6단계</h2>' +
+      '<p class="lede">각 단계가 끝났다는 신호를 확인하고 다음으로 넘어가세요.</p>' +
       '<ol class="steps">' + C.steps.map(function (s, i) {
-        return '<li><span class="step-n">' + (i + 1) + " · " + esc(s.ai) + '</span><span class="step-name">' + esc(s.name) + '</span><span class="step-q">' + esc(s.q) + '</span><span class="step-done">끝 신호: ' + esc(s.done) + "</span></li>";
+        return '<li><span class="step-n mono">관찰 0' + (i + 1) + " · " + esc(s.ai) + '</span><span class="step-name">' + esc(s.name) + '</span><span class="step-q">' + esc(s.q) + '</span><span class="step-done hand">✓ ' + esc(s.done) + "</span></li>";
       }).join("") + "</ol></section>" +
-      '<section class="section"><h2>오늘 일정</h2><div id="timeline">' + timelineHtml() + "</div></section>" +
+      '<section class="section stories"><h2 class="sec-title"><span class="mono">기록 04</span>제주에서 빌려온 두 가지 원칙</h2>' +
+      C.stories.map(function (st, i) {
+        return '<article class="story' + (i % 2 ? " flip" : "") + '">' + polaroid(st.img, st.kicker + ", " + st.title.replace("요", "기"), i % 2 ? 2.5 : -2) +
+          '<div class="story-text"><p class="mono">' + esc(st.kicker) + '</p><h3>' + esc(st.title) + "</h3><p>" + esc(st.text) + '</p><a class="btn ghost" href="' + st.link + '">' + esc(st.cta) + " →</a></div></article>";
+      }).join("") + "</section>" +
+      '<section class="section"><h2 class="sec-title"><span class="mono">기록 05</span>오늘의 코스</h2><div id="timeline">' + timelineHtml() + "</div></section>" +
       "</div>";
   };
 
