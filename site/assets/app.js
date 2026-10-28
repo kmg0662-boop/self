@@ -150,12 +150,105 @@
   // ---------- 화면 ----------
   var views = {};
 
+  // 글자를 한 자씩 쪼개서 움직일 수 있게 만듦 (스크린리더는 원문을 읽음)
+  function kinetic(text, start) {
+    var i = start || 0;
+    return '<span class="kin" aria-hidden="true">' + Array.prototype.map.call(text, function (ch) {
+      if (ch === " ") return '<span class="sp"> </span>';
+      return '<span class="ch" style="--i:' + (i++) + '">' + esc(ch) + "</span>";
+    }).join("") + "</span>";
+  }
+
+  var ROLL = ["미뤄두었던", "불편했던", "상상만 하던", "만들고 싶은"];
+  var KEYWORDS = ["LLM", "에이전트", "스킬", "TCREI", "프롬프트", "컨텍스트", "배포", "체크포인트", "MCP", "서비스 설명서", "바이브코딩", "4D"];
+  var CHIPS = ["LLM", "에이전트", "스킬", "배포", "TCREI"];
+
+  function marquee(words, reverse) {
+    var row = words.map(function (w, i) {
+      return '<span class="mq-word' + (i % 3 === 1 ? " solid" : "") + '">' + esc(w) + '</span><span class="mq-dot">✦</span>';
+    }).join("");
+    return '<div class="mq' + (reverse ? " rev" : "") + '" aria-hidden="true"><div class="mq-track">' + row + row + "</div></div>";
+  }
+
+  // 가상 사진: 불러오지 못하면 숨기고 아래 그린 풍경이 보이게 둠
+  function photo(key, cls, eager) {
+    var im = C.images && C.images[key];
+    if (!im) return "";
+    return '<img class="' + cls + '" src="' + esc(im.src) + '" alt="' + esc(im.alt) + '" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">';
+  }
+
+  // 코드로 그린 제주 풍경: 하늘, 해, 오름 능선 4겹, 억새, 현무암 돌담
+  function landscape() {
+    var grass = "", stones = "", x, i;
+    for (i = 0; i < 70; i++) {
+      x = (i * 21.3 + (i % 7) * 9) % 1440;
+      var h = 60 + ((i * 37) % 70);
+      var lean = ((i * 13) % 40) - 20;
+      grass += '<path class="blade" style="--g:' + (i % 9) + '" d="M' + x.toFixed(1) + " 400 Q" + (x + lean * 0.4).toFixed(1) + " " + (400 - h * 0.6).toFixed(1) + " " + (x + lean).toFixed(1) + " " + (400 - h) + '" stroke="var(' + (i % 3 ? "--grass" : "--grass-2") + ')"/>';
+    }
+    for (x = -10, i = 0; x < 1450; i++) {
+      var w = 34 + ((i * 29) % 30);
+      var sh = 22 + ((i * 17) % 16);
+      stones += '<rect x="' + x + '" y="' + (400 - sh - ((i % 2) * 4)) + '" width="' + w + '" height="' + (sh + 8) + '" rx="' + (10 + (i % 4) * 3) + '" fill="var(' + (i % 3 ? "--stone" : "--stone-2") + ')"/>';
+      x += w - 4;
+    }
+    return '<svg class="land-art" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">' +
+      '<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky-top)"/><stop offset="1" stop-color="var(--sky-bottom)"/></linearGradient>' +
+      '<radialGradient id="sunglow"><stop offset="0" stop-color="var(--sun)" stop-opacity="0.9"/><stop offset="1" stop-color="var(--sun)" stop-opacity="0"/></radialGradient></defs>' +
+      '<rect width="1440" height="400" fill="url(#sky)"/>' +
+      '<circle cx="1080" cy="120" r="140" fill="url(#sunglow)"/><circle class="sun" cx="1080" cy="120" r="34" fill="var(--sun)"/>' +
+      '<path fill="var(--ridge-1)" d="M0 250 C120 200 220 190 330 230 C420 160 560 150 660 215 C760 170 880 150 980 205 C1080 140 1250 150 1440 215 V400 H0Z"/>' +
+      '<path fill="var(--ridge-2)" d="M0 290 C140 230 260 230 380 280 C470 220 610 205 720 265 C840 215 960 210 1080 260 C1200 205 1330 215 1440 255 V400 H0Z"/>' +
+      '<path fill="var(--ridge-3)" d="M0 325 C160 280 300 270 450 315 C580 260 760 255 880 310 C1020 270 1180 265 1440 300 V400 H0Z"/>' +
+      '<path fill="var(--ridge-4)" d="M0 360 C200 330 380 320 560 350 C760 320 960 325 1160 350 C1280 335 1380 335 1440 345 V400 H0Z"/>' +
+      '<g class="grass" fill="none" stroke-width="2.2" stroke-linecap="round">' + grass + "</g>" +
+      '<g class="wall">' + stones + "</g></svg>";
+  }
+
+  function petals() {
+    var out = "";
+    for (var i = 0; i < 14; i++) {
+      out += '<span class="petal" style="--x:' + ((i * 61) % 100) + "%;--d:" + (i * 1.3).toFixed(1) + "s;--t:" + (11 + (i % 5) * 2) + "s;--s:" + (0.6 + (i % 4) * 0.25).toFixed(2) + '"></span>';
+    }
+    return out;
+  }
+
   views.home = function () {
+    var stats = [
+      { n: 20, unit: "시간", cap: "멈추지 않는 빌드" },
+      { n: 6, unit: "단계", cap: "아이디어에서 배포까지" },
+      { n: 4, unit: "D", cap: "AI를 잘 쓰는 네 가지 힘" },
+      { n: 1, unit: "개", cap: "내가 만든 작동하는 서비스" }
+    ];
     return '<div class="view">' +
-      '<section class="hero"><span class="eyebrow">PLAN_Be 시즌10 · 바이브코딩 해커톤 · 1조</span>' +
-      "<h1>" + esc(C.northStar).replace("직접 만든다", "<em>직접 만든다</em>") + "</h1>" +
-      '<p class="lede">이 사이트는 오늘 20시간 동안 펼쳐두는 교재예요. 개념은 비유로, 실습은 순서대로, 막히면 막혔을 때 탭으로 오세요.</p></section>' +
+      '<section class="landing">' +
+      '<div class="land-bg" aria-hidden="true">' + landscape() + photo("hero", "land-photo", true) + '<span class="land-veil"></span><span class="mist m1"></span><span class="mist m2"></span>' + petals() + '<div class="orb"><span class="orb-core"></span><span class="orb-ring"></span></div>' + "</div>" +
+      '<div class="landing-inner">' +
+      '<div class="chips" aria-hidden="true">' + CHIPS.map(function (c, i) { return '<span class="float-chip fc' + (i + 1) + '">' + esc(c) + "</span>"; }).join("") + "</div>" +
+      '<div class="landing-copy">' +
+      '<span class="eyebrow chip rise" style="--d:0">PLAN_Be 시즌10 · 바이브코딩 해커톤 · 1조</span>' +
+      '<h1 class="mega" aria-label="내가 만들고 싶은 것을, 내가 AI로 직접 만든다">' +
+      '<span class="line l1">' + kinetic("내가", 0) + ' <span class="roll" aria-hidden="true">' +
+      ROLL.map(function (w, i) { return '<span class="roll-w' + (i === 0 ? " on" : "") + '">' + esc(w) + "</span>"; }).join("") +
+      "</span> " + kinetic("것을,", 2) + "</span>" +
+      '<span class="line l2">' + kinetic("내가 AI로", 5) + "</span>" +
+      '<span class="line l3"><em>' + kinetic("직접 만든다", 11) + "</em></span>" +
+      "</h1>" +
+      '<p class="lede big rise" style="--d:6">코딩을 몰라도 괜찮아요. 오늘 20시간 동안 LLM과 대화하고, 에이전트에게 맡기고, 내 손으로 작동하는 서비스를 세상에 내놓습니다.</p>' +
+      '<div class="hero-cta rise" style="--d:7"><a class="btn big" href="#lecture">강의 시작하기 <span aria-hidden="true">→</span></a><a class="btn ghost big" href="#prep">사전 준비 체크</a></div>' +
+      "</div>" +
+      "</div>" +
+      '<button type="button" class="scroll-cue" data-scroll="now-card" aria-label="지금 진행 상황 보기"><span></span></button>' +
+      "</div></section>" +
+      '<div class="marquees">' + marquee(KEYWORDS, false) + marquee(KEYWORDS.slice().reverse(), true) + "</div>" +
+      '<section class="stats">' + stats.map(function (s) {
+        return '<div class="stat"><span class="stat-n"><b data-count="' + s.n + '">' + s.n + "</b><small>" + esc(s.unit) + '</small></span><span class="stat-cap">' + esc(s.cap) + "</span></div>";
+      }).join("") + "</section>" +
       nowCard() +
+      '<section class="stories">' + C.stories.map(function (st, i) {
+        return '<article class="story' + (i % 2 ? " flip" : "") + '"><div class="story-media st-' + st.img + '">' + photo(st.img, "story-photo", false) + '<span class="story-kicker">' + esc(st.kicker) + '</span></div>' +
+          '<div class="story-card"><h2>' + esc(st.title) + '</h2><p>' + esc(st.text) + '</p><a class="btn ghost small" href="' + st.link + '">' + esc(st.cta) + "</a></div></article>";
+      }).join("") + "</section>" +
       '<section class="section"><h2>만들기 6단계</h2><p class="lede">모든 내용이 이 순서를 따라가요. 각 단계가 끝났다는 신호를 확인하고 다음으로 넘어가세요.</p>' +
       '<ol class="steps">' + C.steps.map(function (s, i) {
         return '<li><span class="step-n">' + (i + 1) + " · " + esc(s.ai) + '</span><span class="step-name">' + esc(s.name) + '</span><span class="step-q">' + esc(s.q) + '</span><span class="step-done">끝 신호: ' + esc(s.done) + "</span></li>";
@@ -464,6 +557,8 @@
     if (active && active.scrollIntoView) active.scrollIntoView({ block: "nearest", inline: "nearest" });
 
     if (timer) { clearInterval(timer); timer = null; }
+    if (rollTimer) { clearInterval(rollTimer); rollTimer = null; }
+    if (name === "home") { countUp(); startRoll(); bindPhotos(); }
     if (name === "home") {
       timer = setInterval(function () {
         var card = $("#now-card");
@@ -481,6 +576,12 @@
       var id = copyBtn.getAttribute("data-copy");
       var el = document.getElementById(id);
       if (el) copyText(el.textContent, id);
+      return;
+    }
+    var cue = e.target.closest("[data-scroll]");
+    if (cue) {
+      var dest = document.getElementById(cue.getAttribute("data-scroll"));
+      if (dest) dest.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
     var lvl = e.target.closest("[data-level]");
@@ -557,6 +658,81 @@
 
   document.addEventListener("change", function (e) {
     if (e.target.id === "check-team") checkState.team = e.target.value;
+  });
+
+  // 사진이 실제로 뜨면 보이게, 실패하면 빼서 그린 풍경이 보이게
+  function bindPhotos() {
+    $all("img.land-photo, img.story-photo").forEach(function (img) {
+      var ok = function () { img.classList.add("ok"); };
+      var fail = function () { if (img.parentNode) img.parentNode.removeChild(img); };
+      if (img.complete) { if (img.naturalWidth > 0) ok(); else fail(); return; }
+      img.addEventListener("load", ok);
+      img.addEventListener("error", fail);
+    });
+  }
+
+  // 돌아가는 단어: 2.6초마다 다음 단어로, 폭은 지금 단어 길이에 맞춤
+  var rollTimer = null;
+  function startRoll() {
+    var roll = $(".roll");
+    if (!roll) return;
+    var words = $all(".roll-w", roll);
+    var fit = function (w) { roll.style.width = w.getBoundingClientRect().width + "px"; };
+    var idx = 0;
+    fit(words[0]);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { if (document.body.contains(roll)) fit(words[idx]); });
+    }
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    rollTimer = setInterval(function () {
+      if (!document.body.contains(roll)) { clearInterval(rollTimer); rollTimer = null; return; }
+      var cur = words[idx];
+      idx = (idx + 1) % words.length;
+      var next = words[idx];
+      cur.classList.remove("on");
+      cur.classList.add("out");
+      next.classList.remove("out");
+      next.classList.add("on");
+      fit(next);
+      setTimeout(function () { cur.classList.remove("out"); }, 750);
+    }, 2600);
+  }
+  window.addEventListener("resize", function () {
+    var on = $(".roll-w.on");
+    if (on) on.parentNode.style.width = on.getBoundingClientRect().width + "px";
+  });
+
+  // 숫자 카운트업. 화면에는 처음부터 최종 숫자가 들어 있고, 움직임을 허용한 경우에만 0부터 다시 셉니다.
+  function countUp() {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    $all("[data-count]").forEach(function (el, k) {
+      var target = Number(el.getAttribute("data-count"));
+      var startAt = performance.now() + 500 + k * 120;
+      var dur = 1400;
+      function tick(t) {
+        var p = Math.min(1, Math.max(0, (t - startAt) / dur));
+        var eased = 1 - Math.pow(1 - p, 4);
+        el.textContent = String(Math.round(target * eased));
+        if (p < 1 && document.body.contains(el)) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // 유리 카드 위 포인터 하이라이트 (마우스가 있는 기기에서만)
+  var glowFrame = 0;
+  document.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse" || glowFrame) return;
+    glowFrame = requestAnimationFrame(function () {
+      glowFrame = 0;
+      var card = e.target.closest && e.target.closest(".glass, .panel, .now, .tc, .term, .cell, .q, .check, details.acc, .level");
+      if (!card) return;
+      var r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      card.style.setProperty("--my", (e.clientY - r.top) + "px");
+    });
   });
 
   // ---------- 시작 ----------

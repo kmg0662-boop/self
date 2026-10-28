@@ -16,6 +16,17 @@ window.CONTENT = {
 
   northStar: "내가 만들고 싶은 것을, 내가 AI로 직접 만든다",
 
+  // 가상 사진 (Higgsfield로 생성). 불러오지 못하면 코드로 그린 풍경이 대신 보입니다.
+  images: {
+    hero: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261028_093722_a4f2611f-41f0-49c0-b709-a615c2b8d65c.png", alt: "안개 낀 새벽의 제주 오름과 억새" },
+    wall: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261028_093721_aa120bc6-52ff-42de-b135-ef7207c864a5.png", alt: "이끼 낀 현무암 돌담 위로 늘어진 감귤 가지" },
+    field: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261028_093721_cc78302e-f446-4e66-ad71-74dc2e0084d4.png", alt: "바다가 보이는 제주 유채꽃밭" }
+  },
+  stories: [
+    { img: "wall", kicker: "돌담처럼", title: "하나씩 얹어 쌓아요", text: "제주 돌담은 돌을 하나씩 얹어 바람을 견뎌요. 에이전트에게도 한 번에 하나만 맡기고, 잘 되면 저장하고 다음 돌을 얹어요.", link: "#lecture", cta: "위임 4원칙 보기" },
+    { img: "field", kicker: "유채처럼", title: "함께 피어나요", text: "유채는 한 송이보다 들판으로 필 때 아름다워요. 밤 10시, 서로의 첫 사용자가 되어 피드백을 주고받아요.", link: "#help", cta: "막혔을 때 보기" }
+  ],
+
   schedule: [
     { start: "2026-11-07T15:00:00+09:00", end: "2026-11-07T16:00:00+09:00", title: "오프닝, 불편함에서 문제로", note: "전체 강의" },
     { start: "2026-11-07T16:00:00+09:00", end: "2026-11-07T18:00:00+09:00", title: "AI 실전 사용법 (그룹 강의 + 실습)", note: "이 사이트의 강의 탭", lecture: true },
