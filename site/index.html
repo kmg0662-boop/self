@@ -3,47 +3,107 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PLAN_Be AI 야장</title>
+<title>혼자서도, AI로</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="제주패스파인더 플랜비 시즌10 바이브코딩 해커톤 참가자를 위한 AI 실전 사용법 강의 사이트">
+<meta name="description" content="코딩을 몰라도 혼자서 AI로 내가 만들고 싶은 것을 끝까지 만드는 독학 노트. PLAN_Be 시즌10.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Gothic+Coding:wght@400;700&family=Nanum+Pen+Script&family=Song+Myung&display=swap">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&family=Gothic+A1:wght@400;700&family=Nanum+Gothic+Coding:wght@400;700&family=Nanum+Pen+Script&display=swap">
+<link rel="stylesheet" href="assets/landing.css">
 </head>
 <body>
-<header class="top">
-  <div class="wrap">
-    <div class="top-bar">
-    <div class="brand">
-      <span class="brand-mark">PLAN_Be <span>AI</span> 야장</span>
-      <span class="brand-sub">시즌10 바이브코딩 해커톤 · 1조</span>
-    </div>
-    <nav class="tabs" aria-label="강의 메뉴">
-      <a class="tab" href="#home">홈</a>
-      <a class="tab" href="#prep">사전 준비</a>
-      <a class="tab" href="#lecture">강의</a>
-      <a class="tab" href="#prompts">프롬프트 도구</a>
-      <a class="tab" href="#glossary">용어집</a>
-      <a class="tab" href="#skills">스킬</a>
-      <a class="tab" href="#help">막혔을 때</a>
-      <a class="tab" href="#levelup">레벨업</a>
-      <a class="tab" href="#check">자가진단</a>
-    </nav>
-    </div>
-  </div>
+<div class="progress" aria-hidden="true"><i></i></div>
+
+<header class="bar">
+  <a class="logo" href="./">PLAN_Be <b>야장</b></a>
+  <span class="bar-meta mono">독학 노트 · No.10</span>
+  <a class="bar-cta" href="study.html">노트 펼치기 →</a>
 </header>
+
 <main>
-  <div class="wrap" id="view"></div>
+  <!-- ① 첫 화면: 마우스에 반응하는 글자, 스크롤하면 줄이 갈라짐 -->
+  <section class="hero" data-scene>
+    <div class="hero-in">
+      <p class="mono hero-meta"><span>2026 · 제주</span><span>코딩 몰라도 OK</span><span>p.00</span></p>
+      <h1 class="mega" data-kinetic aria-label="혼자서도, AI로, 끝까지 만든다.">
+        <span class="row r1">혼자서도,</span>
+        <span class="row r2">AI로</span>
+        <span class="row r3">끝까지 <mark>만든다.</mark></span>
+      </h1>
+      <p class="hand hero-note">← 마우스를 글자에 가까이 대보세요</p>
+      <div class="scroll-hint mono" aria-hidden="true"><span>스크롤</span><i></i></div>
+    </div>
+  </section>
+
+  <!-- ② 선언문: 스크롤만큼 먹물로 채워지는 문장 -->
+  <section class="manifesto" data-scene style="--len: 260vh">
+    <div class="sticky">
+      <p class="mono kicker">기록 01 · 왜 혼자서도 되는가</p>
+      <p class="fill" data-fill>코딩을 몰라도 괜찮아요. 필요한 건 일상의 <em>불편함</em> 하나, 그리고 AI에게 <em>일을 맡기는 법</em>이에요. 이 노트는 혼자 공부하는 당신을 위해 <em>질문하는 법</em>부터 <em>배포</em>까지, 막히면 돌아갈 길까지 순서대로 적어두었어요.</p>
+    </div>
+  </section>
+
+  <!-- ③ 4D 가로 질주 -->
+  <section class="run" data-scene style="--len: 380vh">
+    <div class="sticky">
+      <p class="mono kicker">기록 02 · AI를 잘 쓰는 네 가지 힘</p>
+      <div class="track" data-track>
+        <div class="word"><span class="no mono">D1</span><b>질문하고</b><small>무엇을 맡길지 정해요 · Delegation</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="word outline"><span class="no mono">D2</span><b>맡기고</b><small>알아듣게 설명해요 · Description</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="word"><span class="no mono">D3</span><b>판단하고</b><small>결과가 맞는지 가려요 · Discernment</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="word outline"><span class="no mono">D4</span><b>책임지고</b><small>안전하고 정직하게 써요 · Diligence</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 6단계: 숫자가 스크롤에 맞춰 바뀜 -->
+  <section class="steps" data-scene style="--len: 420vh">
+    <div class="sticky">
+      <p class="mono kicker">기록 03 · 만들기 6단계</p>
+      <div class="steps-grid">
+        <div class="big-no" aria-hidden="true"><span data-stepno>01</span><small>/06</small></div>
+        <ol class="step-list" data-steps>
+          <li class="on"><b>아이디어</b><span>무엇이 불편한가? 나만 겪나?</span><em class="hand">불편함을 한 문장으로 말할 수 있으면 끝</em></li>
+          <li><b>기획</b><span>가장 작은 기능 1개는?</span><em class="hand">서비스 설명서가 완성되면 끝</em></li>
+          <li><b>디자인</b><span>첫 화면에 무엇이 보여야 하나?</span><em class="hand">첫 화면 미리보기가 나오면 끝</em></li>
+          <li><b>제작</b><span>한 번에 무엇 하나만 맡길까?</span><em class="hand">핵심기능 1개가 작동하면 끝</em></li>
+          <li><b>검증</b><span>남이 써보니 어디서 멈칫하나?</span><em class="hand">Before → After가 1개 생기면 끝</em></li>
+          <li><b>배포·개선</b><span>링크가 휴대폰에서 열리나?</span><em class="hand">링크를 친구에게 보낼 수 있으면 끝</em></li>
+        </ol>
+      </div>
+      <div class="step-bar" aria-hidden="true"><i></i></div>
+    </div>
+  </section>
+
+  <!-- ⑤ 막혀도 괜찮아요: 숫자가 화면을 채움 -->
+  <section class="stuck" data-scene style="--len: 240vh">
+    <div class="sticky">
+      <p class="mono kicker">기록 04 · 혼자일 때 가장 중요한 규칙</p>
+      <p class="stuck-lead">막혀도 괜찮아요. 딱</p>
+      <p class="stuck-num" aria-label="15분">15<span>분</span></p>
+      <p class="stuck-tail">혼자 해보고, 그다음엔 AI에게 에러를 그대로 붙여넣고 물어보세요. <span class="hand">포기는 그 다음 문제!</span></p>
+    </div>
+  </section>
+
+  <!-- ⑥ 시작 -->
+  <section class="start">
+    <p class="mono kicker">기록 05 · 오늘의 첫 페이지</p>
+    <h2 class="start-title">이제, <mark>펼치기만</mark><br>하면 돼요.</h2>
+    <div class="start-links">
+      <a class="big-link" href="study.html#lecture"><span class="mono">01</span>강의 노트부터 읽기 <i>→</i></a>
+      <a class="big-link" href="study.html#prompts"><span class="mono">02</span>프롬프트 도구 바로 쓰기 <i>→</i></a>
+      <a class="big-link" href="study.html#help"><span class="mono">03</span>막혔을 때 펼치기 <i>→</i></a>
+    </div>
+  </section>
 </main>
-<footer>
-  <div class="wrap">
-    <span>뉴키즈인베스트먼트 · PLAN_Be 시즌10 · 이 사이트도 AI와 함께 만들었어요</span>
-    <button type="button" class="btn ghost small" id="print-sheet">A4 치트시트 인쇄</button>
-  </div>
+
+<footer class="foot mono">
+  <span>PLAN_Be 시즌10 · 뉴키즈인베스트먼트 · 제주</span>
+  <a href="study.html">독학 노트 →</a>
 </footer>
-<div class="cheatsheet" id="cheatsheet"></div>
-<script src="assets/content.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/landing.js"></script>
 </body>
 </html>

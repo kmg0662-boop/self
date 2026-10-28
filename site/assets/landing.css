@@ -1,0 +1,289 @@
+/*
+ * 랜딩: "혼자서도, AI로, 끝까지 만든다" — 종이와 먹의 키네틱 타이포그래피.
+ * 레이아웃: 화면 하나씩 고정되는 장면 5개 + 시작. 스크롤 진행도(--p, 0~1)로 글자가 움직임.
+ * 색: 종이 · 먹 · 감귤 도장 · 형광펜. 일부 장면은 먹 바탕으로 반전.
+ */
+:root {
+  --paper: #f5f3ec;
+  --ink: #1d1d1a;
+  --muted: #6b6a62;
+  --line: rgba(29, 29, 26, 0.18);
+  --stamp: #d4561f;
+  --marker: #dcf05a;
+  --pen: #24406a;
+  --ghost: rgba(29, 29, 26, 0.16);
+  --font-display: "Noto Serif KR", "AppleMyungjo", serif;
+  --font-body: "Gothic A1", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "Nanum Gothic Coding", ui-monospace, monospace;
+  --font-hand: "Nanum Pen Script", cursive;
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #171815;
+    --ink: #efece2;
+    --muted: #a3a195;
+    --line: rgba(239, 236, 226, 0.18);
+    --stamp: #f08a52;
+    --marker: #c2d63f;
+    --pen: #a8c0e6;
+    --ghost: rgba(239, 236, 226, 0.16);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #171815;
+  --ink: #efece2;
+  --muted: #a3a195;
+  --line: rgba(239, 236, 226, 0.18);
+  --stamp: #f08a52;
+  --marker: #c2d63f;
+  --pen: #a8c0e6;
+  --ghost: rgba(239, 236, 226, 0.16);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-x: clip;
+}
+::selection { background: var(--marker); color: #1d1d1a; }
+a { color: inherit; }
+:focus-visible { outline: 2px dashed var(--stamp); outline-offset: 4px; }
+.mono { font-family: var(--font-mono); }
+.hand { font-family: var(--font-hand); }
+mark { color: inherit; background: none; }
+
+/* 상단: 진행 막대 + 얇은 바 */
+.progress { position: fixed; inset: 0 0 auto; height: calc(3px + env(safe-area-inset-top, 0px)); z-index: 20; pointer-events: none; }
+.progress i { position: absolute; left: 0; bottom: 0; height: 3px; width: calc(var(--page, 0) * 100%); background: var(--stamp); }
+.bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) 14px var(--gutter);
+  color: var(--ink);
+  transition: color 0.3s;
+}
+.bar.on-run { color: var(--paper); }
+.bar.on-stuck { color: #1d1d1a; }
+.logo { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; text-decoration: none; letter-spacing: -0.02em; }
+.logo b { font-weight: 900; }
+.bar-meta { font-size: 0.78rem; opacity: 0.75; }
+.bar-cta { margin-left: auto; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; text-decoration: none; padding: 8px 14px; border: 1.5px solid currentColor; border-radius: 999px; }
+.bar-cta:hover { background: var(--marker); color: #1d1d1a; border-color: var(--marker); }
+@media (max-width: 520px) { .bar-meta { display: none; } }
+
+.kicker { font-size: 0.8rem; color: var(--stamp); font-weight: 700; letter-spacing: 0.02em; margin: 0; }
+
+/* 장면 공통: 고정되는 화면 */
+[data-scene] { position: relative; }
+.manifesto, .run, .steps, .stuck { height: var(--len, 300vh); }
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+  gap: clamp(18px, 3vw, 32px);
+  padding: 80px max(20px, env(safe-area-inset-right, 0px)) 40px var(--gutter);
+}
+
+/* ① 첫 화면 */
+.hero { min-height: 100vh; min-height: 100svh; display: grid; }
+.hero-in {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: 90px max(20px, env(safe-area-inset-right, 0px)) 60px var(--gutter);
+  position: relative;
+}
+.hero-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); margin: 0; border-bottom: 1px dashed var(--line); padding-bottom: 10px; }
+.mega {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(3.4rem, 15.5vw, 15rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  display: grid;
+}
+.row { display: block; white-space: nowrap; will-change: transform; }
+.r1 { transform: translateX(calc(var(--p, 0) * -28vw)); }
+.r2 { padding-left: 18vw; transform: translateX(calc(var(--p, 0) * 22vw)); color: var(--stamp); }
+.r3 { transform: translateX(calc(var(--p, 0) * -12vw)) scale(calc(1 + var(--p, 0) * 0.08)); transform-origin: left center; }
+.r3 mark { position: relative; }
+.r3 mark::before {
+  content: "";
+  position: absolute;
+  left: -0.04em;
+  right: -0.04em;
+  bottom: 0.08em;
+  height: 0.36em;
+  z-index: -1;
+  background: var(--marker);
+  transform-origin: left;
+  transform: skewX(-8deg) scaleX(0);
+  animation: swipe 0.9s 0.9s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+@keyframes swipe { to { transform: skewX(-8deg) scaleX(1); } }
+.mega .wd { display: inline-block; white-space: nowrap; }
+.mega .ch {
+  display: inline-block;
+  font-weight: var(--w, 300);
+  transition: font-weight 0.25s ease-out;
+  animation: drop 1s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 45ms);
+}
+@keyframes drop { from { transform: translateY(0.35em) rotate(4deg); opacity: 0.1; font-weight: 900; } }
+.hero-note { margin: 0; font-size: 1.5rem; color: var(--pen); transform: rotate(-2deg); justify-self: end; }
+@media (hover: none) { .hero-note { display: none; } }
+@media (max-width: 600px) {
+  .mega { font-size: 19.5vw; line-height: 1.04; }
+  .r3 { white-space: normal; }
+  .r2 { padding-left: 14vw; }
+}
+.scroll-hint { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: var(--muted); }
+.scroll-hint i { width: 60px; height: 1px; background: var(--ink); transform-origin: left; animation: hint 1.8s ease-in-out infinite; }
+@keyframes hint { 0% { transform: scaleX(0); } 60% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: 0; } }
+
+/* ② 선언문 */
+.fill {
+  margin: 0;
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, min(4.6vw, 6.4vh), 4rem);
+  line-height: 1.32;
+  letter-spacing: -0.03em;
+}
+.fill .w { color: var(--ghost); transition: color 0.25s; }
+.fill .w.on { color: var(--ink); }
+.fill em { font-style: normal; }
+.fill em .w.on { background: linear-gradient(transparent 12%, var(--marker) 12% 94%, transparent 94%); color: #1d1d1a; }
+
+/* ③ 4D 가로 질주: 먹 바탕 반전 */
+.run { background: var(--ink); color: var(--paper); }
+.run .kicker { color: var(--marker); }
+.track {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 4vw, 60px);
+  width: max-content;
+  transform: translateX(calc(var(--p, 0) * var(--shift, 0) * -1px));
+  will-change: transform;
+}
+.word { display: grid; gap: 4px; }
+.word b {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(5rem, 22vw, 17rem);
+  line-height: 1.12;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+.word.outline b { color: var(--stamp); }
+.word small { margin-top: 0.6em; font-family: var(--font-mono); font-size: clamp(0.8rem, 1.4vw, 1rem); opacity: 0.75; padding-left: 0.4em; }
+.word .no { font-size: 0.85rem; color: var(--marker); padding-left: 0.4em; }
+.arrow { font-family: var(--font-display); font-size: clamp(3rem, 10vw, 8rem); color: var(--stamp); }
+
+/* ④ 6단계 */
+.steps-grid { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(20px, 5vw, 80px); align-items: center; }
+.big-no { font-family: var(--font-display); font-weight: 900; line-height: 0.85; letter-spacing: -0.06em; display: flex; align-items: flex-start; }
+.big-no span { font-size: clamp(7rem, 30vw, 22rem); font-variant-numeric: tabular-nums; display: inline-block; }
+.big-no span.flip { animation: flip 0.45s cubic-bezier(0.2, 0.9, 0.2, 1); }
+@keyframes flip { from { transform: translateY(18%) rotate(-4deg); opacity: 0.2; } }
+.big-no small { font-family: var(--font-mono); font-size: 1rem; color: var(--muted); margin-top: 1.2em; letter-spacing: 0; }
+.step-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; min-width: 0; }
+.step-list li { display: grid; gap: 0 14px; grid-template-columns: auto 1fr; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--ghost); transition: color 0.3s; }
+.step-list li b { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.2rem, 2.4vw, 1.8rem); }
+.step-list li span { font-size: 0.95rem; }
+.step-list li em { grid-column: 1 / -1; font-style: normal; font-size: 1.4rem; line-height: 1.2; color: var(--pen); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s, opacity 0.3s; }
+.step-list li.done { color: var(--muted); }
+.step-list li.done b { text-decoration: line-through; text-decoration-color: var(--stamp); text-decoration-thickness: 2px; }
+.step-list li.on { color: var(--ink); }
+.step-list li.on b { font-weight: 900; }
+.step-list li.on em { max-height: 3em; opacity: 1; }
+.step-bar { height: 3px; background: var(--line); }
+.step-bar i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--stamp); }
+@media (max-width: 720px) {
+  .steps-grid { grid-template-columns: 1fr; gap: 6px; }
+  .big-no span { font-size: 38vw; }
+  .step-list li span { display: none; }
+  .step-list li.on span { display: inline; }
+}
+
+/* ⑤ 막혀도 괜찮아요 */
+.stuck { background: var(--stamp); color: #1d1d1a; }
+.stuck .kicker { color: #1d1d1a; }
+.stuck-lead { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 5vw, 3.6rem); letter-spacing: -0.03em; }
+.stuck-num {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.07em;
+  font-size: clamp(8rem, calc(18vw + var(--p, 0) * 22vw), 34rem);
+  transform-origin: left center;
+}
+.stuck-num span { font-size: 0.28em; letter-spacing: -0.02em; margin-left: 0.05em; }
+.stuck-tail { margin: 0; max-width: 34ch; font-size: clamp(1rem, 1.8vw, 1.25rem); }
+.stuck-tail .hand { font-size: 1.6em; display: inline-block; transform: rotate(-3deg); }
+
+/* ⑥ 시작 */
+.start {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: 28px;
+  padding: 100px max(20px, env(safe-area-inset-right, 0px)) 60px var(--gutter);
+}
+.start-title { margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(3rem, 11vw, 10rem); line-height: 1; letter-spacing: -0.05em; }
+.start-title mark { background: linear-gradient(transparent 14%, var(--marker) 14% 92%, transparent 92%); color: #1d1d1a; padding: 0 0.06em; }
+.start-links { display: grid; border-top: 2px solid var(--ink); }
+.big-link {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3.6vw, 2.6rem);
+  letter-spacing: -0.03em;
+  transition: padding 0.3s, color 0.2s;
+}
+.big-link .mono { font-size: 0.9rem; color: var(--stamp); font-weight: 700; letter-spacing: 0; }
+.big-link i { margin-left: auto; font-style: normal; transition: transform 0.3s; }
+.big-link:hover { padding-left: 14px; color: var(--stamp); }
+.big-link:hover i { transform: translateX(8px); }
+
+.foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 20px max(20px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) var(--gutter); font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--line); }
+
+/* 움직임을 줄인 사용자: 고정·변형 없이 그대로 읽히게 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .row, .track, .stuck-num { transform: none !important; }
+  .manifesto, .run, .steps, .stuck { height: auto; }
+  .sticky { position: static; height: auto; min-height: 100svh; }
+  .track { flex-wrap: wrap; width: auto; }
+  .fill .w { color: var(--ink); }
+  .step-list li { color: var(--ink); }
+  .step-list li em { max-height: none; opacity: 1; }
+  .r3 mark::before { transform: skewX(-8deg) scaleX(1); }
+}
