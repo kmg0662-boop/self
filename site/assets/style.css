@@ -256,7 +256,7 @@ button { font: inherit; color: inherit; }
 .field { display: grid; gap: 6px; }
 .field label { font-size: 0.88rem; font-weight: 700; }
 .field small { font-size: 0.8rem; color: var(--muted); }
-input[type="text"], textarea {
+input[type="text"], input[type="url"], textarea {
   font: inherit;
   font-size: 1rem;
   color: var(--ink);
@@ -559,3 +559,47 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
 .recipe h3 small { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
 .check-pt { font-size: 0.9rem; color: var(--ink-2); }
 .check-pt b { color: var(--ok); margin-right: 6px; }
+
+/* 민지의 처음 버전 */
+.case-draft { display: grid; gap: 6px; padding: 14px 16px; border-radius: var(--r); border: 1px dashed var(--line-2); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.case-label { font-size: 0.78rem; font-weight: 800; color: var(--muted); }
+.case-draft pre { margin: 0; white-space: pre-wrap; font-family: var(--mono); font-size: 0.86rem; color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--bad) 55%, transparent); }
+.case-miss { font-size: 0.9rem; color: var(--ink-2); }
+.case-miss b { color: var(--bad); margin-right: 6px; }
+
+/* 스킬 카드: 인기, 메모, 전·후, 설치 */
+.skill h3 .pop { margin-left: 8px; font-family: var(--mono); font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--sunken); color: var(--ink-2); vertical-align: 2px; white-space: nowrap; }
+.pick h3 .pop { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.skill .snote { grid-column: 1 / -1; font-size: 0.86rem; color: var(--accent-text); }
+.ba { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ba > div { display: grid; gap: 4px; align-content: start; padding: 10px 12px; border-radius: var(--r-sm); background: var(--sunken); font-size: 0.88rem; }
+.ba > div:last-child { background: var(--ok-soft); }
+.ba span { font-size: 0.72rem; font-weight: 800; color: var(--muted); }
+.ba > div:last-child span { color: var(--ok); }
+.inst { grid-column: 1 / -1; }
+.inst summary { cursor: pointer; font-size: 0.86rem; font-weight: 700; color: var(--ink-2); min-height: 32px; display: flex; align-items: center; }
+.inst[open] summary { margin-bottom: 6px; }
+
+/* 스킬 찾기 도우미 */
+.finder { display: grid; gap: 10px; border-color: var(--accent); }
+.finder h2 { font-size: 1.2rem; font-weight: 800; }
+.q-label { font-size: 0.9rem; font-weight: 750; margin-top: 4px; }
+.finder-hint { font-size: 0.92rem; }
+.finder-result { display: grid; gap: 12px; margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--line); }
+.finder-result .how { font-size: 0.92rem; color: var(--ink-2); }
+.pick { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
+.pick > b { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-size: 0.85rem; }
+.pick h3 { font-size: 1rem; font-weight: 780; }
+.pick p { font-size: 0.9rem; color: var(--ink-2); }
+.pick .src { font-family: var(--mono); font-size: 0.78rem; color: var(--accent-text); overflow-wrap: anywhere; }
+
+/* 내 포트폴리오 */
+.pf-link { justify-self: start; font-weight: 750; color: var(--accent-text); text-decoration: none; }
+.pf-done { padding: 12px 16px; border-radius: var(--r); background: var(--ok-soft); color: var(--ok); font-weight: 700; }
+.pf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pf-grid .card { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.pf-grid a { font-size: 0.9rem; font-weight: 700; color: var(--accent-text); overflow-wrap: anywhere; }
+.pf-big { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; }
+.pf-reflect ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.pf-reflect li b { font-family: var(--mono); font-size: 0.8rem; color: var(--accent-text); margin-right: 6px; }
+@media (max-width: 720px) { .ba, .pf-grid { grid-template-columns: 1fr; } }

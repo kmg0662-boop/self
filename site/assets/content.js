@@ -33,6 +33,8 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 마케팅팀 팀장이에요. 매주 회의가 끝나면 '그래서 누가 뭘 하기로 했지?'로 메신저가 시끄러워요. 이 코스를 시작하며 목표 카드를 이렇게 썼어요.",
+        draft: "만들고 싶은 것: 업무 자동화 앱\n공부할 요일: 시간 날 때",
+        miss: "무엇을 자동화할지, 언제 공부할지가 없어서 첫 주에 한 번도 열지 않았어요.",
         artifact: "만들고 싶은 것: 회의 메모를 붙여넣으면 담당자별 할 일 목록이 나오는 페이지\n공부할 요일: 월·수·금 저녁 9시, 30분\n\n불편했던 순간 3개\n1. 회의 후 할 일 정리가 매번 30분 걸림\n2. 주간 보고서 양식 맞추기\n3. 광고 문구 시안 10개 만들기",
         note: "불편함이 '회의 후 30분'처럼 구체적일수록 나중에 만들 것이 선명해져요."
       },
@@ -70,6 +72,8 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 처음에 '회의록 정리 앱 아이디어 줘'라고 물었다가 뻔한 답을 받았어요. 그래서 TCREI로 다시 썼어요.",
+        draft: "회의록 정리 앱 아이디어 줘",
+        miss: "상황(C)이 없어서 누구에게나 할 법한 답(할 일 앱, 메모 앱…)만 나왔어요.",
         artifact: "[T] 회의 메모를 담당자별 할 일로 바꾸는 서비스의 핵심기능 후보 5개를 표로 정리해줘.\n[C] 나는 8명 팀의 팀장이고, 코딩은 못 해. 회의는 주 2회, 메모는 노션에 대충 적어.\n[R] 메모 앱처럼 단순했으면 좋겠어.\n[E] 이 중 일주일 안에 혼자 만들 수 있는 걸 골라 이유를 2줄로.\n[I] 가장 작은 1개로 좁히고, 나에게 질문 3개를 먼저 해줘.",
         note: "C(상황)에 '코딩 못 함, 주 2회, 노션' 같은 사실이 들어가자 답이 민지만을 위한 답으로 바뀌었어요."
       },
@@ -106,6 +110,8 @@ window.COURSE = {
       ],
       case: {
         story: "AI가 '직장인은 회의 후 할 일 정리에 평균 47분을 쓴다'고 답했어요. 민지는 판단 질문을 던졌어요.",
+        draft: "보고서 초안: '직장인은 회의 후 할 일 정리에 평균 47분을 쓴다(AI 답변)'",
+        miss: "출처를 확인하지 않은 숫자를 그대로 옮겨 적었어요. 팀장 회의에서 출처를 물으면 답할 수 없었죠.",
         artifact: "민지: 47분이라는 숫자의 출처가 뭐야? 링크로 보여줘.\nAI: 정확한 출처를 확인할 수 없어요. 일반적인 추정이었어요.\n민지: 그럼 숫자는 빼고, 내가 직접 재볼 수 있는 방법을 알려줘.\n\n→ 다음 회의 때 정리 시간을 직접 재보니 32분.",
         note: "그럴듯한 숫자일수록 출처를 물어요. 확인할 수 없으면 내 데이터로 바꿔요."
       },
@@ -142,7 +148,9 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 실제 회의 메모를 붙여넣으려다 멈췄어요. 고객사 이름과 동료 연락처가 들어 있었거든요.",
-        artifact: "원본\n(주)한빛식품 김철수 부장님 010-1234-5678, 3월 프로모션 예산 2억 확정\n\n가린 뒤\n[고객사A] [담당자A], 3월 프로모션 예산 [금액] 확정\n\n→ 할 일 정리 결과는 똑같이 잘 나왔어요.",
+        draft: "(주)한빛식품 김철수 부장님 010-1234-5678, 3월 프로모션 예산 2억 확정",
+        miss: "고객사, 사람 이름, 연락처, 금액이 그대로 들어 있었어요. 정리 결과에는 하나도 필요 없는 정보였어요.",
+        artifact: "[고객사A] [담당자A], 3월 프로모션 예산 [금액] 확정\n\n→ 할 일 정리 결과는 똑같이 잘 나왔어요.",
         note: "할 일 정리에 진짜 이름과 금액은 필요 없었어요. 결과에 영향이 없는 정보는 가려요."
       },
       think: [
@@ -179,6 +187,8 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 하고 싶은 게 많았어요. 캘린더 연동, 알림, 팀원 로그인… 설명서를 쓰며 하나로 좁혔어요.",
+        draft: "# 서비스 설명서\n- 문제: 회의가 비효율적이다\n- 핵심기능: 회의록 정리, 캘린더 연동, 알림, 팀원 로그인, 통계 대시보드",
+        miss: "문제가 막연하고 기능이 5개라, 일주일 안에 끝낼 수 없는 크기였어요.",
         artifact: "# 서비스 설명서\n- 문제: 회의가 끝나면 누가 무엇을 언제까지 하는지 정리하는 데 30분이 걸린다\n- 사용자: 8명 팀의 팀장, 회의 직후\n- 핵심기능 1개: 회의 메모를 붙여넣으면 담당자별 할 일 목록이 나온다\n- 사용 흐름: 메모 붙여넣기 → 정리 누르기 → 목록 복사하기\n- 화면 구성: 입력창 1개, 버튼 1개, 결과 목록\n- 하지 않을 것: 로그인, 캘린더 연동, 알림\n- 성공 기준: 회의 메모 3개로 시험해서 3번 다 담당자가 맞게 나온다",
         note: "'하지 않을 것'에 적은 3개 덕분에 일주일 안에 끝낼 수 있었어요."
       },
@@ -216,6 +226,8 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 설명서를 통째로 붙여넣고 '첫 화면만' 요청했어요. 휴대폰으로 열어보니 버튼이 화면 밖에 있었어요.",
+        draft: "버튼이 이상해요. 고쳐줘.",
+        miss: "어디서 무엇이 어떻게 이상한지 없어서, 에이전트가 멀쩡한 버튼 색만 바꿨어요.",
         artifact: "민지의 수정 요청\n휴대폰에서 열면 '정리하기' 버튼이 화면 오른쪽 밖으로 나가서 안 보여요. 버튼이 입력창 바로 아래, 화면 폭 안에 있어야 해요.\n\n→ 한 번에 고쳐짐. 버전 저장: 'v1 첫 화면'",
         note: "'이상해요' 대신 어디서, 무엇이, 어떻게 돼야 하는지 증상으로 말했어요."
       },
@@ -253,6 +265,8 @@ window.COURSE = {
       ],
       case: {
         story: "정리 버튼을 누르면 'TypeError: Cannot read properties of undefined'가 떴어요. 두 번 고쳐 달라고 해도 그대로였어요.",
+        draft: "또 에러 나. 다시 고쳐줘. (세 번째 같은 요청)",
+        miss: "같은 요청을 반복하니 에이전트가 같은 곳을 계속 고치며 더 꼬였어요.",
         artifact: "1) 에러 통역 프롬프트로 물어봄 → '결과를 받기 전에 화면에 그리려다 생긴 문제'라는 설명\n2) 두 번 실패 → 'v1 첫 화면'으로 되돌림\n3) 요청을 쪼갬: '먼저 정리 결과를 화면에 글자 그대로만 보여줘' → 성공\n4) '이제 그 글자를 담당자별 목록으로 나눠줘' → 성공, 'v2 작동' 저장",
         note: "같은 수정을 세 번째로 요청하지 않고, 되돌리고 쪼갰어요."
       },
@@ -290,6 +304,8 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 팀원 3명에게 링크와 질문 3개를 보냈어요. 옆에서 설명하지 않고 혼자 써보게 했어요.",
+        draft: "팀원에게 보낸 질문: '어때요? 괜찮아요?'\n받은 답: '좋네요!' '좋아요' '깔끔하네요'",
+        miss: "칭찬만 돌아와서 무엇을 고쳐야 할지 알 수 없었어요.",
         artifact: "질문: ① 어디서 멈칫했나요? ② 기대와 다른 결과가 있었나요? ③ 매주 쓸 것 같나요?\n\n받은 피드백\n- 지훈: 담당자 이름이 '@지훈'처럼 적혀 있으면 인식을 못 해요\n- 서연: 결과를 슬랙에 바로 붙이고 싶어요 (복사 버튼)\n- 도윤: 마감일도 같이 나오면 좋겠어요\n\n→ 두 명이 막힌 '@이름 인식'을 먼저 고치고 다시 배포",
         note: "새 기능 요청(마감일)보다 막힘(@이름)을 먼저 고쳤어요."
       },
@@ -327,6 +343,8 @@ window.COURSE = {
       ],
       case: {
         story: "민지는 금요일마다 주간 보고를 쓰며 같은 지시를 반복하고 있었어요. 그걸 스킬로 만들었어요.",
+        draft: "스킬 내용: 주간 보고 정리해줘",
+        miss: "언제, 무엇을 넣고, 어떤 형식으로, 무엇은 하지 말지가 없어서 매주 결과가 달랐어요.",
         artifact: "# 주간 보고 정리 스킬\n1. 언제 쓰나: 금요일, 이번 주 회의 메모를 모았을 때\n2. 입력: 이번 주 회의 메모들\n3. 할 일: 완료 / 진행 / 막힘으로 나눠 표로 정리\n4. 형식: 팀장 보고용, 항목당 한 줄\n5. 하지 말 것: 메모에 없는 내용을 추측해서 쓰기\n6. 확인: 담당자 이름이 빠진 항목은 맨 아래에 따로 표시",
         note: "6칸 중 '하지 말 것'과 '확인'이 결과의 품질을 지켜줘요."
       },
@@ -365,6 +383,8 @@ window.COURSE = {
       ],
       case: {
         story: "서비스를 팀에서 매주 쓰게 되자 고칠 게 많아졌어요. 민지는 웹앱 빌더 크레딧이 자주 바닥나서 Claude Code로 옮겼어요.",
+        draft: "CLAUDE.md 없이 매번 말로 설명: '로그인은 넣지 마…'",
+        miss: "세 번째 대화에서 그 말을 빠뜨리자 에이전트가 로그인 기능을 추가했어요.",
         artifact: "# CLAUDE.md\n## 이 프로젝트\n회의 메모 → 담당자별 할 일 목록 페이지. 사용자는 8명 팀의 팀장.\n## 원칙\n- 내가 말한 부분만 고친다. 바꾸기 전에 무엇을 바꿀지 한 줄로 말한다.\n- 로그인, 캘린더 연동은 하지 않는다.\n## 확인 방법\n- samples 폴더의 회의 메모 3개로 결과를 확인한 뒤에 완료라고 말한다.",
         note: "서비스 설명서가 CLAUDE.md로 자랐어요. 에이전트는 일을 시작할 때마다 이 파일부터 읽어요."
       },
@@ -424,49 +444,66 @@ window.COURSE = {
     { term: "RAG", like: "오픈북 시험", why: "내 자료를 근거로 답하게 해요.", cat: "AI 기본", unit: "u7" }
   ],
 
-  // 스킬: 카테고리별. stars = 초급 추천도(3이 가장 먼저), src = 받을 수 있는 곳(GitHub 저장소)
+  // 스킬: 카테고리별. stars = 초급 추천도(3이 가장 먼저), src = GitHub 저장소, pop = GitHub 별 수(2026년 10월 기준),
+  // install = Claude Code 설치 명령(각 저장소 README 기준), ba = 전·후 예시
   skillStarter: ["Superpowers", "frontend-design", "Karpathy guidelines"],
   skillCats: [
+    { id: "korean", title: "한국어 글쓰기", desc: "AI가 쓴 티가 나는 한국어를 사람이 쓴 글처럼 다듬어요. 혼자 만든 서비스의 소개글, 공지, 보고서를 내기 전에 가장 먼저 쓰게 되는 스킬이에요.", items: [
+      {"name": "한국어 윤문 · im-not-ai", "by": "epoko77-ai", "src": "epoko77-ai/im-not-ai", "pop": "★ 6.3k", "what": "번역투, 기계적인 나열, AI 상투어, 과한 피동 같은 'AI 티' 패턴 70여 개를 찾아 그 부분만 고쳐요. 사실·숫자·인용은 그대로 둬요.", "when": "AI로 쓴 보고서·공지·블로그 글을 내보내기 직전", "stars": 3, "install": "/plugin marketplace add epoko77-ai/im-not-ai\n/plugin install humanize-korean@im-not-ai", "ba": {"before": "본 서비스는 회의 내용을 효율적으로 관리할 수 있도록 다양한 기능을 제공함으로써, 사용자의 업무 생산성 향상에 기여하는 혁신적인 솔루션이라고 할 수 있습니다.", "after": "이 서비스는 회의 내용을 쉽게 정리하도록 도와줘요. 정리하는 시간이 줄어서 일이 빨라져요."}},
+      {"name": "달레의 korean-skills", "by": "Dale Seo (달레)", "src": "DaleSeo/korean-skills", "pop": "★ 240", "what": "윤문(humanizer), 맞춤법·띄어쓰기 검사(grammar-checker), 문체·용어 통일(style-guide)을 따로 또는 함께 설치해요. 왜 고쳤는지도 알려줘요.", "when": "맞춤법이 걱정될 때, 여러 사람이 쓴 문서의 말투를 맞출 때", "stars": 3, "install": "npx skills add daleseo/korean-skills", "ba": {"before": "회의가 끝난후 할일을 정리 하는데 시간이 너무 오래 걸립니다.", "after": "회의가 끝난 후 할 일을 정리하는 데 시간이 너무 오래 걸립니다."}},
+      {"name": "humanizer", "by": "blader", "src": "blader/humanizer", "pop": "★ 62k", "what": "위키백과의 'AI가 쓴 글의 특징' 목록을 바탕으로 영어 글의 AI 티를 지워요. 한국어 윤문 스킬들의 원조예요.", "when": "영어 이메일이나 서비스 소개글을 쓸 때", "stars": 2, "install": "/plugin marketplace add blader/humanizer\n/plugin install humanizer@humanizer", "ba": {"before": "In today's fast-paced world, our innovative tool seamlessly empowers teams to unlock their full potential.", "after": "Our tool helps teams finish their work faster."}}
+    ] },
     { id: "plan", title: "생각·기획", desc: "만들기 전에 무엇을 왜 만드는지 먼저 정리하게 해요.", items: [
-      { name: "Superpowers", by: "obra", src: "obra/superpowers", what: "바로 만들지 않고 질문을 하나씩 던져 설계를 확정한 뒤(brainstorming), 일을 2~5분 단위 계획으로 쪼개요(writing-plans).", when: "아이디어가 흐릿할 때, 큰 기능을 시작할 때", stars: 3 },
-      { name: "gstack · /office-hours", by: "Garry Tan", src: "garrytan/gstack", what: "스타트업 멘토처럼 '누가, 왜 쓰나요?'를 캐물어 아이디어를 검증해요. /plan-ceo-review로 범위도 점검해요.", when: "만들 가치가 있는지 확인하고 싶을 때", stars: 2 }
+      {"name": "Superpowers", "by": "obra", "src": "obra/superpowers", "pop": "★ 308k", "what": "바로 만들지 않고 질문을 하나씩 던져 설계를 확정한 뒤(brainstorming), 일을 2~5분 단위 계획으로 쪼개요(writing-plans).", "when": "아이디어가 흐릿할 때, 큰 기능을 시작할 때", "stars": 3, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
+      {"name": "gstack · /office-hours", "by": "Garry Tan", "src": "garrytan/gstack", "pop": "★ 138k", "what": "스타트업 멘토처럼 '누가, 왜 쓰나요?'를 캐물어 아이디어를 검증해요. /plan-ceo-review로 범위도 점검해요.", "when": "만들 가치가 있는지 확인하고 싶을 때", "stars": 2, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup", "note": "Git과 Bun이 필요해요. 터미널에서 실행해요."}
     ] },
     { id: "design", title: "디자인·UI", desc: "AI가 만든 티가 나는 뻔한 화면을 피하게 해요.", items: [
-      { name: "frontend-design", by: "Anthropic 공식", src: "anthropics/skills", what: "글꼴·색·여백을 의도적으로 고르게 해서, 템플릿 같은 화면을 피하게 해줘요.", when: "첫 화면을 만들 때", stars: 3 },
-      { name: "Taste Skill", by: "Leon Lin", what: "디자인의 다양성·움직임·밀도를 다이얼처럼 조절해요.", when: "같은 느낌의 화면이 반복될 때", stars: 2 },
-      { name: "web-design-guidelines", by: "Vercel", src: "vercel-labs/agent-skills", what: "접근성·반응형·폼 같은 웹 화면의 기본 규칙으로 내 화면을 점검해요.", when: "다 만들고 나서 점검할 때", stars: 2 },
-      { name: "theme-factory · canvas-design", by: "Anthropic 공식", src: "anthropics/skills", what: "색·글꼴 테마 세트를 만들거나(theme-factory), 포스터 같은 시각물을 만들어요(canvas-design).", when: "브랜드 느낌을 정하거나 홍보 이미지가 필요할 때", stars: 1 }
+      {"name": "frontend-design", "by": "Anthropic 공식", "src": "anthropics/skills", "pop": "★ 185k", "what": "글꼴·색·여백을 의도적으로 고르게 해서, 템플릿 같은 화면을 피하게 해줘요.", "when": "첫 화면을 만들 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
+      {"name": "ui-ux-pro-max", "by": "nextlevelbuilder", "src": "nextlevelbuilder/ui-ux-pro-max-skill", "pop": "★ 142k", "what": "스타일, 색 팔레트, 글꼴 조합, 차트 유형 데이터베이스에서 업종에 맞는 디자인 시스템을 골라줘요. 접근성 점검표도 있어요.", "when": "어떤 색과 글꼴을 써야 할지 감이 안 올 때", "stars": 2, "install": "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill\n/plugin install ui-ux-pro-max@ui-ux-pro-max-skill"},
+      {"name": "Taste Skill", "by": "Leonxlnx", "src": "Leonxlnx/taste-skill", "what": "디자인의 다양성·움직임·밀도를 다이얼처럼 숫자로 조절해요.", "when": "같은 느낌의 화면이 반복될 때", "stars": 2, "install": "npx skills add Leonxlnx/taste-skill"},
+      {"name": "web-design-guidelines", "by": "Vercel", "src": "vercel-labs/agent-skills", "pop": "★ 33k", "what": "접근성·반응형·폼 같은 웹 화면의 기본 규칙으로 내 화면을 점검해요.", "when": "다 만들고 나서 점검할 때", "stars": 2, "install": "npx skills add vercel-labs/agent-skills --skill web-design-guidelines"},
+      {"name": "theme-factory · canvas-design", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "색·글꼴 테마 세트를 만들거나(theme-factory), 포스터 같은 시각물을 만들어요(canvas-design).", "when": "브랜드 느낌을 정하거나 홍보 이미지가 필요할 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
     ] },
     { id: "build", title: "만들기 습관", desc: "에이전트가 엉뚱한 곳을 고치거나 일을 키우지 않게 해요.", items: [
-      { name: "Karpathy guidelines", by: "forrestchang", src: "forrestchang/andrej-karpathy-skills", what: "먼저 생각하기 · 단순하게 · 필요한 곳만 고치기 · 성공 기준 정하기. 네 줄짜리 원칙이에요.", when: "항상. 가장 먼저 깔아둘 기본기", stars: 3 },
-      { name: "Superpowers · test-driven-development", by: "obra", src: "obra/superpowers", what: "고치기 전에 '성공하면 이렇게 동작해야 한다'는 확인 장치(테스트)부터 만들게 해요.", when: "같은 버그가 자꾸 다시 생길 때", stars: 1 },
-      { name: "react-best-practices", by: "Vercel", src: "vercel-labs/agent-skills", what: "React·Next.js 코드를 느려지지 않게 짜는 규칙 모음이에요.", when: "에이전트가 React로 만들 때", stars: 1 },
-      { name: "Supabase agent skills", by: "Supabase 공식", src: "supabase/agent-skills", what: "데이터베이스를 만들 때 보안 규칙(RLS)과 설계 실수를 피하게 해요.", when: "로그인·저장 기능에 Supabase를 쓸 때", stars: 1 },
-      { name: "GSD (get-shit-done)", by: "glittercowboy", src: "glittercowboy/get-shit-done", what: "긴 작업에서 품질이 떨어지는 문제를 막는 단계별 실행 시스템이에요. 중급용.", when: "작업이 길어져 에이전트가 앞의 내용을 잊을 때", stars: 1 }
+      {"name": "Karpathy guidelines", "by": "forrestchang", "src": "forrestchang/andrej-karpathy-skills", "pop": "★ 226k", "what": "먼저 생각하기 · 단순하게 · 필요한 곳만 고치기 · 성공 기준 정하기. 네 줄짜리 원칙이에요.", "when": "항상. 가장 먼저 깔아둘 기본기", "stars": 3, "install": "/plugin marketplace add forrestchang/andrej-karpathy-skills\n/plugin install andrej-karpathy-skills@karpathy-skills"},
+      {"name": "Superpowers · test-driven-development", "by": "obra", "src": "obra/superpowers", "what": "고치기 전에 '성공하면 이렇게 동작해야 한다'는 확인 장치(테스트)부터 만들게 해요.", "when": "같은 버그가 자꾸 다시 생길 때", "stars": 1, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
+      {"name": "caveman", "by": "Julius Brussee", "src": "JuliusBrussee/caveman", "pop": "★ 116k", "what": "AI가 군더더기 없이 짧게 말하게 해서 토큰(사용량)을 아껴요. 저장소 소개는 65% 절약을 내세우지만, 본문의 측정값은 작업에 따라 33~54% 정도예요.", "when": "긴 작업에서 사용량 한도에 자주 걸릴 때", "stars": 1, "install": "/plugin marketplace add JuliusBrussee/caveman\n/plugin install caveman@caveman", "note": "설명이 짧아져서 처음 배우는 단계에서는 오히려 불편할 수 있어요."},
+      {"name": "react-best-practices", "by": "Vercel", "src": "vercel-labs/agent-skills", "what": "React·Next.js 코드를 느려지지 않게 짜는 규칙 모음이에요.", "when": "에이전트가 React로 만들 때", "stars": 1, "install": "npx skills add vercel-labs/agent-skills --skill react-best-practices"},
+      {"name": "Supabase agent skills", "by": "Supabase 공식", "src": "supabase/agent-skills", "pop": "★ 2.9k", "what": "데이터베이스를 만들 때 보안 규칙(RLS)과 설계 실수를 피하게 해요.", "when": "로그인·저장 기능에 Supabase를 쓸 때", "stars": 1, "install": "/plugin marketplace add supabase/agent-skills\n/plugin install supabase@supabase-agent-skills"},
+      {"name": "GSD Core", "by": "open-gsd", "src": "open-gsd/gsd-core", "pop": "★ 11k", "what": "긴 작업에서 품질이 떨어지는 문제를 막는 단계별 실행 시스템이에요. 중급용. 예전 get-shit-done 저장소가 이곳으로 옮겨졌어요.", "when": "작업이 길어져 에이전트가 앞의 내용을 잊을 때", "stars": 1, "install": "npx @opengsd/gsd-core@latest"}
     ] },
     { id: "check", title: "검수·고치기", desc: "'다 됐어요'라는 말을 그대로 믿지 않게 해요.", items: [
-      { name: "Superpowers · systematic-debugging", by: "obra", src: "obra/superpowers", what: "추측으로 고치지 않고, 원인을 좁혀 가며 찾게 해요. verification-before-completion은 '확인 없이 완료 금지'예요.", when: "같은 수정을 두 번 실패했을 때", stars: 2 },
-      { name: "gstack · /qa · /review", by: "Garry Tan", src: "garrytan/gstack", what: "/qa는 실제 브라우저로 화면을 눌러보며 버그를 찾고, /review는 코드를 출시 전에 검토해요.", when: "공개하기 직전", stars: 2 },
-      { name: "webapp-testing", by: "Anthropic 공식", src: "anthropics/skills", what: "브라우저 자동화(Playwright)로 내 웹앱을 직접 열어보고 스크린샷으로 확인해요.", when: "눌러봐야 아는 버그를 찾을 때", stars: 1 }
+      {"name": "Superpowers · systematic-debugging", "by": "obra", "src": "obra/superpowers", "what": "추측으로 고치지 않고, 원인을 좁혀 가며 찾게 해요. verification-before-completion은 '확인 없이 완료 금지'예요.", "when": "같은 수정을 두 번 실패했을 때", "stars": 2, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
+      {"name": "gstack · /qa · /review", "by": "Garry Tan", "src": "garrytan/gstack", "what": "/qa는 실제 브라우저로 화면을 눌러보며 버그를 찾고, /review는 코드를 출시 전에 검토해요.", "when": "공개하기 직전", "stars": 2, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup", "note": "Git과 Bun이 필요해요."},
+      {"name": "webapp-testing", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "브라우저 자동화(Playwright)로 내 웹앱을 직접 열어보고 스크린샷으로 확인해요.", "when": "눌러봐야 아는 버그를 찾을 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
     ] },
     { id: "docs", title: "문서·발표", desc: "결과물을 파일로 받아요.", items: [
-      { name: "docx · pptx · xlsx · pdf", by: "Anthropic 공식", src: "anthropics/skills", what: "워드 문서, 발표 자료, 엑셀 표, PDF를 실제 파일로 만들어줘요.", when: "기획서·발표 자료가 필요할 때", stars: 3 },
-      { name: "doc-coauthoring", by: "Anthropic 공식", src: "anthropics/skills", what: "긴 문서를 질문 → 구조 → 초안 → 다듬기 순서로 같이 써요.", when: "서비스 소개서·제안서를 쓸 때", stars: 2 },
-      { name: "internal-comms · brand-guidelines", by: "Anthropic 공식", src: "anthropics/skills", what: "공지·업데이트 글의 형식을 잡거나, 정해 둔 브랜드 규칙대로 쓰게 해요.", when: "팀에 공유하는 글을 자주 쓸 때", stars: 1 }
+      {"name": "docx · pptx · xlsx · pdf", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "워드 문서, 발표 자료, 엑셀 표, PDF를 실제 파일로 만들어줘요.", "when": "기획서·발표 자료가 필요할 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install document-skills@anthropic-agent-skills", "note": "Claude 앱 유료 요금제에는 기본으로 들어 있어요."},
+      {"name": "doc-coauthoring", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "긴 문서를 질문 → 구조 → 초안 → 다듬기 순서로 같이 써요.", "when": "서비스 소개서·제안서를 쓸 때", "stars": 2, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
+      {"name": "internal-comms · brand-guidelines", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "공지·업데이트 글의 형식을 잡거나, 정해 둔 브랜드 규칙대로 쓰게 해요.", "when": "팀에 공유하는 글을 자주 쓸 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
+    ] },
+    { id: "marketing", title: "마케팅·콘텐츠", desc: "광고 문구, SEO, 이메일, 가격 정하기처럼 알리고 파는 일을 도와줘요.", items: [
+      {"name": "marketingskills", "by": "Corey Haines", "src": "coreyhaines31/marketingskills", "pop": "★ 57k", "what": "카피라이팅, SEO, 광고, 이메일, 가격 정하기, 출시 계획 등 마케팅 스킬 49개 묶음이에요. 필요한 것만 골라 설치해요.", "when": "랜딩 문구, 광고 시안, 출시 계획이 필요할 때", "stars": 2, "install": "npx skills add coreyhaines31/marketingskills --skill copywriting", "note": "영어 기반이라 결과를 한국어 윤문 스킬로 한 번 더 다듬으면 좋아요."}
+    ] },
+    { id: "kwork", title: "한국 업무·생활", desc: "한국에서 일하고 사는 데 필요한 공식 정보를 AI가 직접 찾아보게 해요. Node.js 18 이상이 필요해요.", items: [
+      {"name": "k-skill · 업무", "by": "NomaDamas", "src": "NomaDamas/k-skill", "pop": "★ 8.2k", "what": "법령·판례 검색, DART 전자공시, 사업자등록 상태, 나라장터, 국가통계(KOSIS), 한글(HWP) 문서 읽기·편집, 맞춤법 검사, NEIS 바이트 글자 수까지 있어요.", "when": "보고서에 공식 자료를 붙이거나 한글 파일을 다뤄야 할 때", "stars": 2, "install": "/plugin marketplace add NomaDamas/k-skill\n/plugin install k-skill@k-skill"},
+      {"name": "k-skill · 생활", "by": "NomaDamas", "src": "NomaDamas/k-skill", "what": "KTX 시간표, 지하철·버스 길찾기, 아파트 실거래가, 공휴일·절기, 날씨·미세먼지를 조회해요. 125개 중 필요한 것만 골라 설치할 수 있어요.", "when": "일정·이동·집 알아보기를 AI에게 맡기고 싶을 때", "stars": 1, "install": "npx --yes skills add NomaDamas/k-skill --skill railway-timetable -g"}
     ] },
     { id: "ship", title: "공개·출시", desc: "남이 써볼 수 있는 상태로 내보내요.", items: [
-      { name: "gstack · /ship", by: "Garry Tan", src: "garrytan/gstack", what: "테스트 → 검토 → 커밋 → 푸시 → PR까지 출시 절차를 한 번에 밟아요.", when: "GitHub와 배포를 연결한 뒤", stars: 1 },
-      { name: "/security-review", by: "Claude Code 내장", what: "올리기 전에 비밀 키 노출, 위험한 코드 같은 보안 문제를 훑어봐요. 설치 없이 바로 써요.", when: "처음 공개하기 직전", stars: 2 }
+      {"name": "gstack · /ship", "by": "Garry Tan", "src": "garrytan/gstack", "what": "테스트 → 검토 → 커밋 → 푸시 → PR까지 출시 절차를 한 번에 밟아요.", "when": "GitHub와 배포를 연결한 뒤", "stars": 1, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup"},
+      {"name": "/security-review", "by": "Claude Code 내장", "what": "올리기 전에 비밀 키 노출, 위험한 코드 같은 보안 문제를 훑어봐요. 설치 없이 바로 써요.", "when": "처음 공개하기 직전", "stars": 2, "install": "/security-review"}
     ] },
     { id: "extend", title: "나만의 확장", desc: "반복하는 일을 내 스킬·연결로 만들어요.", items: [
-      { name: "skill-creator", by: "Anthropic 공식", src: "anthropics/skills", what: "나만의 스킬을 만들고, 잘 작동하는지 시험하고 다듬도록 도와줘요.", when: "유닛 8에서 레시피를 스킬로 만들 때", stars: 3 },
-      { name: "mcp-builder", by: "Anthropic 공식", src: "anthropics/skills", what: "내가 쓰는 서비스를 AI에 연결하는 MCP 서버를 만들도록 안내해요. 중급용.", when: "AI가 내 데이터에 직접 접근해야 할 때", stars: 1 },
-      { name: "web-artifacts-builder", by: "Anthropic 공식", src: "anthropics/skills", what: "Claude 안에서 여러 화면이 있는 작은 웹앱(아티팩트)을 만들어요.", when: "설치 없이 Claude 안에서 바로 돌아가는 도구가 필요할 때", stars: 1 }
+      {"name": "skill-creator", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "나만의 스킬을 만들고, 잘 작동하는지 시험하고 다듬도록 도와줘요.", "when": "유닛 08에서 레시피를 스킬로 만들 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
+      {"name": "mcp-builder", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "내가 쓰는 서비스를 AI에 연결하는 MCP 서버를 만들도록 안내해요. 중급용.", "when": "AI가 내 데이터에 직접 접근해야 할 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
+      {"name": "web-artifacts-builder", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "Claude 안에서 여러 화면이 있는 작은 웹앱(아티팩트)을 만들어요.", "when": "설치 없이 Claude 안에서 바로 돌아가는 도구가 필요할 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
     ] }
   ],
+  // 스킬 찾기 도우미: 목표별 추천(picks는 위 스킬 이름과 똑같아야 해요)과 도구별 설치 안내
+  skillFinder: {"goals": [{"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·콘텐츠", "picks": ["marketingskills", "한국어 윤문 · im-not-ai", "ui-ux-pro-max"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
   skillInstall: [
     { where: "Claude 앱 (웹·데스크톱)", how: "설정 › 기능(Capabilities)에서 기본 스킬을 켜고, 받은 스킬 폴더를 zip으로 올려요.", cmd: "" },
-    { where: "Claude Code (터미널)", how: "플러그인 마켓에서 설치하거나, 스킬 폴더를 ~/.claude/skills 아래에 넣어요.", cmd: "/plugin marketplace add obra/superpowers" },
+    { where: "Claude Code (터미널)", how: "플러그인 마켓에서 설치하거나, 스킬 폴더를 ~/.claude/skills 아래에 넣어요.", cmd: "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace" },
     { where: "여러 에이전트 공통", how: "npx로 설치 도구를 빌려 실행해요. 저장소 주소(owner/repo)만 바꾸면 돼요.", cmd: "npx skills add supabase/agent-skills" },
     { where: "웹앱 빌더 (Lovable 등)", how: "스킬을 설치할 수 없어요. 아래 '작업 원칙'을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.", cmd: "" }
   ],
