@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>민규의 서비스 · PLAN_Be 독학 코스</title>
+<meta name="description" content="PLAN_Be 독학 코스를 따라가며 만든 완성품: 회의 메모를 붙여넣으면 담당자별 할 일 목록이 나오는 서비스. 버전별로 어떻게 자랐는지 볼 수 있어요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/demo.css">
+</head>
+<body>
+<header class="demo-top">
+  <a class="logo" href="./" aria-label="PLAN_Be 처음으로">PLAN<span>_</span>Be</a>
+  <a class="btn secondary small" href="study.html">← 코스로 돌아가기</a>
+</header>
+
+<main class="demo" id="main">
+  <section class="hello">
+    <p class="eyebrow">완성품 데모 · 민규의 서비스</p>
+    <h1>회의 메모 → 담당자별 할 일</h1>
+    <p class="lead">민규가 이 코스를 따라가며 만든 서비스예요. 메모를 붙여넣고 정리를 누르면, 누가 무엇을 언제까지 하는지 나와요. 버전을 바꿔 보면 유닛마다 어떻게 자랐는지 보여요.</p>
+  </section>
+
+  <section class="ver" aria-label="버전">
+    <div class="ver-tabs" role="group" aria-label="버전 고르기">
+      <button type="button" data-ver="1" aria-pressed="false"><b>v1</b><span>첫 화면</span></button>
+      <button type="button" data-ver="2" aria-pressed="false"><b>v2</b><span>작동</span></button>
+      <button type="button" data-ver="3" aria-pressed="true"><b>v3</b><span>피드백 반영</span></button>
+    </div>
+    <p class="ver-note" id="ver-note"></p>
+  </section>
+
+  <section class="card tool" aria-label="서비스">
+    <div class="tool-head">
+      <label for="memo">회의 메모</label>
+      <div class="samples" role="group" aria-label="예시 메모">
+        <button type="button" class="filter" data-sample="0">예시 1</button>
+        <button type="button" class="filter" data-sample="1">예시 2</button>
+        <button type="button" class="filter" data-sample="2">예시 3</button>
+      </div>
+    </div>
+    <textarea id="memo" rows="9" placeholder="회의 메모를 붙여넣으세요. 예) 지훈: 배너 시안 3개 금요일까지"></textarea>
+    <button type="button" class="btn accent run" id="run">정리하기</button>
+    <div id="out" aria-live="polite"></div>
+    <p class="tool-foot">이 데모는 아무것도 저장하거나 보내지 않아요. 메모는 이 화면 안에서만 정리돼요.</p>
+  </section>
+
+  <section class="card why-rules">
+    <p class="eyebrow">왜 AI 없이 작동하나요?</p>
+    <p>이 데모는 정해진 규칙(<code>이름:</code>, <code>@이름</code>, '금요일까지' 같은 날짜 말)으로 정리해요. 메모 형식이 어느 정도 정해져 있으면 규칙만으로도 충분하고, 더 빠르고, 매번 같은 결과가 나와요. 메모가 제멋대로라면 AI에게 맡기는 쪽이 더 잘 맞아요.</p>
+    <p class="ask-q"><b>생각해볼 질문</b>내가 만들 서비스에서 AI가 꼭 필요한 부분은 어디이고, 규칙으로 충분한 부분은 어디일까요?</p>
+    <div class="prompt"><div class="prompt-head"><span>AI 버전: 지금 메모를 대화형 AI에 붙여넣기</span><button type="button" class="copy" data-copy>복사</button></div><pre id="ai-prompt"></pre></div>
+    <p class="muted small">회사 메모라면 붙여넣기 전에 <a href="study.html#us">유닛 03 데이터 신호등</a>을 먼저 확인하세요.</p>
+  </section>
+
+  <section class="section grow">
+    <h2>이 서비스가 자란 길</h2>
+    <p class="muted">유닛마다 민규가 한 일이에요. 누르면 그 유닛의 '민규의 사례'로 가요.</p>
+    <ol class="road" id="road"></ol>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="assets/content.js"></script>
+<script src="assets/demo.js"></script>
+</body>
+</html>

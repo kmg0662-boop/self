@@ -1,0 +1,55 @@
+/* 민규의 서비스 데모: style.css의 토큰과 공통 요소(.btn, .card, .prompt 등) 위에 얹어요 */
+.demo-top { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(12px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) 12px max(20px, env(safe-area-inset-left, 0px)); background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.demo { max-width: 760px; margin: 0 auto; padding: clamp(28px, 6vw, 64px) max(20px, env(safe-area-inset-right, 0px)) 120px max(20px, env(safe-area-inset-left, 0px)); display: grid; gap: 28px; }
+.small { font-size: 0.86rem; }
+
+.ver { display: grid; gap: 10px; }
+.ver-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 5px; border-radius: var(--r); background: var(--sunken); }
+.ver-tabs button { display: grid; gap: 0; justify-items: center; padding: 10px 6px; border: 0; border-radius: var(--r-sm); background: none; cursor: pointer; min-height: 56px; }
+.ver-tabs b { font-family: var(--mono); font-size: 0.9rem; }
+.ver-tabs span { font-size: 0.8rem; color: var(--muted); font-weight: 650; }
+.ver-tabs button[aria-pressed="true"] { background: var(--surface); box-shadow: var(--shadow-1); }
+.ver-tabs button[aria-pressed="true"] b { color: var(--accent-text); }
+.ver-note { font-size: 0.95rem; color: var(--ink-2); }
+.ver-note a { font-weight: 750; color: var(--accent-text); text-decoration: none; margin-right: 4px; }
+
+.tool { display: grid; gap: 12px; }
+.tool-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.tool-head label { font-weight: 800; }
+.samples { display: flex; gap: 6px; flex-wrap: wrap; }
+.samples .filter { min-height: 36px; padding: 6px 12px; font-size: 0.82rem; }
+.tool textarea { width: 100%; font: inherit; font-size: 0.95rem; line-height: 1.7; padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--bg); color: var(--ink); resize: vertical; }
+.tool textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.run { justify-self: stretch; }
+.tool-foot { font-size: 0.82rem; color: var(--muted); }
+#out { display: grid; gap: 12px; }
+#out:empty { display: none; }
+.stat { font-size: 0.92rem; color: var(--ink-2); }
+.stat .miss { color: var(--bad); }
+.v1-msg { padding: 14px 16px; border-radius: var(--r); background: var(--sunken); color: var(--ink-2); font-size: 0.95rem; }
+.v1-msg a { font-weight: 750; color: var(--accent-text); }
+.decisions, .unknown { padding: 14px 16px; border-radius: var(--r); }
+.decisions { background: var(--sunken); }
+.unknown { background: var(--accent-soft); }
+.decisions ul, .unknown ul, .person ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.95rem; }
+.people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.person { padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); }
+.person h3 { display: flex; align-items: center; gap: 8px; font-size: 1.05rem; font-weight: 800; }
+.person h3 span { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; background: var(--sunken); color: var(--muted); }
+.person li span { margin-right: 6px; }
+.due { font-style: normal; font-size: 0.74rem; font-weight: 800; padding: 1px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-text); white-space: nowrap; }
+@media (max-width: 560px) { .people { grid-template-columns: 1fr; } }
+
+.why-rules { display: grid; gap: 12px; }
+.why-rules code { font-family: var(--mono); font-size: 0.85em; padding: 1px 6px; border-radius: 6px; background: var(--sunken); }
+.why-rules .prompt pre { max-height: 220px; overflow: auto; }
+.ask-q { padding: 12px 16px; border-radius: var(--r); border-left: 3px solid var(--accent); background: var(--bg); }
+.ask-q b { display: block; font-size: 0.78rem; color: var(--accent-text); margin-bottom: 2px; }
+
+.road { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.road a { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 12px; padding: 12px 14px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--surface); text-decoration: none; }
+.road a:hover { border-color: var(--ink); }
+.road .no { font-family: var(--mono); font-weight: 600; color: var(--accent-text); }
+.road b { display: block; font-weight: 750; }
+.road small { display: block; font-size: 0.86rem; color: var(--muted); line-height: 1.55; }
+.vtag { font-style: normal; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; padding: 1px 7px; border-radius: 99px; background: var(--ink); color: var(--bg); vertical-align: 2px; }
