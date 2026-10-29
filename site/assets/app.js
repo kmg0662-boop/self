@@ -3,6 +3,7 @@
 
   var C = window.COURSE;
   var U = C.units;
+  var CORE = U.filter(function (u) { return !u.optional; }); // 보너스(선택) 유닛은 진도에서 빠짐
   var KEY = "planbe:course:v2";
 
   // ---------- 저장 (이 기기에만) ----------
@@ -10,7 +11,7 @@
   function load() {
     try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { return blank(); }
   }
-  function blank() { return { missions: {}, quiz: {}, done: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} } }; }
+  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" } }; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가: 이번 방문 동안만 유지 */ } }
 
   // ---------- 작은 도구 ----------
@@ -20,13 +21,27 @@
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
   function unitById(id) { return U.filter(function (u) { return u.id === id; })[0]; }
-  function totalMinutes() { return U.reduce(function (a, u) { return a + u.minutes; }, 0); }
-  function doneCount() { return U.filter(function (u) { return state.done[u.id]; }).length; }
-  function progress() { return Math.round((doneCount() / U.length) * 100); }
+  function totalMinutes() { return CORE.reduce(function (a, u) { return a + u.minutes; }, 0); }
+  function doneCount() { return CORE.filter(function (u) { return state.done[u.id]; }).length; }
+  function progress() { return Math.round((doneCount() / CORE.length) * 100); }
   function started(u) { var m = state.missions[u.id]; return !!(m && m.some(Boolean)); }
   function nextUnit() {
     if (state.last && !state.done[state.last]) return unitById(state.last);
-    return U.filter(function (u) { return !state.done[u.id]; })[0] || null;
+    return CORE.filter(function (u) { return !state.done[u.id]; })[0] || null;
+  }
+
+  // ---------- 간격 복습: 완료 후 1일 → 3일 → 7일 ----------
+  var DAY = 24 * 60 * 60 * 1000;
+  var GAPS = [1, 3, 7];
+  var reviewSeen = {}; // 이번 방문에서 푼 복습 문항 (답과 해설을 계속 보여주려고)
+  function reviewQuestion(u, r) { return u.quiz[(r.stage + u.quiz.length - 1) % u.quiz.length]; }
+  function dueReviews() {
+    var now = Date.now();
+    return U.filter(function (u) {
+      if (!state.done[u.id] || !state.doneAt[u.id] || reviewSeen[u.id]) return false;
+      var r = state.review[u.id] || { stage: 0, at: state.doneAt[u.id] };
+      return r.stage < GAPS.length && now - r.at >= GAPS[r.stage] * DAY;
+    }).slice(0, 3);
   }
   function hm(min) { var h = Math.floor(min / 60), m = min % 60; return (h ? h + "시간 " : "") + (m ? m + "분" : ""); }
 
@@ -45,10 +60,12 @@
 
   // ---------- 목차 ----------
   var TOOLS = [
+    { id: "portfolio", icon: "◎", title: "내 포트폴리오" },
     { id: "prompts", icon: "✎", title: "프롬프트 모음" },
     { id: "brief", icon: "▤", title: "서비스 설명서 작성기" },
     { id: "glossary", icon: "Aa", title: "용어 사전" },
     { id: "devkit", icon: "⌘", title: "개발 도구 지도" },
+    { id: "recipes", icon: "☰", title: "직무별 레시피" },
     { id: "skills", icon: "◇", title: "스킬 가이드" },
     { id: "stuck", icon: "?", title: "막혔을 때" }
   ];
@@ -57,8 +74,10 @@
     var html = '<a class="nav-item' + '" href="#home"' + (route === "home" ? ' aria-current="page"' : "") + '><span class="nav-icon">⌂</span><span>내 학습</span><span></span></a>';
     html += '<div class="nav-group">코스 · ' + hm(totalMinutes()) + "</div>";
     html += U.map(function (u) {
+      var group = u.optional && !U[U.indexOf(u) - 1].optional ? '<div class="nav-group">보너스 · 선택</div>' : "";
       var cls = "nav-item" + (state.done[u.id] ? " done" : "") + (started(u) ? " started" : "");
-      return '<a class="' + cls + '" href="#' + u.id + '"' + (route === u.id ? ' aria-current="page"' : "") + '><span class="nav-no">' + u.no + "</span><span>" + esc(u.title) + '</span><span class="dot" aria-label="' + (state.done[u.id] ? "완료" : "미완료") + '"></span></a>';
+      var item = '<a class="' + cls + '" href="#' + u.id + '"' + (route === u.id ? ' aria-current="page"' : "") + '><span class="nav-no">' + u.no + "</span><span>" + esc(u.title) + '</span><span class="dot" aria-label="' + (state.done[u.id] ? "완료" : "미완료") + '"></span></a>';
+      return group + item;
     }).join("");
     html += '<div class="nav-group">도구</div>';
     html += TOOLS.map(function (t) {
@@ -76,17 +95,17 @@
   function viewHome() {
     var nx = nextUnit();
     var first = !state.last && doneCount() === 0;
-    var left = U.filter(function (u) { return !state.done[u.id]; }).reduce(function (a, u) { return a + u.minutes; }, 0);
+    var left = CORE.filter(function (u) { return !state.done[u.id]; }).reduce(function (a, u) { return a + u.minutes; }, 0);
     var cta = nx
       ? '<a class="continue" href="#' + nx.id + '"><span><small>' + (first ? "여기서 시작해요" : "이어서 학습하기") + "</small><b>" + nx.no + " · " + esc(nx.title) + '</b></span><span class="go" aria-hidden="true">→</span></a>'
-      : '<a class="continue" href="#u7"><span><small>코스 완주!</small><b>이제 두 번째 서비스를 만들어볼까요?</b></span><span class="go" aria-hidden="true">✓</span></a>';
+      : '<a class="continue" href="#u8"><span><small>코스 완주!</small><b>' + (state.done.u8 ? "이제 두 번째 서비스를 만들어볼까요?" : "보너스 · 코딩 에이전트로 졸업하기") + '</b></span><span class="go" aria-hidden="true">✓</span></a>';
     return '<div class="page">' +
       '<section class="hello"><p class="eyebrow">' + esc(C.title) + "</p><h1>" + (first ? "혼자서도 끝까지,<br>오늘 첫 유닛부터." : "다시 왔네요.<br>이어서 가볼까요?") + '</h1><p class="lead">' + esc(C.promise) + "</p></section>" +
-      cta +
-      '<div class="stats"><div class="stat"><b>' + doneCount() + "/" + U.length + "</b><span>완료한 유닛</span></div><div class=\"stat\"><b>" + progress() + "%</b><span>진도</span></div><div class=\"stat\"><b>" + (left ? hm(left) : "0분") + "</b><span>남은 시간</span></div></div>" +
+      cta + (nx ? "" : '<a class="pf-link" href="#portfolio">내 포트폴리오 만들기 →</a>') + reviewHtml() +
+      '<div class="stats"><div class="stat"><b>' + doneCount() + "/" + CORE.length + "</b><span>완료한 유닛</span></div><div class=\"stat\"><b>" + progress() + "%</b><span>진도</span></div><div class=\"stat\"><b>" + (left ? hm(left) : "0분") + "</b><span>남은 시간</span></div></div>" +
       '<section class="section"><h2>코스 지도</h2><div class="unit-list">' + U.map(function (u) {
         var st = state.done[u.id] ? "완료" : started(u) ? "진행 중" : hm(u.minutes);
-        return '<a class="unit-row' + (state.done[u.id] ? " done" : "") + '" href="#' + u.id + '"><span class="no">' + u.no + "</span><span><b>" + esc(u.title) + "</b><small>결과물 · " + esc(u.outcome) + '</small></span><span class="state">' + st + "</span></a>";
+        return '<a class="unit-row' + (state.done[u.id] ? " done" : "") + '" href="#' + u.id + '"><span class="no">' + u.no + "</span><span><b>" + esc(u.title) + (u.optional ? ' <i class="bonus">보너스</i>' : "") + "</b><small>결과물 · " + esc(u.outcome) + '</small></span><span class="state">' + st + "</span></a>";
       }).join("") + "</div></section>" +
       '<section class="section card goal"><h2>내 목표 카드</h2><p class="muted">적어두면 의지가 약한 날에도 돌아올 이유가 돼요. 이 기기에만 저장돼요.</p>' +
       '<div class="field"><label for="goal-what">만들고 싶은 것 한 줄</label><input type="text" id="goal-what" data-goal="what" placeholder="회의가 끝나면 할 일을 자동으로 정리해주는 도구" value="' + esc(state.goal.what) + '"></div>' +
@@ -95,6 +114,22 @@
       }).join("") + "</div><small>일주일에 세 번이면 약 3주 만에 완주해요.</small></div></section>" +
       selfCheckHtml() +
       "</div>";
+  }
+
+  function reviewHtml() {
+    var due = dueReviews();
+    var seen = Object.keys(reviewSeen);
+    if (!due.length && !seen.length) return "";
+    var items = seen.map(function (id) { return { u: unitById(id), seen: reviewSeen[id] }; }).concat(due.map(function (u) { return { u: u }; }));
+    return '<section class="section card review" id="review"><h2>오늘의 복습</h2><p class="muted">끝낸 유닛을 1일, 3일, 7일 뒤에 한 문제씩 다시 꺼내요. 꺼내 볼 때 기억이 단단해져요.</p>' +
+      items.map(function (it) {
+        var u = it.u, q = it.seen ? it.seen.q : reviewQuestion(u, state.review[u.id] || { stage: 0 });
+        var picked = it.seen ? it.seen.picked : undefined, answered = picked !== undefined;
+        return '<div class="q rv" data-rv="' + u.id + '"><p class="rv-from">UNIT ' + u.no + " · " + esc(u.title) + "</p><h3>" + esc(q.q) + '</h3><div class="options">' + q.options.map(function (o, oi) {
+          var cls = "opt" + (answered && oi === q.answer ? " right" : answered && oi === picked ? " wrong" : "");
+          return '<button type="button" class="' + cls + '" data-ropt="' + oi + '"' + (answered ? " disabled" : "") + ">" + esc(o) + "</button>";
+        }).join("") + "</div>" + (answered ? explainHtml(q, picked) + '<p class="rv-next muted">' + (picked === q.answer ? (it.seen.stage >= GAPS.length ? "이 유닛 복습은 끝났어요." : "다음 복습은 " + GAPS[it.seen.stage] + "일 뒤예요.") : "내일 다시 나와요. 유닛을 한 번 훑어봐도 좋아요.") + "</p>" : "") + "</div>";
+      }).join("") + "</section>";
   }
 
   var scPhase = "start";
@@ -120,19 +155,22 @@
     var m = state.missions[u.id] || [];
     var qs = state.quiz[u.id] || {};
     return '<article class="page">' +
-      '<header class="unit-hero"><div class="meta"><span class="tag accent">' + esc(u.level) + '</span><span class="tag">' + hm(u.minutes) + "</span>" + (state.done[u.id] ? '<span class="tag" style="color:var(--ok)">완료</span>' : "") + "</div>" +
+      '<header class="unit-hero"><div class="meta"><span class="tag accent">' + esc(u.level) + "</span>" + (u.optional ? '<span class="tag">선택</span>' : "") + '<span class="tag">' + hm(u.minutes) + "</span>" + (state.done[u.id] ? '<span class="tag" style="color:var(--ok)">완료</span>' : "") + "</div>" +
       '<h1><span class="no">UNIT ' + u.no + "</span>" + esc(u.title) + '</h1><p class="lead">' + esc(u.lead) + '</p><div class="outcome"><b>결과물</b><span>' + esc(u.outcome) + "</span></div></header>" +
       '<section class="section"><h2><span class="num">01</span>왜 배우나요</h2><p class="why">' + esc(u.why) + "</p></section>" +
       '<section class="section"><h2><span class="num">02</span>핵심 개념</h2><div class="concepts">' + u.concepts.map(function (c) {
-        return '<div class="card concept"><h3>' + esc(c.term) + '<span class="like">' + esc(c.like) + "</span></h3><p>" + esc(c.body) + "</p></div>";
+        return '<div class="card concept"><h3>' + esc(c.term) + '<span class="like">' + esc(c.like) + "</span></h3><p>" + esc(c.body) + "</p>" + figHtml(c.fig) + "</div>";
       }).join("") + "</div></section>" +
-      '<section class="section"><h2><span class="num">03</span>따라하기</h2><ol class="steps">' + u.steps.map(function (s) {
+      (u.case ? '<section class="section"><h2><span class="num">03</span>민지의 사례</h2><div class="case"><p class="case-story">' + esc(u.case.story) + "</p>" +
+        (u.case.draft ? '<div class="case-draft"><p class="case-label">처음 버전</p><pre>' + esc(u.case.draft) + '</pre><p class="case-miss"><b>아쉬웠던 점</b> ' + esc(u.case.miss) + "</p></div>" : "") +
+        promptBox(u.case.artifact, "고친 버전") + '<p class="case-note"><b>볼 포인트</b> ' + esc(u.case.note) + "</p></div></section>" : "") +
+      '<section class="section"><h2><span class="num">04</span>따라하기</h2><ol class="steps">' + u.steps.map(function (s) {
         return '<li><div class="step-body"><p>' + esc(s.text) + "</p>" + (s.prompt ? promptBox(s.prompt) : "") + (s.link ? '<a href="' + s.link + '">' + esc(s.linkText) + " →</a>" : "") + "</div></li>";
       }).join("") + "</ol></section>" +
-      '<section class="section"><h2><span class="num">04</span>미션</h2><div class="card mission">' + u.mission.map(function (t, k) {
+      '<section class="section"><h2><span class="num">05</span>미션</h2><div class="card mission">' + u.mission.map(function (t, k) {
         return '<label class="check"><input type="checkbox" data-mission="' + k + '"' + (m[k] ? " checked" : "") + "><span>" + esc(t) + "</span></label>";
       }).join("") + "</div></section>" +
-      '<section class="section"><h2><span class="num">05</span>확인 퀴즈</h2><div class="quiz">' + u.quiz.map(function (q, k) {
+      '<section class="section"><h2><span class="num">06</span>확인 퀴즈</h2><div class="quiz">' + u.quiz.map(function (q, k) {
         var picked = qs[k];
         var answered = picked !== undefined;
         return '<div class="q" data-q="' + k + '"><h3>' + esc(q.q) + '</h3><div class="options">' + q.options.map(function (o, oi) {
@@ -142,7 +180,11 @@
           return '<button type="button" class="' + cls + '" data-opt="' + oi + '"' + (answered ? " disabled" : "") + ">" + esc(o) + "</button>";
         }).join("") + "</div>" + (answered ? explainHtml(q, picked) : "") + "</div>";
       }).join("") + "</div></section>" +
-      '<section class="section"><h2><span class="num">06</span>막히면</h2><div>' + u.stuck.map(function (s) {
+      '<section class="section check-self"><h2><span class="num">07</span>스스로 점검</h2>' +
+      '<div class="think"><p class="eyebrow">생각해볼 질문</p><ol>' + (u.think || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>" +
+      '<div class="tutor"><h3>AI 튜터에게 확인받기</h3><p class="muted">아래 프롬프트를 대화형 AI에 붙여넣으면, 이 유닛을 이해했는지 질문으로 확인해줘요. 정답 대신 힌트를 주도록 되어 있어요.</p>' + promptBox(tutorText(u), "AI 튜터 프롬프트") + "</div>" +
+      '<div class="field reflect"><label for="reflect-' + u.id + '">친구에게 한 문장으로 설명한다면?</label><textarea id="reflect-' + u.id + '" data-reflect="' + u.id + '" rows="2" placeholder="예: AI는 내가 상황을 알려줘야 나만을 위한 답을 줘.">' + esc(state.reflect[u.id] || "") + "</textarea><small>이 기기에만 저장돼요. 한 문장으로 못 쓰겠다면 그 부분을 튜터에게 물어보세요.</small></div></section>" +
+      '<section class="section"><h2><span class="num">08</span>막히면</h2><div>' + u.stuck.map(function (s) {
         return '<details class="stuck"><summary>' + esc(s.symptom) + "</summary><p>" + esc(s.fix) + "</p></details>";
       }).join("") + "</div></section>" +
       '<section class="finish"><h2>' + (state.done[u.id] ? "이 유닛을 마쳤어요." : "미션을 다 했다면") + "</h2><p class=\"muted\">" + (state.done[u.id] ? "다음 유닛으로 넘어가거나, 필요하면 다시 복습하세요." : "완료로 표시하면 진도에 반영되고 다음 유닛이 열려요.") + '</p><div class="finish-row">' +
@@ -152,6 +194,13 @@
       "</div></section>" +
       '<nav class="pager" aria-label="유닛 이동">' + (prev ? '<a href="#' + prev.id + '"><small>← 이전</small><b>' + esc(prev.title) + "</b></a>" : "<span></span>") + (next ? '<a class="next" href="#' + next.id + '"><small>다음 →</small><b>' + esc(next.title) + "</b></a>" : "") + "</nav>" +
       "</article>";
+  }
+  function figHtml(key) {
+    var f = key && window.FIGS && window.FIGS[key];
+    return f ? '<figure class="fig" role="img" aria-label="' + esc(f.label) + '">' + f.svg + "</figure>" : "";
+  }
+  function tutorText(u) {
+    return C.tutorTemplate.replace("{title}", "UNIT " + u.no + " " + u.title).replace("{concepts}", u.concepts.map(function (c) { return c.term; }).join(", "));
   }
   function explainHtml(q, picked) {
     var ok = picked === q.answer;
@@ -163,7 +212,7 @@
   function viewPrompts() {
     var cats = ["전체"].concat(C.prompts.map(function (p) { return p.cat; }).filter(function (c, i, a) { return a.indexOf(c) === i; }));
     var list = C.prompts.filter(function (p) { return promptCat === "전체" || p.cat === promptCat; });
-    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구</p><h1>프롬프트 모음</h1><p class="lead">[대괄호]만 내 상황으로 바꿔서 쓰세요. 마음에 드는 건 유닛 7에서 스킬로 만들어요.</p></header>' +
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구</p><h1>프롬프트 모음</h1><p class="lead">[대괄호]만 내 상황으로 바꿔서 쓰세요. 마음에 드는 건 유닛 08에서 스킬로 만들어요.</p></header>' +
       '<div class="filters" role="group" aria-label="분류">' + cats.map(function (c) { return '<button type="button" class="filter" data-cat="' + c + '" aria-pressed="' + (c === promptCat) + '">' + c + "</button>"; }).join("") + "</div>" +
       '<div class="prompt-grid">' + list.map(function (p) {
         return '<div class="card prompt-card"><h3><span class="tag">' + esc(p.cat) + "</span>" + esc(p.title) + "</h3>" + promptBox(p.text, "프롬프트") + "</div>";
@@ -177,7 +226,7 @@
     }).join("\n");
   }
   function viewBrief() {
-    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 3에서 써요</p><h1>서비스 설명서 작성기</h1><p class="lead">일을 넘길 때 쓰는 인수인계서예요. 새 대화를 열거나 도구를 바꿀 때 오른쪽 내용을 통째로 붙여넣으면 AI가 바로 이어서 일해요.</p></header>' +
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 04에서 써요</p><h1>서비스 설명서 작성기</h1><p class="lead">일을 넘길 때 쓰는 인수인계서예요. 새 대화를 열거나 도구를 바꿀 때 오른쪽 내용을 통째로 붙여넣으면 AI가 바로 이어서 일해요.</p></header>' +
       '<div class="brief-grid"><form class="card goal" autocomplete="off">' + C.briefFields.map(function (f) {
         var v = esc(state.brief[f.id] || "");
         var input = f.multi
@@ -215,10 +264,53 @@
     }).join("");
   }
 
+  // ---------- 화면: 내 포트폴리오 ----------
+  function portfolioText() {
+    var pf = state.portfolio || {};
+    var lines = ["# " + (pf.name ? pf.name + "의 " : "") + "PLAN_Be 포트폴리오", ""];
+    lines.push("## 만든 것", "- " + (state.goal.what || "(목표 카드를 채워주세요)"), pf.url ? "- 링크: " + pf.url : "- 링크: (배포한 주소를 적어주세요)", "");
+    lines.push(briefText(), "");
+    lines.push("## 유닛별 배움");
+    U.forEach(function (u) { if (state.reflect[u.id]) lines.push("- UNIT " + u.no + " " + u.title + ": " + state.reflect[u.id]); });
+    if (pf.lesson) lines.push("", "## 가장 큰 배움", pf.lesson);
+    lines.push("", "## 진도", "- 완료한 유닛 " + doneCount() + "/" + CORE.length + (state.done.u8 ? " + 보너스" : ""));
+    var sc = C.selfCheck.map(function (q, i) { var a = state.self.start[i], b = state.self.end[i]; return a || b ? "- " + q + ": " + (a || "-") + " → " + (b || "-") : ""; }).filter(Boolean);
+    if (sc.length) { lines.push("", "## 실력 점검 (시작 → 끝)"); lines.push.apply(lines, sc); }
+    return lines.join("\n");
+  }
+  function viewPortfolio() {
+    var pf = state.portfolio || {};
+    var reflected = U.filter(function (u) { return state.reflect[u.id]; });
+    var all = !nextUnit();
+    return '<div class="page"><header class="hello"><p class="eyebrow">도구 · 완주하면 완성돼요</p><h1>내 포트폴리오</h1><p class="lead">수료증보다 오래 남는 건 내가 만든 것과 배운 것이에요. 지금까지 이 기기에 저장된 내용을 한 장으로 모았어요.</p></header>' +
+      (all ? '<p class="pf-done">코스를 완주했어요. 아래 내용을 복사해서 공유해 보세요.</p>' : '<p class="muted">완료한 유닛 ' + doneCount() + "/" + CORE.length + ". 유닛을 마칠 때마다 한 줄 회고가 여기에 쌓여요.</p>") +
+      '<section class="section card"><h2>채워 넣기</h2>' +
+      '<div class="field"><label for="pf-name">이름 (선택)</label><input type="text" id="pf-name" data-pf="name" placeholder="민지" value="' + esc(pf.name) + '"></div>' +
+      '<div class="field"><label for="pf-url">내 서비스 링크</label><input type="url" id="pf-url" data-pf="url" placeholder="https://my-service.vercel.app" value="' + esc(pf.url) + '"><small>유닛 07에서 배포한 주소예요.</small></div>' +
+      '<div class="field"><label for="pf-lesson">가장 큰 배움 한 줄</label><input type="text" id="pf-lesson" data-pf="lesson" placeholder="크게 시키지 말고, 작게 맡기고 확인하기" value="' + esc(pf.lesson) + '"></div></section>' +
+      '<section class="section"><h2>한눈에 보기</h2><div class="pf-grid">' +
+      '<div class="card"><p class="eyebrow">만든 것</p><p class="pf-big">' + esc(state.goal.what || "목표 카드가 비어 있어요") + "</p>" + (pf.url ? '<a href="' + esc(pf.url) + '" target="_blank" rel="noopener">' + esc(pf.url) + " ↗</a>" : '<a href="#home">목표 카드 채우기 →</a>') + "</div>" +
+      '<div class="card"><p class="eyebrow">진도</p><p class="pf-big">' + doneCount() + "/" + CORE.length + '</p><p class="muted">완료한 유닛' + (state.done.u8 ? " + 보너스" : "") + "</p></div></div>" +
+      '<div class="card pf-reflect"><p class="eyebrow">유닛별 한 줄 회고 ' + reflected.length + "개</p>" + (reflected.length ? "<ul>" + reflected.map(function (u) { return "<li><b>UNIT " + u.no + "</b> " + esc(state.reflect[u.id]) + "</li>"; }).join("") + "</ul>" : '<p class="muted">유닛 끝의 \'스스로 점검\'에서 한 줄 회고를 쓰면 여기에 모여요.</p>') + "</div></section>" +
+      '<section class="section" id="pf-out"><h2>복사해서 공유하기</h2><p class="muted">노션, 블로그, 이력서에 그대로 붙여넣을 수 있는 형식(마크다운)이에요.</p>' + promptBox(portfolioText(), "내 포트폴리오") + "</section></div>";
+  }
+
+  // ---------- 화면: 직무별 레시피 ----------
+  var recipeRole = C.recipes[0].role;
+  function viewRecipes() {
+    var r = C.recipes.filter(function (x) { return x.role === recipeRole; })[0];
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 08에서 써요</p><h1>직무별 레시피</h1><p class="lead">내 일에 바로 써먹는 프롬프트예요. [대괄호]만 바꿔서 쓰고, 세 번 이상 쓰게 되면 유닛 08에서 스킬로 만들어요.</p></header>' +
+      '<div class="filters" role="group" aria-label="직무">' + C.recipes.map(function (x) { return '<button type="button" class="filter" data-rrole="' + esc(x.role) + '" aria-pressed="' + (x.role === recipeRole) + '">' + esc(x.role) + "</button>"; }).join("") + "</div>" +
+      '<div class="recipes">' + r.items.map(function (it) {
+        return '<div class="card recipe"><h3>' + esc(it.title) + '<small>' + esc(it.when) + "</small></h3>" + promptBox(it.prompt, "프롬프트") + '<p class="check-pt"><b>확인 포인트</b> ' + esc(it.check) + "</p></div>";
+      }).join("") + "</div>" +
+      '<p class="muted" style="font-size:.88rem">회사 자료를 넣기 전에 <a href="#us">유닛 03 안전하게 쓰기</a>의 데이터 신호등을 먼저 확인하세요.</p></div>';
+  }
+
   // ---------- 화면: 개발 도구 지도 ----------
   var LEVEL = { ok: "허락", check: "확인 후", stop: "멈춤" };
   function viewDevkit() {
-    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 4·6·7에서 만나요</p><h1>개발 도구 지도</h1><p class="lead">명령어를 외울 필요는 없어요. 에이전트가 쓰는 말을 <b>알아듣고</b>, 허락해도 되는지 <b>판단</b>할 수 있으면 충분해요. 운전면허에서 엔진 수리 대신 표지판 읽기를 배우는 것과 같아요.</p></header>' +
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 05·07·09에서 만나요</p><h1>개발 도구 지도</h1><p class="lead">명령어를 외울 필요는 없어요. 에이전트가 쓰는 말을 <b>알아듣고</b>, 허락해도 되는지 <b>판단</b>할 수 있으면 충분해요. 운전면허에서 엔진 수리 대신 표지판 읽기를 배우는 것과 같아요.</p></header>' +
       '<nav class="jump" aria-label="이 페이지 목차">' + C.devkit.map(function (g, i) { return '<button type="button" data-jump="dk-' + g.id + '"><span>' + (i + 1) + "</span>" + esc(g.title) + "</button>"; }).join("") + '<button type="button" data-jump="dk-approve"><span>!</span>허락 가이드</button></nav>' +
       C.devkit.map(function (g, i) {
         return '<section class="section dk" id="dk-' + g.id + '"><p class="dk-no">' + String(i + 1).padStart(2, "0") + "</p><h2>" + esc(g.title) + '</h2><p class="muted">' + esc(g.lead) + '</p><div class="terms">' +
@@ -234,18 +326,44 @@
 
   function stars(n) { var s = ""; for (var i = 1; i <= 3; i++) s += i <= n ? "★" : "<i>★</i>"; return '<span class="stars" aria-label="초급 추천도 ' + n + '">' + s + "</span>"; }
   var skillCat = "all";
+  function skillByName(n) { return [].concat.apply([], C.skillCats.map(function (c) { return c.items; })).filter(function (s) { return s.name === n; })[0]; }
+  function srcLink(s) { return s.src ? '<a class="src" href="https://github.com/' + esc(s.src) + '" target="_blank" rel="noopener">github.com/' + esc(s.src) + " ↗</a>" : ""; }
   function skillCard(s) {
-    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small></h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" +
-      (s.src ? '<a class="src" href="https://github.com/' + esc(s.src) + '" target="_blank" rel="noopener">github.com/' + esc(s.src) + " ↗</a>" : "") + "</div>";
+    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small>" + (s.pop ? '<span class="pop" title="GitHub 별 수, 2026년 10월 기준">' + esc(s.pop) + "</span>" : "") + "</h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" +
+      (s.note ? '<p class="snote">' + esc(s.note) + "</p>" : "") +
+      (s.ba ? '<div class="ba"><div><span>전</span><p>' + esc(s.ba.before) + '</p></div><div><span>후</span><p>' + esc(s.ba.after) + "</p></div></div>" : "") +
+      '<details class="inst"><summary>Claude Code 설치 명령</summary>' + promptBox(s.install, "설치 명령") + "</details>" + srcLink(s) + "</div>";
+  }
+  var finder = { goal: "", tool: "" };
+  function finderHtml() {
+    var F = C.skillFinder;
+    var chips = function (list, key, cur) {
+      return list.map(function (x) { return '<button type="button" class="filter" data-' + key + '="' + x.id + '" aria-pressed="' + (x.id === cur) + '">' + esc(x.label) + "</button>"; }).join("");
+    };
+    var g = F.goals.filter(function (x) { return x.id === finder.goal; })[0];
+    var t = F.tools.filter(function (x) { return x.id === finder.tool; })[0];
+    var result = "";
+    if (g && t) {
+      var picks = g.picks.map(skillByName);
+      result = '<div class="finder-result"><p class="how">' + esc(t.how) + "</p>" + picks.map(function (s, i) {
+        var body = t.id === "code" ? promptBox(s.install, "설치 명령") : t.id === "app" ? (s.src ? srcLink(s) : '<p class="muted">Claude Code 전용이에요.</p>') : "";
+        return '<div class="pick"><b>' + (i + 1) + "</b><div><h3>" + esc(s.name) + (s.pop ? ' <span class="pop">' + esc(s.pop) + "</span>" : "") + "</h3><p>" + esc(s.what) + "</p>" + body + "</div></div>";
+      }).join("") + (t.id === "builder" ? promptBox(C.builderRules, "프로젝트 지침에 붙여넣기") : "") + "</div>";
+    } else {
+      result = '<p class="muted finder-hint">' + (g ? "어떤 도구를 쓰는지 골라주세요." : "하고 싶은 일부터 골라주세요.") + "</p>";
+    }
+    return '<section class="card finder" id="finder"><h2>내게 맞는 스킬 찾기</h2>' +
+      '<p class="q-label">1. 무엇을 하고 싶나요?</p><div class="filters" role="group" aria-label="하고 싶은 일">' + chips(F.goals, "fgoal", finder.goal) + "</div>" +
+      '<p class="q-label">2. 어떤 도구를 쓰나요?</p><div class="filters" role="group" aria-label="쓰는 도구">' + chips(F.tools, "ftool", finder.tool) + "</div>" + result + "</section>";
   }
   function viewSkills() {
     var all = [].concat.apply([], C.skillCats.map(function (c) { return c.items; }));
     var starter = C.skillStarter.map(function (n) { return all.filter(function (s) { return s.name === n; })[0]; });
     var cats = C.skillCats.filter(function (c) { return skillCat === "all" || c.id === skillCat; });
-    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 7에서 써요</p><h1>스킬 가이드</h1><p class="lead">스킬은 고수가 정리한 업무 매뉴얼을 AI에게 장착하는 거예요. 처음에는 별 셋짜리 두세 개만 쓰세요. 장비를 다 껴도 레벨이 낮으면 못 쓰거든요.</p></header>' +
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 08에서 써요</p><h1>스킬 가이드</h1><p class="lead">스킬은 고수가 정리한 업무 매뉴얼을 AI에게 장착하는 거예요. 처음에는 별 셋짜리 두세 개만 쓰세요. 장비를 다 껴도 레벨이 낮으면 못 쓰거든요.</p></header>' +
       '<section class="starter"><p class="eyebrow">처음이라면 이 3개만</p><div class="starter-row">' + starter.map(function (s, i) {
         return '<div><b>' + (i + 1) + "</b><span>" + esc(s.name) + "</span><small>" + esc(s.when) + "</small></div>";
-      }).join("") + "</div></section>" +
+      }).join("") + "</div></section>" + finderHtml() +
       '<div class="filters" role="group" aria-label="스킬 분류"><button type="button" class="filter" data-scat="all" aria-pressed="' + (skillCat === "all") + '">전체 ' + all.length + "</button>" +
       C.skillCats.map(function (c) { return '<button type="button" class="filter" data-scat="' + c.id + '" aria-pressed="' + (skillCat === c.id) + '">' + esc(c.title) + " " + c.items.length + "</button>"; }).join("") + "</div>" +
       cats.map(function (c) {
@@ -256,7 +374,7 @@
         return '<div class="install-item"><h3>' + esc(m.where) + "</h3><p>" + esc(m.how) + "</p>" + (m.cmd ? promptBox(m.cmd, "예시 명령") : "") + "</div>";
       }).join("") + "</div></section>" +
       '<section class="section"><h2>스킬을 설치할 수 없는 도구라면</h2><p class="muted">웹앱 빌더(Lovable 등)에는 스킬을 설치할 수 없어요. 대신 아래 원칙을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.</p>' + promptBox(C.builderRules, "프로젝트 지침에 붙여넣기") + "</section>" +
-      '<p class="muted" style="font-size:.88rem">스킬은 인터넷에서 받는 지시문이자 코드예요. 출처가 분명한 것만 설치하고, 설치 전에 내용을 한 번 읽어보세요. 별점은 이 코스의 초급 추천도예요.</p></div>';
+      '<p class="muted" style="font-size:.88rem">스킬은 인터넷에서 받는 지시문이자 코드예요. 출처가 분명한 것만 설치하고, 설치 전에 내용을 한 번 읽어보세요. 별점(★★★)은 이 코스의 초급 추천도이고, ★ 6.3k 같은 숫자는 GitHub 별 수(2026년 10월 기준)예요. 별 수는 계속 바뀌어요. 전·후 예시는 이해를 돕기 위해 만든 문장이에요.</p></div>';
   }
 
   function viewStuck() {
@@ -279,6 +397,8 @@
     else if (r === "brief") html = viewBrief();
     else if (r === "glossary") html = viewGlossary();
     else if (r === "devkit") html = viewDevkit();
+    else if (r === "recipes") html = viewRecipes();
+    else if (r === "portfolio") html = viewPortfolio();
     else if (r === "skills") html = viewSkills();
     else if (r === "stuck") html = viewStuck();
     else { r = "home"; html = viewHome(); }
@@ -337,6 +457,8 @@
     if (t.closest("[data-complete]")) {
       var cu = unitById(current());
       state.done[cu.id] = true;
+      state.doneAt[cu.id] = Date.now();
+      state.review[cu.id] = { stage: 0, at: Date.now() };
       save();
       var nx = U[U.indexOf(cu) + 1];
       toast("UNIT " + cu.no + " 완료! " + (nx ? "다음 유닛으로 가요" : "코스를 완주했어요"));
@@ -346,6 +468,8 @@
     if (t.closest("[data-undone]")) {
       var uu = unitById(current());
       delete state.done[uu.id];
+      delete state.doneAt[uu.id];
+      delete state.review[uu.id];
       save();
       route();
       return;
@@ -369,6 +493,27 @@
       $(".selfcheck").outerHTML = selfCheckHtml();
       return;
     }
+    var ro = t.closest("[data-ropt]");
+    if (ro) {
+      var rid = ro.closest("[data-rv]").getAttribute("data-rv"), ru = unitById(rid);
+      var rr = state.review[rid] || { stage: 0, at: state.doneAt[rid] };
+      var rq = reviewQuestion(ru, rr), pick = Number(ro.getAttribute("data-ropt"));
+      rr = pick === rq.answer ? { stage: rr.stage + 1, at: Date.now() } : { stage: 0, at: Date.now() };
+      state.review[rid] = rr;
+      reviewSeen[rid] = { q: rq, picked: pick, stage: rr.stage };
+      save();
+      $("#review").outerHTML = reviewHtml();
+      return;
+    }
+    var fg = t.closest("[data-fgoal]"), ft = t.closest("[data-ftool]");
+    if (fg || ft) {
+      if (fg) finder.goal = fg.getAttribute("data-fgoal");
+      if (ft) finder.tool = ft.getAttribute("data-ftool");
+      $("#finder").outerHTML = finderHtml();
+      return;
+    }
+    var rrole = t.closest("[data-rrole]");
+    if (rrole) { recipeRole = rrole.getAttribute("data-rrole"); $("#view").innerHTML = viewRecipes(); return; }
     var gc = t.closest("[data-gcat]");
     if (gc) {
       glossCat = gc.getAttribute("data-gcat");
@@ -408,6 +553,10 @@
     var t = e.target;
     var g = t.getAttribute("data-goal");
     if (g) { state.goal[g] = t.value; save(); return; }
+    var pk = t.getAttribute("data-pf");
+    if (pk) { state.portfolio[pk] = t.value; save(); var pre2 = $("#pf-out pre"); if (pre2) pre2.textContent = portfolioText(); return; }
+    var rf = t.getAttribute("data-reflect");
+    if (rf) { state.reflect[rf] = t.value; save(); return; }
     var b = t.getAttribute("data-brief");
     if (b) { state.brief[b] = t.value; save(); var pre = $("#brief-out pre"); if (pre) pre.textContent = briefText(); return; }
     if (t.id === "g-search") {

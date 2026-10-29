@@ -233,6 +233,7 @@ a { color: inherit; }
 .unit p { grid-column: 2 / -1; color: var(--ink-2); font-size: 0.98rem; }
 .unit p b { color: var(--ink); font-weight: 700; }
 .unit:hover h3 { color: var(--accent); }
+.unit .bonus { font-style: normal; font-size: 0.5em; font-weight: 800; vertical-align: 0.35em; padding: 3px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); letter-spacing: 0; }
 @media (max-width: 860px) {
   .course { grid-template-columns: 1fr; padding-top: 88px; }
   .course-head { position: static; }
