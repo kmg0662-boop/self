@@ -49,6 +49,51 @@ window.FIGS = {
       '<rect class="f-box on" x="14" y="160" width="150" height="70" rx="12"/><text class="f-t f-inv" x="89" y="190" text-anchor="middle">주소 (URL)</text><text class="f-m f-inv" x="89" y="212" text-anchor="middle">누구나 접속</text>' +
       '</svg>'
   },
+  stairs: {
+    label: "코스의 다섯 계단: 대화, 만들기, 쌓기는 기본 코스이고 맡기기, 자동화는 보너스",
+    svg: '<svg viewBox="0 0 420 250">' +
+      '<rect class="f-box on" x="10" y="150" width="76" height="60" rx="10"/>' +
+      '<text class="f-m f-inv" x="48" y="172" text-anchor="middle">STEP 1</text><text class="f-t f-inv" x="48" y="194" text-anchor="middle">대화</text>' +
+      '<rect class="f-box" x="92" y="120" width="76" height="90" rx="10"/>' +
+      '<text class="f-m" x="130" y="142" text-anchor="middle">STEP 2</text><text class="f-t" x="130" y="164" text-anchor="middle">만들기</text>' +
+      '<rect class="f-box" x="174" y="90" width="76" height="120" rx="10"/>' +
+      '<text class="f-m" x="212" y="112" text-anchor="middle">STEP 3</text><text class="f-t" x="212" y="134" text-anchor="middle">쌓기</text>' +
+      '<rect class="f-me" x="256" y="60" width="76" height="150" rx="10"/>' +
+      '<text class="f-m" x="294" y="82" text-anchor="middle">STEP 4</text><text class="f-t" x="294" y="104" text-anchor="middle">맡기기</text>' +
+      '<rect class="f-me" x="338" y="30" width="76" height="180" rx="10"/>' +
+      '<text class="f-m" x="376" y="52" text-anchor="middle">STEP 5</text><text class="f-t" x="376" y="74" text-anchor="middle">자동화</text>' +
+      '<text class="f-m" x="10" y="238">실선 칸: 기본 코스 · 점선 칸: 보너스(선택)</text>' +
+      '</svg>'
+  },
+  harness: {
+    label: "하네스 해부도: 가운데 모델(두뇌)을 도구, 권한, CLAUDE.md, 스킬, MCP, 서브에이전트, 훅, 컴팩션이 사무실처럼 둘러싼 그림",
+    svg: '<svg viewBox="0 0 420 300">' +
+      '<rect class="f-ring" x="14" y="30" width="392" height="258" rx="18"/><text class="f-m" x="22" y="20">하네스 = 모델을 둘러싼 사무실</text>' +
+      '<path class="f-link" d="M210 158 L86 67 M210 158 L210 67 M210 158 L334 67 M210 158 L86 157 M210 158 L334 157 M210 158 L86 247 M210 158 L210 247 M210 158 L334 247"/>' +
+      '<rect class="f-box" x="30" y="50" width="112" height="34" rx="9"/><text class="f-t" x="86" y="73" text-anchor="middle">CLAUDE.md</text>' +
+      '<rect class="f-box" x="154" y="50" width="112" height="34" rx="9"/><text class="f-t" x="210" y="73" text-anchor="middle">스킬</text>' +
+      '<rect class="f-box" x="278" y="50" width="112" height="34" rx="9"/><text class="f-t" x="334" y="73" text-anchor="middle">MCP</text>' +
+      '<rect class="f-box" x="30" y="140" width="112" height="34" rx="9"/><text class="f-t" x="86" y="163" text-anchor="middle">도구</text>' +
+      '<rect class="f-box on" x="154" y="130" width="112" height="56" rx="14"/><text class="f-t f-inv" x="210" y="155" text-anchor="middle">모델</text><text class="f-m f-inv" x="210" y="176" text-anchor="middle">두뇌</text>' +
+      '<rect class="f-box" x="278" y="140" width="112" height="34" rx="9"/><text class="f-t" x="334" y="163" text-anchor="middle">권한</text>' +
+      '<rect class="f-box" x="30" y="230" width="112" height="34" rx="9"/><text class="f-t" x="86" y="253" text-anchor="middle">서브에이전트</text>' +
+      '<rect class="f-box" x="154" y="230" width="112" height="34" rx="9"/><text class="f-t" x="210" y="253" text-anchor="middle">훅</text>' +
+      '<rect class="f-box" x="278" y="230" width="112" height="34" rx="9"/><text class="f-t" x="334" y="253" text-anchor="middle">컴팩션</text>' +
+      '</svg>'
+  },
+  triggerAction: {
+    label: "트리거가 생기면 AI가 액션을 하고, 결과는 먼저 나에게 와서 사람이 확인한 뒤 공유하는 자동화 흐름 그림",
+    svg: '<svg viewBox="0 0 420 210">' +
+      '<rect class="f-box on" x="10" y="30" width="116" height="70" rx="12"/><text class="f-t f-inv" x="68" y="60" text-anchor="middle">트리거</text><text class="f-m f-inv" x="68" y="84" text-anchor="middle">매주 월 9시</text>' +
+      '<path class="f-arrow" d="M130 65 H140"/><path class="f-head" d="M140 59 L150 65 L140 71 Z"/>' +
+      '<rect class="f-box" x="152" y="30" width="116" height="70" rx="12"/><text class="f-t" x="210" y="60" text-anchor="middle">액션</text><text class="f-m" x="210" y="84" text-anchor="middle">AI가 요약</text>' +
+      '<path class="f-arrow" d="M272 65 H282"/><path class="f-head" d="M282 59 L292 65 L282 71 Z"/>' +
+      '<rect class="f-box" x="294" y="30" width="116" height="70" rx="12"/><text class="f-t" x="352" y="60" text-anchor="middle">결과</text><text class="f-m" x="352" y="84" text-anchor="middle">나에게만</text>' +
+      '<path class="f-arrow" d="M352 104 V132"/><path class="f-head" d="M346 132 L352 142 L358 132 Z"/>' +
+      '<rect class="f-me" x="152" y="146" width="258" height="44" rx="10"/><text class="f-t" x="281" y="174" text-anchor="middle">사람이 확인한 뒤 공유</text>' +
+      '<text class="f-m" x="10" y="174">자동화는</text><text class="f-m" x="10" y="194">초안까지</text>' +
+      '</svg>'
+  },
   dataLight: {
     label: "데이터 신호등: 초록은 넣어도 됨, 노랑은 가려서, 빨강은 넣지 않음",
     svg: '<svg viewBox="0 0 420 220">' +
