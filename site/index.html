@@ -3,47 +3,157 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PLAN_Be AI 야장</title>
+<meta name="color-scheme" content="light only">
+<title>PLAN_Be 독학 코스</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="제주패스파인더 플랜비 시즌10 바이브코딩 해커톤 참가자를 위한 AI 실전 사용법 강의 사이트">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Gothic+Coding:wght@400;700&family=Nanum+Pen+Script&family=Song+Myung&display=swap">
-<link rel="stylesheet" href="assets/style.css">
+<meta name="description" content="미뤄둔 Plan B를, AI로 Be. 코딩을 몰라도 혼자서 AI로 작동하는 서비스를 만들어 공개하는 8유닛 독학 코스.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/landing.css">
 </head>
 <body>
-<header class="top">
-  <div class="wrap">
-    <div class="top-bar">
-    <div class="brand">
-      <span class="brand-mark">PLAN_Be <span>AI</span> 야장</span>
-      <span class="brand-sub">시즌10 바이브코딩 해커톤 · 1조</span>
-    </div>
-    <nav class="tabs" aria-label="강의 메뉴">
-      <a class="tab" href="#home">홈</a>
-      <a class="tab" href="#prep">사전 준비</a>
-      <a class="tab" href="#lecture">강의</a>
-      <a class="tab" href="#prompts">프롬프트 도구</a>
-      <a class="tab" href="#glossary">용어집</a>
-      <a class="tab" href="#skills">스킬</a>
-      <a class="tab" href="#help">막혔을 때</a>
-      <a class="tab" href="#levelup">레벨업</a>
-      <a class="tab" href="#check">자가진단</a>
-    </nav>
-    </div>
-  </div>
+<header class="bar" id="bar">
+  <a class="logo" href="./">PLAN<span>_</span>Be</a>
+  <a class="bar-cta" href="study.html" data-start>코스 시작하기</a>
 </header>
+
 <main>
-  <div class="wrap" id="view"></div>
+  <!-- 1. Plan B → Be. -->
+  <section class="hero" id="hero" data-scene>
+    <div class="sticky">
+      <div class="film-media" data-film="hero" aria-hidden="true">
+        <img class="still still-a" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_005350_5d41fbd7-090d-47c4-92c9-89b9be2c6464_min.webp" alt="" decoding="async">
+        <img class="still still-b" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_005350_90ce645a-c83b-45b8-a0f5-1790fb15f0b3_min.webp" alt="" decoding="async">
+        <video muted playsinline preload="none" data-src="https://d2ol7oe51mr4n9.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/fc542c03-a69e-42bb-a802-0b0f45f148bd.mp4"></video>
+      </div>
+      <p class="hero-top"><span class="pill">AI 독학 코스</span><span class="mono">8 UNITS · 약 6시간 · 코딩 몰라도 OK</span></p>
+      <h1 class="word" aria-label="Plan B를 Be로">
+        <span class="w-plan">Plan&nbsp;</span><span class="w-b">B</span><span class="w-e">e.</span>
+      </h1>
+      <div class="hero-sub">
+        <p class="sub-a">미뤄둔 그 계획, 아직 기억하나요?</p>
+        <p class="sub-b">이제 AI로, 직접 <b>Be</b> 하세요.</p>
+      </div>
+      <p class="scroll-cue mono" aria-hidden="true">SCROLL</p>
+    </div>
+  </section>
+
+  <!-- 2. 선언 -->
+  <section class="manifesto" data-scene data-dark>
+    <div class="sticky">
+      <div class="film-media" data-film="f1" aria-hidden="true">
+        <img class="still still-a" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_003217_2d0b6795-e4f7-4cc0-960b-87c272775866_min.webp" alt="" loading="lazy" decoding="async">
+        <img class="still still-b" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_003218_ef434244-e9ff-49a5-8490-af916531a15b_min.webp" alt="" loading="lazy" decoding="async">
+        <video muted playsinline preload="none" data-src="https://d2ol7oe51mr4n9.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/3ad95128-05b4-4999-a56f-5a2808bbaa22.mp4"></video>
+      </div>
+      <p class="label mono">WHY</p>
+      <p class="fill" data-fill>코딩을 몰라도 괜찮아요. 필요한 건 일상의 <em>불편함 하나</em>, 그리고 AI에게 <em>일을 맡기는 법</em>뿐이에요. 이 코스는 혼자서도 <em>끝까지</em> 갈 수 있도록 순서와 진도와 막혔을 때의 길을 모두 준비해 두었어요.</p>
+    </div>
+  </section>
+
+  <!-- 3. 펼치다: 접힌 계획이 아침에 작동하는 것이 됨 -->
+  <section class="film" data-scene data-dark>
+    <div class="sticky">
+      <div class="film-frame">
+        <div class="film-media" data-film="f2" aria-hidden="true">
+        <img class="still still-a" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_003219_5f961f80-802e-4ef4-ae50-849f914e50b1_min.webp" alt="" loading="lazy" decoding="async">
+        <img class="still still-b" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_005351_c21e5ba3-98b2-4129-9430-ad81c77da24e_min.webp" alt="" loading="lazy" decoding="async">
+        <video muted playsinline preload="none" data-src="https://d2ol7oe51mr4n9.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/786f1a7e-36ec-4188-a326-bcef69c61e8e.mp4"></video>
+      </div>
+        <div class="film-caps">
+          <p class="cap" data-from="0.14" data-to="0.42">서랍 속에 접어 둔<br>계획 하나.</p>
+          <p class="cap" data-from="0.42" data-to="0.7">AI와 함께<br>펼치면,</p>
+          <p class="cap" data-from="0.7" data-to="1.01">아침이 오기 전에,<br><b>작동하는 것</b>이 돼요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 질문이 바뀌면 답이 바뀐다 -->
+  <section class="demo" data-scene>
+    <div class="sticky">
+      <div class="demo-head">
+        <p class="label mono">UNIT 01 미리보기</p>
+        <h2>질문이 바뀌면,<br>답이 바뀌어요.</h2>
+        <ol class="tcrei" aria-label="TCREI 공식">
+          <li data-at="0.08"><b>T</b>무엇을</li>
+          <li data-at="0.2"><b>C</b>누가·왜</li>
+          <li data-at="0.32"><b>R</b>예시</li>
+          <li data-at="0.44"><b>E</b>점검</li>
+          <li data-at="0.56"><b>I</b>다시</li>
+        </ol>
+      </div>
+      <div class="demo-cards">
+        <div class="chat me">
+          <p class="who mono">나</p>
+          <p class="line base">앱 아이디어 줘</p>
+          <p class="line add" data-at="0.08"><b>T</b> 내 불편함을 해결할 핵심기능 후보 5개를 표로</p>
+          <p class="line add" data-at="0.2"><b>C</b> 나는 회의 끝나면 할 일이 헷갈리는 팀장이고, 코딩 없이 혼자 만들어야 해</p>
+          <p class="line add" data-at="0.32"><b>R</b> 메모 앱처럼 단순했으면 좋겠어</p>
+          <p class="line add" data-at="0.44"><b>E</b> 이 중 일주일 안에 만들 수 있는 건?</p>
+          <p class="line add" data-at="0.56"><b>I</b> 가장 작은 1개로 좁히고 나에게 질문 3개를 해줘</p>
+        </div>
+        <div class="chat ai">
+          <p class="who mono">AI</p>
+          <div class="ans vague">
+            <p>1. 할 일 관리 앱</p><p>2. 일기 앱</p><p>3. 날씨 앱</p><p>4. 운동 기록 앱</p><p class="note"><span>Plan B의 답</span> 누구에게나 할 법한 답</p>
+          </div>
+          <div class="ans sharp">
+            <p><b>추천:</b> 회의 메모를 붙여넣으면 담당자별 할 일 목록을 만들어주는 페이지</p>
+            <p>일주일 안에 가능한 이유: 입력 1개, 결과 1개, 로그인 불필요</p>
+            <p class="q">질문 ① 회의는 주로 어디에 기록하나요?</p>
+            <p class="note"><span>Be의 답</span> 나만을 위한 답</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 코스 지도 -->
+  <section class="course" id="course">
+    <div class="course-head">
+      <p class="label mono">CURRICULUM</p>
+      <h2>8개의 유닛,<br>하나의 서비스.</h2>
+      <p class="course-sub">유닛마다 같은 순서로 배워요. 왜 → 개념 → 따라하기 → 미션 → 퀴즈 → 막히면. 진도는 자동으로 저장돼요.</p>
+    </div>
+    <ol class="units" id="units"></ol>
+  </section>
+
+  <!-- 6. 약속 -->
+  <section class="promise">
+    <p class="label mono">HOW</p>
+    <div class="promise-grid">
+      <div><b>30분</b><span>한 번에 유닛 하나.<br>일주일에 세 번이면 3주에 완주.</span></div>
+      <div><b>15분</b><span>혼자 막히면 딱 15분까지.<br>그다음은 '막혔어요' 버튼.</span></div>
+      <div><b>1개</b><span>끝나면 남는 건 수료증이 아니라<br>링크로 공유되는 내 서비스.</span></div>
+    </div>
+  </section>
+
+  <!-- 7. 시작: 창밖으로 -->
+  <section class="start" data-scene>
+    <div class="sticky">
+      <div class="film-media" data-film="f3" aria-hidden="true">
+        <img class="still still-a" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_003218_7ef0f810-1100-493f-acc1-47b2776e58fb_min.webp" alt="" loading="lazy" decoding="async">
+        <img class="still still-b" src="https://d8j0ntlcm91z4.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/hf_20261029_003217_f320755e-b623-4604-a92d-474b2e5ea001_min.webp" alt="" loading="lazy" decoding="async">
+        <video muted playsinline preload="none" data-src="https://d2ol7oe51mr4n9.cloudfront.net/user_38poQXCKBG2dDaVuvzqMwQnSxN6/f4d8b95f-7588-4827-8c11-b05d677d1141.mp4"></video>
+      </div>
+      <div class="start-body">
+        <h2 class="start-title" aria-label="Plan B는 접고, 오늘부터 Be."><s>Plan B</s>는 접고,<br>오늘부터 <span>Be.</span></h2>
+        <div class="start-row">
+          <a class="start-btn" href="study.html#u0" data-start-big><span data-start-label>UNIT 00 시작하기</span><i aria-hidden="true">→</i></a>
+          <p class="start-note">가입 없이 바로 시작해요.<br>진도는 이 기기에 저장돼요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
-<footer>
-  <div class="wrap">
-    <span>뉴키즈인베스트먼트 · PLAN_Be 시즌10 · 이 사이트도 AI와 함께 만들었어요</span>
-    <button type="button" class="btn ghost small" id="print-sheet">A4 치트시트 인쇄</button>
-  </div>
+
+<footer class="foot">
+  <span class="logo">PLAN<span>_</span>Be</span>
+  <span class="mono">미뤄둔 Plan B를, AI로 Be.</span>
 </footer>
-<div class="cheatsheet" id="cheatsheet"></div>
 <script src="assets/content.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/landing.js"></script>
 </body>
 </html>

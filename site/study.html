@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>PLAN_Be 독학 코스</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="코딩을 몰라도 혼자서 AI로 작동하는 서비스를 만들어 공개하는 8유닛 독학 코스.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="코스 목차">
+    <div class="side-head">
+      <a class="logo" href="./" aria-label="PLAN_Be 처음으로">PLAN<span>_</span>Be</a>
+      <button type="button" class="side-close" id="side-close" aria-label="목차 닫기">닫기</button>
+    </div>
+    <a class="side-progress" href="#home">
+      <span class="sp-label">내 진도</span>
+      <span class="sp-value" id="sp-value">0%</span>
+      <span class="sp-bar"><i id="sp-bar"></i></span>
+    </a>
+    <nav class="side-nav" id="side-nav"></nav>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button type="button" class="menu-btn" id="menu-btn" aria-label="목차 열기" aria-controls="side"><span></span><span></span></button>
+      <a class="logo small" href="./">PLAN<span>_</span>Be</a>
+      <span class="top-progress" aria-hidden="true"><i id="top-bar"></i></span>
+      <a class="help-btn" href="#stuck">막혔어요</a>
+    </header>
+    <main id="view" tabindex="-1"></main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="assets/content.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
