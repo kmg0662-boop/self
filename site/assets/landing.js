@@ -12,8 +12,14 @@
   // 코스 지도
   var list = $("#units");
   if (list && C) {
-    list.innerHTML = C.units.map(function (u) {
-      return '<li><a class="unit" href="study.html#' + u.id + '"><span class="no">' + u.no + "</span><h3>" + esc(u.title) + (u.optional ? ' <i class="bonus">보너스</i>' : "") + '</h3><span class="min">' + u.minutes + "분</span><p>" + esc(u.lead.split(". ")[0].replace(/\.$/, "")) + ". <b>→ " + esc(u.outcome) + "</b></p></a></li>";
+    var byId = {};
+    C.units.forEach(function (u) { byId[u.id] = u; });
+    list.innerHTML = C.stages.map(function (s) {
+      return '<li class="stage-row"><span class="mono">STEP ' + s.no + '</span><b>' + esc(s.name) + "</b><span>" + esc(s.title) + (s.bonus ? " · 보너스" : "") + "</span></li>" +
+        s.units.map(function (id) {
+          var u = byId[id];
+          return '<li><a class="unit" href="study.html#' + u.id + '"><span class="no">' + u.no + "</span><h3>" + esc(u.title) + (u.optional ? ' <i class="bonus">보너스</i>' : "") + '</h3><span class="min">' + u.minutes + "분</span><p>" + esc(u.lead.split(". ")[0].replace(/\.$/, "")) + ". <b>→ " + esc(u.outcome) + "</b></p></a></li>";
+        }).join("");
     }).join("");
   }
 
