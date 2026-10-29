@@ -55,6 +55,14 @@
     })(p);
   });
 
+  // 마지막 장면: 보이면 Plan B에 줄을 그음
+  var start = $(".start");
+  if (start && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (es, io) {
+      es.forEach(function (e) { if (e.isIntersecting) { start.classList.add("seen"); io.disconnect(); } });
+    }, { threshold: 0.45 }).observe(start);
+  } else if (start) { start.classList.add("seen"); }
+
   if (reduce) {
     words.forEach(function (w) { w.classList.add("on"); });
     $all(".tcrei li, .line.add").forEach(function (el) { el.classList.add("on"); });
@@ -89,7 +97,7 @@
     if (demo) {
       var dp = sceneP(demo);
       demo.classList.toggle("started", dp > 0.08);
-      demo.classList.toggle("sharp", dp > 0.9);
+      demo.classList.toggle("sharp", dp > 0.66);
       marks.forEach(function (el) { el.classList.toggle("on", dp >= Number(el.getAttribute("data-at"))); });
     }
     units.forEach(function (el) {
