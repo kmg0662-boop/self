@@ -11,7 +11,7 @@
   function load() {
     try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { return blank(); }
   }
-  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" } }; }
+  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" }, placed: {}, placement: { answers: {}, applied: 0 } }; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가: 이번 방문 동안만 유지 */ } }
 
   // ---------- 작은 도구 ----------
@@ -76,6 +76,8 @@
 
   // ---------- 목차 ----------
   var TOOLS = [
+    { id: "placement", icon: "◐", title: "시작점 진단" },
+    { id: "demo", icon: "▶", title: "민규의 서비스 써보기", href: "demo.html" },
     { id: "portfolio", icon: "◎", title: "내 포트폴리오" },
     { id: "prompts", icon: "✎", title: "프롬프트 모음" },
     { id: "brief", icon: "▤", title: "서비스 설명서 작성기" },
@@ -99,7 +101,7 @@
     }).join("");
     html += '<div class="nav-group">도구</div>';
     html += TOOLS.map(function (t) {
-      return '<a class="nav-item" href="#' + t.id + '"' + (route === t.id ? ' aria-current="page"' : "") + '><span class="nav-icon" aria-hidden="true">' + t.icon + "</span><span>" + esc(t.title) + "</span><span></span></a>";
+      return '<a class="nav-item" href="' + (t.href || "#" + t.id) + '"' + (route === t.id ? ' aria-current="page"' : "") + '><span class="nav-icon" aria-hidden="true">' + t.icon + "</span><span>" + esc(t.title) + "</span><span></span></a>";
     }).join("");
     $("#side-nav").innerHTML = html;
     var p = progress();
@@ -120,11 +122,13 @@
       : '<a class="continue" href="#' + (bx ? bx.id : "portfolio") + '"><span><small>기본 코스 완주!</small><b>' + (bx ? "보너스 · " + esc(bx.title) : "이제 두 번째 서비스를 만들어볼까요?") + '</b></span><span class="go" aria-hidden="true">✓</span></a>';
     return '<div class="page">' +
       '<section class="hello"><p class="eyebrow">' + esc(C.title) + "</p><h1>" + (first ? "혼자서도 끝까지,<br>오늘 첫 유닛부터." : "다시 왔네요.<br>이어서 가볼까요?") + '</h1><p class="lead">' + esc(C.promise) + "</p></section>" +
-      cta + (nx ? "" : '<a class="pf-link" href="#portfolio">내 포트폴리오 만들기 →</a>') + ladderHtml() + reviewHtml() +
+      cta + (nx ? "" : '<a class="pf-link" href="#portfolio">내 포트폴리오 만들기 →</a>') +
+      (first && !state.placement.applied ? '<div class="starts"><a class="start-card" href="#placement"><b>AI를 써본 적 있나요?</b><span>3분 진단으로 이미 아는 유닛은 건너뛰어요. 내게 필요한 유닛만 남겨줘요.</span><i aria-hidden="true">→</i></a><a class="start-card" href="demo.html"><b>완성품 먼저 보기</b><span>민규가 이 코스로 만든 서비스를 직접 써봐요. 목적지를 보고 출발하면 덜 헤매요.</span><i aria-hidden="true">→</i></a></div>' : "") +
+      ladderHtml() + reviewHtml() +
       '<div class="stats"><div class="stat"><b>' + doneCount() + "/" + CORE.length + "</b><span>완료한 유닛</span></div><div class=\"stat\"><b>" + progress() + "%</b><span>진도</span></div><div class=\"stat\"><b>" + (left ? hm(left) : "0분") + "</b><span>남은 시간</span></div></div>" +
       '<section class="section"><h2>코스 지도</h2><p class="muted">유닛 ' + U.length + "개를 다섯 계단으로 묶었어요. 계단을 오를 때마다 쓰는 도구와 새로 알 말이 바뀌어요. 기본 코스는 STEP 3까지, 약 " + hm(totalMinutes()) + "이에요.</p>" + S.map(function (s) {
         return '<div class="stage-block' + (s === nowStage() ? " now" : "") + '"><div class="stage-head"><span class="stage-no">STEP ' + s.no + "</span><div><b>" + esc(s.name) + " · " + esc(s.title) + (s.bonus ? ' <i class="bonus">보너스</i>' : "") + "</b><small>" + esc(s.sub) + '</small></div><span class="state">' + stageDone(s) + "/" + s.units.length + '</span></div><div class="unit-list">' + stageUnits(s).map(function (u) {
-          var st = state.done[u.id] ? "완료" : started(u) ? "진행 중" : hm(u.minutes);
+          var st = state.placed[u.id] ? "진단 통과" : state.done[u.id] ? "완료" : started(u) ? "진행 중" : hm(u.minutes);
           return '<a class="unit-row' + (state.done[u.id] ? " done" : "") + '" href="#' + u.id + '"><span class="no">' + u.no + "</span><span><b>" + esc(u.title) + "</b><small>결과물 · " + esc(u.outcome) + '</small></span><span class="state">' + st + "</span></a>";
         }).join("") + "</div></div>";
       }).join("") + "</section>" +
@@ -189,18 +193,19 @@
     var m = state.missions[u.id] || [];
     var qs = state.quiz[u.id] || {};
     var st = stageOf(u), si = st.units.indexOf(u.id);
+    var seen = conceptSeen(u), r = function (t) { return rich(t, seen); };
     return '<article class="page">' +
-      '<header class="unit-hero"><p class="crumb"><a href="#map">' + stepLabel(st) + "</a><span>" + esc(st.title) + " · " + (si + 1) + "/" + st.units.length + '번째 유닛</span></p><div class="meta"><span class="tag accent">' + esc(u.level) + "</span>" + (u.optional ? '<span class="tag">선택</span>' : "") + '<span class="tag">' + hm(u.minutes) + "</span>" + (state.done[u.id] ? '<span class="tag" style="color:var(--ok)">완료</span>' : "") + "</div>" +
-      '<h1><span class="no">UNIT ' + u.no + "</span>" + esc(u.title) + '</h1><p class="lead">' + esc(u.lead) + '</p><div class="outcome"><b>결과물</b><span>' + esc(u.outcome) + "</span></div>" + (u.place ? '<div class="outcome place"><b>어디서</b><span>' + esc(u.place) + "</span></div>" : "") + "</header>" +
-      '<section class="section"><h2><span class="num">01</span>왜 배우나요</h2><p class="why">' + esc(u.why) + "</p></section>" +
+      '<header class="unit-hero"><p class="crumb"><a href="#map">' + stepLabel(st) + "</a><span>" + esc(st.title) + " · " + (si + 1) + "/" + st.units.length + '번째 유닛</span></p><div class="meta"><span class="tag accent">' + esc(u.level) + "</span>" + (u.optional ? '<span class="tag">선택</span>' : "") + '<span class="tag">' + hm(u.minutes) + "</span>" + (state.placed[u.id] ? '<span class="tag" style="color:var(--ok)">진단 통과</span>' : state.done[u.id] ? '<span class="tag" style="color:var(--ok)">완료</span>' : "") + "</div>" +
+      '<h1><span class="no">UNIT ' + u.no + "</span>" + esc(u.title) + '</h1><p class="lead">' + r(u.lead) + '</p>' + (state.placed[u.id] ? '<p class="placed-note">시작점 진단에서 이미 안다고 나온 유닛이에요. 훑어보고 퀴즈만 풀어 봐도 좋아요.</p>' : "") + '<p class="gl-hint">점선 밑줄이 있는 말을 누르면 뜻이 바로 떠요.</p><div class="outcome"><b>결과물</b><span>' + esc(u.outcome) + "</span></div>" + (u.place ? '<div class="outcome place"><b>어디서</b><span>' + esc(u.place) + "</span></div>" : "") + "</header>" +
+      '<section class="section"><h2><span class="num">01</span>왜 배우나요</h2><p class="why">' + r(u.why) + "</p></section>" +
       '<section class="section"><h2><span class="num">02</span>핵심 개념</h2><div class="concepts">' + u.concepts.map(function (c) {
-        return '<div class="card concept"><h3>' + esc(c.term) + '<span class="like">' + esc(c.like) + "</span></h3><p>" + esc(c.body) + "</p>" + figHtml(c.fig) + "</div>";
+        return '<div class="card concept"><h3>' + esc(c.term) + '<span class="like">' + esc(c.like) + "</span></h3><p>" + r(c.body) + "</p>" + figHtml(c.fig) + "</div>";
       }).join("") + "</div></section>" +
-      (u.case ? '<section class="section"><h2><span class="num">03</span>민지의 사례</h2><div class="case"><p class="case-story">' + esc(u.case.story) + "</p>" +
-        (u.case.draft ? '<div class="case-draft"><p class="case-label">처음 버전</p><pre>' + esc(u.case.draft) + '</pre><p class="case-miss"><b>아쉬웠던 점</b> ' + esc(u.case.miss) + "</p></div>" : "") +
-        promptBox(u.case.artifact, "고친 버전") + '<p class="case-note"><b>볼 포인트</b> ' + esc(u.case.note) + "</p></div></section>" : "") +
+      (u.case ? '<section class="section"><h2><span class="num">03</span>민규의 사례</h2><div class="case"><p class="case-story">' + r(u.case.story) + "</p>" +
+        (u.case.draft ? '<div class="case-draft"><p class="case-label">처음 버전</p><pre>' + esc(u.case.draft) + '</pre><p class="case-miss"><b>아쉬웠던 점</b> ' + r(u.case.miss) + "</p></div>" : "") +
+        promptBox(u.case.artifact, "고친 버전") + '<p class="case-note"><b>볼 포인트</b> ' + r(u.case.note) + "</p></div></section>" : "") +
       '<section class="section"><h2><span class="num">04</span>따라하기</h2><ol class="steps">' + u.steps.map(function (s) {
-        return '<li><div class="step-body"><p>' + esc(s.text) + "</p>" + (s.prompt ? promptBox(s.prompt) : "") + (s.link ? '<a href="' + s.link + '">' + esc(s.linkText) + " →</a>" : "") + "</div></li>";
+        return '<li><div class="step-body"><p>' + r(s.text) + "</p>" + (s.prompt ? promptBox(s.prompt) : "") + (s.link ? '<a href="' + s.link + '">' + esc(s.linkText) + " →</a>" : "") + "</div></li>";
       }).join("") + "</ol></section>" +
       '<section class="section"><h2><span class="num">05</span>미션</h2><div class="card mission">' + u.mission.map(function (t, k) {
         return '<label class="check"><input type="checkbox" data-mission="' + k + '"' + (m[k] ? " checked" : "") + "><span>" + esc(t) + "</span></label>";
@@ -216,11 +221,11 @@
         }).join("") + "</div>" + (answered ? explainHtml(q, picked) : "") + "</div>";
       }).join("") + "</div></section>" +
       '<section class="section check-self"><h2><span class="num">07</span>스스로 점검</h2>' +
-      '<div class="think"><p class="eyebrow">생각해볼 질문</p><ol>' + (u.think || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>" +
+      '<div class="think"><p class="eyebrow">생각해볼 질문</p><ol>' + (u.think || []).map(function (t) { return "<li>" + r(t) + "</li>"; }).join("") + "</ol></div>" +
       '<div class="tutor"><h3>AI 튜터에게 확인받기</h3><p class="muted">아래 프롬프트를 대화형 AI에 붙여넣으면, 이 유닛을 이해했는지 질문으로 확인해줘요. 정답 대신 힌트를 주도록 되어 있어요.</p>' + promptBox(tutorText(u), "AI 튜터 프롬프트") + "</div>" +
       '<div class="field reflect"><label for="reflect-' + u.id + '">친구에게 한 문장으로 설명한다면?</label><textarea id="reflect-' + u.id + '" data-reflect="' + u.id + '" rows="2" placeholder="예: AI는 내가 상황을 알려줘야 나만을 위한 답을 줘.">' + esc(state.reflect[u.id] || "") + "</textarea><small>이 기기에만 저장돼요. 한 문장으로 못 쓰겠다면 그 부분을 튜터에게 물어보세요.</small></div></section>" +
       '<section class="section"><h2><span class="num">08</span>막히면</h2><div>' + u.stuck.map(function (s) {
-        return '<details class="stuck"><summary>' + esc(s.symptom) + "</summary><p>" + esc(s.fix) + "</p></details>";
+        return '<details class="stuck"><summary>' + esc(s.symptom) + "</summary><p>" + r(s.fix) + "</p></details>";
       }).join("") + "</div></section>" +
       '<section class="finish"><h2>' + (state.done[u.id] ? "이 유닛을 마쳤어요." : "미션을 다 했다면") + "</h2><p class=\"muted\">" + (state.done[u.id] ? "다음 유닛으로 넘어가거나, 필요하면 다시 복습하세요." : "완료로 표시하면 진도에 반영되고 다음 유닛이 열려요.") + '</p><div class="finish-row">' +
       (state.done[u.id]
@@ -368,6 +373,109 @@
       }).join("") + '</div><p class="muted">명령어가 나오면 <a href="#devkit">개발 도구 지도의 허락 가이드</a>를 함께 보세요.</p></section></div>';
   }
 
+  // ---------- 본문 속 용어 툴팁: 유닛마다 용어를 처음 나올 때 한 번만 연결 ----------
+  var GL_STOP = ["포트", "풀", "이미지", "프로젝트", "명령", "도구", "빌드", "컨테이너", "패키지"];
+  var GL_KEYS = null, GL_RE = null;
+  function glKeys() {
+    if (GL_KEYS) return GL_KEYS;
+    GL_KEYS = {};
+    ALL_TERMS.forEach(function (t, i) {
+      t.idx = i;
+      t.term.split(/\s+(?:·|\/|vs|→)\s+/).forEach(function (part) {
+        part.split(/\s*\(([^)]*)\)\s*/).forEach(function (k) {
+          k = k.trim();
+          if (!k || GL_STOP.indexOf(k) !== -1 || (k.length < 2 && k !== "훅") || GL_KEYS[k]) return;
+          GL_KEYS[k] = t;
+        });
+      });
+    });
+    var keys = Object.keys(GL_KEYS).sort(function (a, b) { return b.length - a.length; });
+    GL_RE = new RegExp(keys.map(function (k) { return esc(k).replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&"); }).join("|"), "g");
+    return GL_KEYS;
+  }
+  function conceptSeen(u) {
+    var keys = glKeys(), seen = {};
+    u.concepts.forEach(function (c) { Object.keys(keys).forEach(function (k) { if (c.term.indexOf(k) !== -1) seen[keys[k].idx] = 1; }); });
+    return seen;
+  }
+  function rich(text, seen) {
+    var keys = glKeys(), h = esc(text);
+    return h.replace(GL_RE, function (m, off, str) {
+      var t = keys[m] || keys[m.replace(/&amp;/g, "&")];
+      if (!t || seen[t.idx]) return m;
+      var latin = /[A-Za-z]/;
+      if (latin.test(m.charAt(0)) && latin.test(str.charAt(off - 1))) return m;
+      if (latin.test(m.charAt(m.length - 1)) && /[A-Za-z0-9]/.test(str.charAt(off + m.length))) return m;
+      seen[t.idx] = 1;
+      return '<button type="button" class="gl" data-gl="' + t.idx + '" aria-haspopup="dialog">' + m + "</button>";
+    });
+  }
+  function glPop(btn) {
+    var t = ALL_TERMS[Number(btn.getAttribute("data-gl"))], pop = $("#gl-pop");
+    if (!pop) { pop = document.createElement("div"); pop.id = "gl-pop"; pop.className = "gl-pop"; pop.setAttribute("role", "dialog"); document.body.appendChild(pop); }
+    var s = t.stage && t.stage !== "dev" ? stageById(t.stage) : null;
+    pop.setAttribute("aria-label", t.term);
+    pop.innerHTML = '<p class="gl-top">' + (s ? "STEP " + s.no + " " + esc(s.name) : "개발 도구") + '<button type="button" class="gl-x" data-gl-close aria-label="닫기">✕</button></p><h3>' + esc(t.term) + (t.en ? "<small>" + esc(t.en) + "</small>" : "") + '</h3><p class="like">= ' + esc(t.like) + "</p>" + (t.body ? "<p>" + esc(t.body) + "</p>" : "") + '<p class="why"><b>왜?</b> ' + esc(t.why) + '</p><button type="button" class="gl-more" data-gq="' + esc(t.term) + '">용어 사전에서 보기 →</button>';
+    pop.hidden = false;
+    var r = btn.getBoundingClientRect(), w = Math.min(340, window.innerWidth - 24);
+    pop.style.width = w + "px";
+    pop.style.left = Math.max(12, Math.min(r.left, window.innerWidth - w - 12)) + window.scrollX + "px";
+    pop.style.top = r.bottom + window.scrollY + 8 + "px";
+    $all(".gl[aria-expanded]").forEach(function (b) { b.removeAttribute("aria-expanded"); });
+    btn.setAttribute("aria-expanded", "true");
+  }
+  function glClose() { var pop = $("#gl-pop"); if (pop) pop.hidden = true; $all(".gl[aria-expanded]").forEach(function (b) { b.removeAttribute("aria-expanded"); }); }
+
+  // ---------- 화면: 시작점 진단 ----------
+  function plItem(id) { return C.placement.items.filter(function (x) { return x.unit === id; })[0]; }
+  function plMust(id) { return C.placement.must.filter(function (x) { return x.unit === id; })[0]; }
+  function plPath() {
+    var A = state.placement.answers;
+    return CORE.map(function (u) {
+      var it = plItem(u.id), a = A[u.id] || {};
+      return { u: u, it: it, must: plMust(u.id), pass: !!(it && a.k === it.answer && a.did === true), known: !!(it && a.k === it.answer) };
+    });
+  }
+  function viewPlacement() {
+    var P = C.placement, A = state.placement.answers;
+    var answered = P.items.filter(function (it) { var a = A[it.unit]; return a && a.k !== undefined && a.did !== undefined; }).length;
+    return '<div class="page"><header class="hello"><p class="eyebrow">도구 · 3분이면 끝나요</p><h1>어디서 시작할까요?</h1><p class="lead">AI를 이미 써봤다면 아는 유닛까지 다시 할 필요는 없어요. 유닛마다 <b>문제 하나</b>와 <b>경험 하나</b>를 물어요. 둘 다 갖춰야 건너뛰어요.</p><p class="muted">왜 둘 다냐고요? 운전 이론을 아는 것과 실제로 몰아본 것이 다르듯, 아는 것과 해본 것은 달라서요.</p></header>' +
+      '<div class="pl-list">' + P.items.map(function (it, i) {
+        var u = unitById(it.unit), a = A[it.unit] || {};
+        return '<section class="card pl-item"><p class="pl-unit"><span>' + (i + 1) + "/" + P.items.length + "</span>유닛 " + u.no + " · " + esc(u.title) + "</p><h3>" + esc(it.q) + '</h3><div class="options">' + it.options.map(function (o, oi) {
+          return '<button type="button" class="opt pl-opt" data-pk="' + it.unit + '" data-pv="' + oi + '" aria-pressed="' + (a.k === oi) + '">' + esc(o) + "</button>";
+        }).join("") + '</div><p class="pl-did">' + esc(it.did) + '</p><div class="sc-tabs" role="group" aria-label="경험"><button type="button" data-pd="' + it.unit + '" data-pv="1" aria-pressed="' + (a.did === true) + '">해봤어요</button><button type="button" data-pd="' + it.unit + '" data-pv="0" aria-pressed="' + (a.did === false) + '">아직이요</button></div></section>';
+      }).join("") + "</div>" +
+      (answered < P.items.length ? '<p class="muted pl-left">' + (P.items.length - answered) + "개 남았어요. 모두 답하면 아래에 추천 경로가 나와요.</p>" : plResultHtml()) + "</div>";
+  }
+  function plResultHtml() {
+    var path = plPath();
+    var todo = path.filter(function (p) { return !p.pass; });
+    var mins = todo.reduce(function (a, p) { return a + p.u.minutes; }, 0);
+    var first = todo[0] && todo[0].u.id === "u0" && todo[1] ? todo[1] : todo[0];
+    return '<section class="card pl-result" id="pl-result"><p class="eyebrow">추천 경로</p><h2>유닛 ' + todo.length + "개 · 약 " + hm(mins) + '</h2><p class="muted">원래 기본 코스는 ' + CORE.length + "개 · 약 " + hm(totalMinutes()) + "이에요." + (todo.length === CORE.length ? " 처음부터 차근차근 가는 게 가장 빨라요." : " 이미 아는 건 건너뛰고, 필요한 곳에 시간을 써요.") + "</p>" +
+      '<ol class="pl-path">' + path.map(function (p) {
+        var label, why, cls;
+        if (p.pass) { cls = "skip"; label = "건너뛰기"; why = "문제도 맞히고 해본 적도 있어요."; }
+        else if (p.must) { cls = "must"; label = "꼭 하기"; why = p.must.why; }
+        else { cls = "do"; label = "하기"; why = !p.known ? "정답은 '" + p.it.options[p.it.answer] + "'예요. 이 유닛에서 왜 그런지 다뤄요." : "아는 것을 직접 해보는 유닛이에요."; }
+        return '<li class="' + cls + '"><span class="no">' + p.u.no + "</span><div><b>" + esc(p.u.title) + "</b><small>" + esc(why) + '</small></div><span class="pl-tag">' + label + "</span></li>";
+      }).join("") + "</ol>" +
+      '<div class="finish-row"><button type="button" class="btn accent" data-pl-apply>이 경로로 시작하기 →</button><button type="button" class="btn secondary" data-pl-none>전부 처음부터 할게요</button></div>' +
+      '<p class="muted pl-foot">건너뛴 유닛도 언제든 열어볼 수 있어요. 진도에는 \'진단 통과\'로 표시돼요.' + (first ? " 목표 카드(유닛 00)를 채운 다음엔 유닛 " + first.u.no + "부터예요." : "") + "</p></section>";
+  }
+  function plApply(useIt) {
+    Object.keys(state.placed).forEach(function (id) { delete state.done[id]; });
+    state.placed = {};
+    if (useIt) plPath().forEach(function (p) { if (p.pass && !state.done[p.u.id]) { state.done[p.u.id] = true; state.placed[p.u.id] = true; } });
+    state.placement.applied = Date.now();
+    state.last = "";
+    save();
+    var nx = nextUnit();
+    toast(useIt ? "추천 경로로 맞췄어요" : "처음부터 시작해요");
+    location.hash = nx ? nx.id : "home";
+  }
+
   // ---------- 화면: 내 포트폴리오 ----------
   function portfolioText() {
     var pf = state.portfolio || {};
@@ -389,7 +497,7 @@
     return '<div class="page"><header class="hello"><p class="eyebrow">도구 · 완주하면 완성돼요</p><h1>내 포트폴리오</h1><p class="lead">수료증보다 오래 남는 건 내가 만든 것과 배운 것이에요. 지금까지 이 기기에 저장된 내용을 한 장으로 모았어요.</p></header>' +
       (all ? '<p class="pf-done">코스를 완주했어요. 아래 내용을 복사해서 공유해 보세요.</p>' : '<p class="muted">완료한 유닛 ' + doneCount() + "/" + CORE.length + ". 유닛을 마칠 때마다 한 줄 회고가 여기에 쌓여요.</p>") +
       '<section class="section card"><h2>채워 넣기</h2>' +
-      '<div class="field"><label for="pf-name">이름 (선택)</label><input type="text" id="pf-name" data-pf="name" placeholder="민지" value="' + esc(pf.name) + '"></div>' +
+      '<div class="field"><label for="pf-name">이름 (선택)</label><input type="text" id="pf-name" data-pf="name" placeholder="민규" value="' + esc(pf.name) + '"></div>' +
       '<div class="field"><label for="pf-url">내 서비스 링크</label><input type="url" id="pf-url" data-pf="url" placeholder="https://my-service.vercel.app" value="' + esc(pf.url) + '"><small>유닛 07에서 배포한 주소예요.</small></div>' +
       '<div class="field"><label for="pf-lesson">가장 큰 배움 한 줄</label><input type="text" id="pf-lesson" data-pf="lesson" placeholder="크게 시키지 말고, 작게 맡기고 확인하기" value="' + esc(pf.lesson) + '"></div></section>' +
       '<section class="section"><h2>한눈에 보기</h2><div class="pf-grid">' +
@@ -501,6 +609,7 @@
     else if (r === "brief") html = viewBrief();
     else if (r === "glossary") html = viewGlossary();
     else if (r === "map") html = viewMap();
+    else if (r === "placement") html = viewPlacement();
     else if (r === "cheats") html = viewCheats();
     else if (r === "devkit") html = viewDevkit();
     else if (r === "recipes") html = viewRecipes();
@@ -508,6 +617,7 @@
     else if (r === "skills") html = viewSkills();
     else if (r === "stuck") html = viewStuck();
     else { r = "home"; html = viewHome(); }
+    glClose();
     $("#view").innerHTML = html;
     renderNav(r);
     closeSide();
@@ -524,7 +634,7 @@
   $("#menu-btn").addEventListener("click", openSide);
   $("#side-close").addEventListener("click", closeSide);
   $("#scrim").addEventListener("click", closeSide);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSide(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { closeSide(); glClose(); } });
 
   // ---------- 이벤트 ----------
   document.addEventListener("click", function (e) {
@@ -574,6 +684,7 @@
     if (t.closest("[data-undone]")) {
       var uu = unitById(current());
       delete state.done[uu.id];
+      delete state.placed[uu.id];
       delete state.doneAt[uu.id];
       delete state.review[uu.id];
       save();
@@ -627,6 +738,25 @@
       $("#g-list").innerHTML = termsHtml(glossList());
       return;
     }
+    var gl = t.closest(".gl");
+    if (gl) { if (gl.getAttribute("aria-expanded")) glClose(); else glPop(gl); return; }
+    if (t.closest("[data-gl-close]")) { glClose(); return; }
+    var gq = t.closest("[data-gq]");
+    if (gq) { glClose(); glossCat = "all"; glossQ = gq.getAttribute("data-gq"); location.hash = "glossary"; return; }
+    if (!t.closest("#gl-pop")) glClose();
+    var pk = t.closest("[data-pk]"), pd = t.closest("[data-pd]");
+    if (pk || pd) {
+      var pid = (pk || pd).getAttribute("data-pk") || (pk || pd).getAttribute("data-pd"), pa = state.placement.answers[pid] || {};
+      if (pk) pa.k = Number(pk.getAttribute("data-pv")); else pa.did = pd.getAttribute("data-pv") === "1";
+      state.placement.answers[pid] = pa;
+      save();
+      var y = window.scrollY;
+      $("#view").innerHTML = viewPlacement();
+      window.scrollTo(0, y);
+      return;
+    }
+    if (t.closest("[data-pl-apply]")) { plApply(true); return; }
+    if (t.closest("[data-pl-none]")) { plApply(false); return; }
     var gs = t.closest("[data-gstage]");
     if (gs) { glossCat = gs.getAttribute("data-gstage"); glossQ = ""; if (current() === "glossary") route(); else location.hash = "glossary"; return; }
     if (t.closest("[data-print]")) { window.print(); return; }

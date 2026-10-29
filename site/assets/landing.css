@@ -216,6 +216,10 @@ a { color: inherit; }
 .course-head h2 { font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 830; line-height: 1.08; letter-spacing: -0.05em; }
 .course-sub { color: var(--ink-2); max-width: 32ch; }
 .units { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--line); }
+.course-demo { display: grid; gap: 6px; margin-top: 40px; padding: 26px 28px; border-radius: 20px; background: var(--ink); color: var(--bg); text-decoration: none; transition: transform 0.2s; }
+.course-demo:hover { transform: translateY(-3px); }
+.course-demo .mono { font-size: 0.74rem; letter-spacing: 0.08em; color: var(--accent); }
+.course-demo b { font-size: clamp(1.2rem, 2.6vw, 1.7rem); font-weight: 800; letter-spacing: -0.03em; }
 .stage-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding: 34px 0 12px; border-bottom: 1px solid var(--line); }
 .stage-row .mono { font-size: 0.78rem; font-weight: 600; color: var(--accent); letter-spacing: 0.04em; }
 .stage-row b { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 820; letter-spacing: -0.04em; }
