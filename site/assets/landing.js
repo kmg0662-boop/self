@@ -121,7 +121,7 @@
     films.forEach(function (f) { f.load(); });
   }
   function filmFor(sec) { return films.filter(function (f) { return sec && sec.contains(f.el); })[0]; }
-  var fManifesto = filmFor(manifesto), fFilm = filmFor(film), fStart = filmFor(start);
+  var fHero = filmFor(hero), fManifesto = filmFor(manifesto), fFilm = filmFor(film), fStart = filmFor(start);
   (function loop() {
     films.forEach(function (f) { f.tick(); });
     requestAnimationFrame(loop);
@@ -144,6 +144,7 @@
       hero.style.setProperty("--collapse", ease(seg(p, 0.32, 0.62)).toFixed(4));
       hero.style.setProperty("--reveal", ease(seg(p, 0.55, 0.86)).toFixed(4));
       hero.style.setProperty("--weigh", seg(p, 0, 0.9).toFixed(4));
+      if (fHero) fHero.set(seg(p, 0.04, 0.9));
     }
     if (manifesto) {
       var mp = sceneP(manifesto);
