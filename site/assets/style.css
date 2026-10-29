@@ -4,6 +4,7 @@
  * 원칙: 읽기 쉬움이 먼저. 포인트 색은 하나(감귤 오렌지). 장식 대신 위계와 여백.
  */
 :root {
+  color-scheme: light;
   --bg: #fbfaf7;
   --surface: #ffffff;
   --sunken: #f3f2ee;
@@ -29,50 +30,6 @@
   --r-lg: 20px;
   --side: 288px;
   --read: 680px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f0f0e;
-    --surface: #181817;
-    --sunken: #1f1f1d;
-    --ink: #f2f1ec;
-    --ink-2: #cfcdc6;
-    --muted: #8f8d86;
-    --line: #2a2a27;
-    --line-2: #363632;
-    --accent: #ff6a32;
-    --accent-ink: #160803;
-    --accent-soft: #2b1710;
-    --accent-text: #ff8a5c;
-    --ok: #4ccb84;
-    --ok-soft: #12271b;
-    --bad: #ff7a73;
-    --bad-soft: #2c1615;
-    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.35), 0 16px 36px -12px rgba(0, 0, 0, 0.6);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0f0f0e;
-  --surface: #181817;
-  --sunken: #1f1f1d;
-  --ink: #f2f1ec;
-  --ink-2: #cfcdc6;
-  --muted: #8f8d86;
-  --line: #2a2a27;
-  --line-2: #363632;
-  --accent: #ff6a32;
-  --accent-ink: #160803;
-  --accent-soft: #2b1710;
-  --accent-text: #ff8a5c;
-  --ok: #4ccb84;
-  --ok-soft: #12271b;
-  --bad: #ff7a73;
-  --bad-soft: #2c1615;
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.35), 0 16px 36px -12px rgba(0, 0, 0, 0.6);
-  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -494,4 +451,50 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* 용어 카드: 설명 + 왜 */
+.term .body { color: var(--ink); }
+.term .why b { color: var(--accent-text); font-weight: 750; }
+.terms + .filters, .search + .filters { margin-top: -4px; }
+
+/* 개발 도구 지도 */
+.jump { display: flex; flex-wrap: wrap; gap: 8px; }
+.jump button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px 8px 8px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--surface); font: inherit; font-size: 0.9rem; font-weight: 700; color: var(--ink); cursor: pointer; }
+.jump button span { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--sunken); font-family: var(--mono); font-size: 0.78rem; }
+.jump button:hover { border-color: var(--ink); }
+.dk { scroll-margin-top: 88px; padding-top: 8px; border-top: 1px solid var(--line); }
+.dk-no { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--accent-text); margin-top: 20px; }
+.dk > h2 { margin-top: -10px; }
+.sub { font-size: 1.05rem; font-weight: 780; margin-top: 8px; }
+.approvals { display: grid; gap: 8px; }
+.approval { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 4px 14px; align-items: baseline; padding: 14px 18px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
+.approval .lv { grid-row: span 2; justify-self: start; font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+.approval.ok .lv { background: var(--ok-soft); color: var(--ok); }
+.approval.check .lv { background: var(--accent-soft); color: var(--accent-text); }
+.approval.stop .lv { background: var(--bad-soft); color: var(--bad); }
+.approval code { font-family: var(--mono); font-size: 0.86rem; font-weight: 600; overflow-wrap: anywhere; }
+.approval p { font-size: 0.92rem; color: var(--ink-2); }
+
+/* 스킬 가이드 */
+.starter { display: grid; gap: 12px; padding: 22px 24px; border-radius: var(--r-lg); background: var(--ink); color: var(--bg); }
+.starter .eyebrow { color: #ff8a5c; }
+.starter-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.starter-row div { display: grid; gap: 2px; align-content: start; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.18); }
+.starter-row b { font-family: var(--mono); color: #ff8a5c; font-size: 0.85rem; }
+.starter-row span { font-weight: 780; font-size: 1.05rem; }
+.starter-row small { color: rgba(255, 255, 255, 0.66); font-size: 0.85rem; }
+.skill-cat { padding-top: 8px; }
+.skill .when { font-size: 0.86rem; color: var(--muted); }
+.skill .when b { color: var(--ink-2); font-weight: 750; margin-right: 4px; }
+.skill .src { grid-column: 1 / -1; justify-self: start; font-family: var(--mono); font-size: 0.78rem; color: var(--muted); text-decoration: none; overflow-wrap: anywhere; }
+.skill .src:hover { color: var(--accent-text); }
+.install { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.install-item { display: grid; gap: 8px; align-content: start; padding: 18px 20px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); min-width: 0; }
+.install-item h3 { font-size: 1rem; font-weight: 780; }
+.install-item p { font-size: 0.92rem; color: var(--ink-2); }
+@media (max-width: 720px) {
+  .starter-row, .install { grid-template-columns: 1fr; }
+  .approval { grid-template-columns: 1fr; }
+  .approval .lv { grid-row: auto; }
 }

@@ -48,6 +48,7 @@
     { id: "prompts", icon: "✎", title: "프롬프트 모음" },
     { id: "brief", icon: "▤", title: "서비스 설명서 작성기" },
     { id: "glossary", icon: "Aa", title: "용어 사전" },
+    { id: "devkit", icon: "⌘", title: "개발 도구 지도" },
     { id: "skills", icon: "◇", title: "스킬 가이드" },
     { id: "stuck", icon: "?", title: "막혔을 때" }
   ];
@@ -187,29 +188,75 @@
       '<div id="brief-out">' + promptBox(briefText(), "완성된 설명서") + "</div></div></div>";
   }
 
-  function viewGlossary(q) {
-    q = (q || "").trim().toLowerCase();
-    var list = C.glossary.filter(function (t) { return !q || (t.term + t.like + t.why).toLowerCase().indexOf(q) !== -1; });
-    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구</p><h1>용어 사전</h1><p class="lead">모든 용어를 비유와 함께, 왜 알아야 하는지까지.</p></header>' +
-      '<div class="search"><input type="text" id="g-search" placeholder="용어를 검색하세요 (예: 배포, 토큰)" aria-label="용어 검색" value="' + esc(q) + '"></div>' +
-      '<div class="terms" id="g-list">' + termsHtml(list) + "</div></div>";
+  // 용어 사전 = 코스 용어 + 개발 도구 지도의 용어
+  var ALL_TERMS = C.glossary.concat([].concat.apply([], C.devkit.map(function (g) {
+    return g.terms.map(function (t) { return { term: t.term, like: t.like, why: t.why, body: t.body, cat: "개발 도구", group: g }; });
+  })));
+  var GLOSS_CATS = ["전체", "AI 기본", "만들기", "개발 도구"];
+  var glossCat = "전체", glossQ = "";
+  function glossList() {
+    var q = glossQ.trim().toLowerCase();
+    return ALL_TERMS.filter(function (t) {
+      return (glossCat === "전체" || t.cat === glossCat) && (!q || (t.term + t.like + t.why + (t.body || "")).toLowerCase().indexOf(q) !== -1);
+    });
+  }
+  function viewGlossary() {
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구</p><h1>용어 사전</h1><p class="lead">모든 용어를 비유와 함께, 왜 알아야 하는지까지. GitHub·npx·Docker 같은 개발 용어도 들어 있어요.</p></header>' +
+      '<div class="search"><input type="text" id="g-search" placeholder="용어를 검색하세요 (예: 배포, npx, 커밋)" aria-label="용어 검색" value="' + esc(glossQ) + '"></div>' +
+      '<div class="filters" role="group" aria-label="용어 분류">' + GLOSS_CATS.map(function (c) { return '<button type="button" class="filter" data-gcat="' + c + '" aria-pressed="' + (c === glossCat) + '">' + c + "</button>"; }).join("") + "</div>" +
+      '<div class="terms" id="g-list">' + termsHtml(glossList()) + "</div></div>";
   }
   function termsHtml(list) {
     if (!list.length) return '<p class="muted">찾는 용어가 없어요. 다른 말로 검색하거나, 막혔을 때 페이지를 확인하세요.</p>';
     return list.map(function (t) {
       var u = unitById(t.unit);
-      return '<div class="term"><h3>' + esc(t.term) + '</h3><span class="like">= ' + esc(t.like) + "</span><p>" + esc(t.why) + "</p>" + (u ? '<a href="#' + u.id + '">유닛 ' + u.no + " · " + esc(u.title) + " →</a>" : "") + "</div>";
+      var link = u ? '<a href="#' + u.id + '">유닛 ' + u.no + " · " + esc(u.title) + " →</a>" : t.group ? '<a href="#devkit">개발 도구 지도 · ' + esc(t.group.title) + " →</a>" : "";
+      return '<div class="term"><h3>' + esc(t.term) + '</h3><span class="like">= ' + esc(t.like) + "</span>" + (t.body ? '<p class="body">' + esc(t.body) + "</p>" : "") + '<p class="why">' + (t.body ? "<b>왜?</b> " : "") + esc(t.why) + "</p>" + link + "</div>";
     }).join("");
   }
 
-  function stars(n) { var s = ""; for (var i = 1; i <= 3; i++) s += i <= n ? "★" : "<i>★</i>"; return '<span class="stars" aria-label="초급 추천도 ' + n + '">' + s + "</span>"; }
-  function viewSkills() {
-    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 7에서 써요</p><h1>스킬 가이드</h1><p class="lead">스킬은 고수가 정리한 업무 매뉴얼을 AI에게 장착하는 거예요. 처음에는 별 셋짜리 두세 개만 쓰세요. 장비를 다 껴도 레벨이 낮으면 못 쓰거든요.</p></header>' +
-      '<div class="skill-table">' + C.skills.map(function (s) {
-        return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + " · " + esc(s.fit) + "</small></h3>" + stars(s.stars) + "<p>" + esc(s.what) + "</p></div>";
+  // ---------- 화면: 개발 도구 지도 ----------
+  var LEVEL = { ok: "허락", check: "확인 후", stop: "멈춤" };
+  function viewDevkit() {
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 4·6·7에서 만나요</p><h1>개발 도구 지도</h1><p class="lead">명령어를 외울 필요는 없어요. 에이전트가 쓰는 말을 <b>알아듣고</b>, 허락해도 되는지 <b>판단</b>할 수 있으면 충분해요. 운전면허에서 엔진 수리 대신 표지판 읽기를 배우는 것과 같아요.</p></header>' +
+      '<nav class="jump" aria-label="이 페이지 목차">' + C.devkit.map(function (g, i) { return '<button type="button" data-jump="dk-' + g.id + '"><span>' + (i + 1) + "</span>" + esc(g.title) + "</button>"; }).join("") + '<button type="button" data-jump="dk-approve"><span>!</span>허락 가이드</button></nav>' +
+      C.devkit.map(function (g, i) {
+        return '<section class="section dk" id="dk-' + g.id + '"><p class="dk-no">' + String(i + 1).padStart(2, "0") + "</p><h2>" + esc(g.title) + '</h2><p class="muted">' + esc(g.lead) + '</p><div class="terms">' +
+          termsHtml(g.terms.map(function (t) { return { term: t.term, like: t.like, body: t.body, why: t.why }; })) + "</div>" +
+          (g.cmds ? promptBox(g.cmds, "자주 보는 명령 (# 뒤는 설명)") : "") + "</section>";
+      }).join("") +
+      '<section class="section dk" id="dk-approve"><p class="dk-no">!</p><h2>에이전트가 허락을 구하면</h2><p class="muted">코딩 에이전트는 위험할 수 있는 일을 하기 전에 물어봐요. 무조건 허락하지 말고 이 표로 신호를 읽으세요.</p>' +
+      '<div class="approvals">' + C.approvals.map(function (a) {
+        return '<div class="approval ' + a.level + '"><span class="lv">' + LEVEL[a.level] + "</span><code>" + esc(a.cmd) + "</code><p>" + esc(a.say) + "</p></div>";
       }).join("") + "</div>" +
+      '<h3 class="sub">모르는 명령이 나오면</h3>' + promptBox(C.explainCmd, "AI에게 물어보는 프롬프트") + "</section></div>";
+  }
+
+  function stars(n) { var s = ""; for (var i = 1; i <= 3; i++) s += i <= n ? "★" : "<i>★</i>"; return '<span class="stars" aria-label="초급 추천도 ' + n + '">' + s + "</span>"; }
+  var skillCat = "all";
+  function skillCard(s) {
+    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small></h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" +
+      (s.src ? '<a class="src" href="https://github.com/' + esc(s.src) + '" target="_blank" rel="noopener">github.com/' + esc(s.src) + " ↗</a>" : "") + "</div>";
+  }
+  function viewSkills() {
+    var all = [].concat.apply([], C.skillCats.map(function (c) { return c.items; }));
+    var starter = C.skillStarter.map(function (n) { return all.filter(function (s) { return s.name === n; })[0]; });
+    var cats = C.skillCats.filter(function (c) { return skillCat === "all" || c.id === skillCat; });
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 7에서 써요</p><h1>스킬 가이드</h1><p class="lead">스킬은 고수가 정리한 업무 매뉴얼을 AI에게 장착하는 거예요. 처음에는 별 셋짜리 두세 개만 쓰세요. 장비를 다 껴도 레벨이 낮으면 못 쓰거든요.</p></header>' +
+      '<section class="starter"><p class="eyebrow">처음이라면 이 3개만</p><div class="starter-row">' + starter.map(function (s, i) {
+        return '<div><b>' + (i + 1) + "</b><span>" + esc(s.name) + "</span><small>" + esc(s.when) + "</small></div>";
+      }).join("") + "</div></section>" +
+      '<div class="filters" role="group" aria-label="스킬 분류"><button type="button" class="filter" data-scat="all" aria-pressed="' + (skillCat === "all") + '">전체 ' + all.length + "</button>" +
+      C.skillCats.map(function (c) { return '<button type="button" class="filter" data-scat="' + c.id + '" aria-pressed="' + (skillCat === c.id) + '">' + esc(c.title) + " " + c.items.length + "</button>"; }).join("") + "</div>" +
+      cats.map(function (c) {
+        return '<section class="section skill-cat"><h2>' + esc(c.title) + '</h2><p class="muted">' + esc(c.desc) + '</p><div class="skill-table">' + c.items.map(skillCard).join("") + "</div></section>";
+      }).join("") +
+      '<section class="section"><h2>설치하는 법</h2><p class="muted">쓰는 도구에 따라 방법이 달라요. 명령어가 낯설면 <a href="#devkit">개발 도구 지도</a>에서 npx와 GitHub부터 보세요.</p><div class="install">' +
+      C.skillInstall.map(function (m) {
+        return '<div class="install-item"><h3>' + esc(m.where) + "</h3><p>" + esc(m.how) + "</p>" + (m.cmd ? promptBox(m.cmd, "예시 명령") : "") + "</div>";
+      }).join("") + "</div></section>" +
       '<section class="section"><h2>스킬을 설치할 수 없는 도구라면</h2><p class="muted">웹앱 빌더(Lovable 등)에는 스킬을 설치할 수 없어요. 대신 아래 원칙을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.</p>' + promptBox(C.builderRules, "프로젝트 지침에 붙여넣기") + "</section>" +
-      '<p class="muted" style="font-size:.88rem">스킬은 인터넷에서 받는 지시문이자 코드예요. 출처가 분명한 것만 설치하고, 설치 전에 내용을 한 번 읽어보세요.</p></div>';
+      '<p class="muted" style="font-size:.88rem">스킬은 인터넷에서 받는 지시문이자 코드예요. 출처가 분명한 것만 설치하고, 설치 전에 내용을 한 번 읽어보세요. 별점은 이 코스의 초급 추천도예요.</p></div>';
   }
 
   function viewStuck() {
@@ -230,7 +277,8 @@
     if (u) html = viewUnit(u);
     else if (r === "prompts") html = viewPrompts();
     else if (r === "brief") html = viewBrief();
-    else if (r === "glossary") html = viewGlossary("");
+    else if (r === "glossary") html = viewGlossary();
+    else if (r === "devkit") html = viewDevkit();
     else if (r === "skills") html = viewSkills();
     else if (r === "stuck") html = viewStuck();
     else { r = "home"; html = viewHome(); }
@@ -321,6 +369,21 @@
       $(".selfcheck").outerHTML = selfCheckHtml();
       return;
     }
+    var gc = t.closest("[data-gcat]");
+    if (gc) {
+      glossCat = gc.getAttribute("data-gcat");
+      $all("[data-gcat]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === gc)); });
+      $("#g-list").innerHTML = termsHtml(glossList());
+      return;
+    }
+    var scat = t.closest("[data-scat]");
+    if (scat) { skillCat = scat.getAttribute("data-scat"); $("#view").innerHTML = viewSkills(); return; }
+    var jump = t.closest("[data-jump]");
+    if (jump) {
+      var el = document.getElementById(jump.getAttribute("data-jump"));
+      if (el) el.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      return;
+    }
     var cat = t.closest("[data-cat]");
     if (cat) { promptCat = cat.getAttribute("data-cat"); $("#view").innerHTML = viewPrompts(); return; }
     if (t.closest("[data-brief-sample]")) { C.briefFields.forEach(function (f) { state.brief[f.id] = f.ph; }); save(); route(); return; }
@@ -348,8 +411,8 @@
     var b = t.getAttribute("data-brief");
     if (b) { state.brief[b] = t.value; save(); var pre = $("#brief-out pre"); if (pre) pre.textContent = briefText(); return; }
     if (t.id === "g-search") {
-      var q = t.value.trim().toLowerCase();
-      $("#g-list").innerHTML = termsHtml(C.glossary.filter(function (x) { return !q || (x.term + x.like + x.why).toLowerCase().indexOf(q) !== -1; }));
+      glossQ = t.value;
+      $("#g-list").innerHTML = termsHtml(glossList());
     }
   });
 

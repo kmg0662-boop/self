@@ -21,6 +21,7 @@ window.COURSE = {
       steps: [
         { text: "대화형 AI 하나(ChatGPT, Claude, Gemini 중)에 가입해요. 무료로 시작해도 충분해요." },
         { text: "웹앱 빌더 하나(Lovable 등)에 가입해요. 유닛 4부터 써요." },
+        { text: "(선택) GitHub 계정도 만들어 두세요. 유닛 6에서 배포할 때, 유닛 7에서 스킬을 받을 때 만나요.", link: "#devkit", linkText: "GitHub가 뭔지 먼저 보기" },
         { text: "일상에서 '이거 왜 이렇게 불편하지?' 싶었던 순간을 3개 적어요. 작고 사소할수록 좋아요." },
         { text: "아래 '내 학습' 화면에서 목표 카드를 채워요. 만들고 싶은 것 한 줄과 공부할 요일을 적어요." }
       ],
@@ -124,7 +125,8 @@ window.COURSE = {
         { text: "웹앱 빌더에서 새 프로젝트를 만들고, 서비스 설명서를 통째로 붙여넣어요. 요청은 '첫 화면만'.", prompt: "아래 서비스 설명서를 바탕으로 첫 화면만 만들어줘. 기능 연결은 다음에 할게. 모바일에서 먼저 보기 좋게 만들어줘.\n\n[서비스 설명서 붙여넣기]" },
         { text: "미리보기에서 화면을 직접 눌러봐요. 설명서와 다른 점을 하나 찾아요." },
         { text: "다른 점을 '증상'으로 말해요.", prompt: "[어디]를 봤을 때 [기대한 모습]이었으면 하는데, 지금은 [실제 모습]이야. 이 부분만 고쳐주고 나머지는 건드리지 마." },
-        { text: "마음에 들면 버전을 저장해요(메뉴 이름은 도구마다 달라요: 체크포인트, 버전, 히스토리 등)." }
+        { text: "마음에 들면 버전을 저장해요(메뉴 이름은 도구마다 달라요: 체크포인트, 버전, 히스토리 등)." },
+        { text: "Claude Code 같은 코딩 에이전트로 넘어가면 '이 명령을 실행해도 될까요?'라는 질문을 받아요. 허락하기 전에 허락 가이드로 확인하는 습관을 들여요.", link: "#devkit", linkText: "개발 도구 지도 · 허락 가이드" }
       ],
       mission: ["설명서로 첫 화면 만들기", "증상으로 수정 요청 1번 하기", "버전 저장 1번 하기"],
       quiz: [
@@ -174,7 +176,7 @@ window.COURSE = {
         { term: "사용자 검증", like: "시식 코너", body: "설명하지 말고 링크만 주고 지켜보세요. 질문은 세 개면 충분해요: 무엇을 하는 서비스 같나요? 어디서 멈칫했나요? 또 쓰고 싶나요, 왜요?" }
       ],
       steps: [
-        { text: "배포하고, 링크를 내 휴대폰에서 열어봐요." },
+        { text: "배포하고, 링크를 내 휴대폰에서 열어봐요. 코딩 에이전트로 만들었다면 GitHub에 푸시 → Vercel 연결 순서예요.", link: "#devkit", linkText: "GitHub·Vercel 용어 보기" },
         { text: "지인 3명에게 링크와 질문 3개를 보내요.", prompt: "안녕! 내가 혼자 AI로 만든 서비스야. 설명 없이 한 번 써봐줘 🙏\n[링크]\n\n1) 무엇을 하는 서비스 같아?\n2) 어디서 멈칫했어?\n3) 또 쓰고 싶어? 왜?" },
         { text: "피드백을 정리해요.", prompt: "아래 피드백을 공통 문제 / 개별 의견 / 지금 바로 고칠 것 1개로 나누고, 고칠 것은 Before → After 표로 만들어줘.\n\n[피드백 붙여넣기]" },
         { text: "가장 중요한 하나를 고치고 다시 배포해요." }
@@ -240,35 +242,133 @@ window.COURSE = {
   ],
 
   glossary: [
-    { term: "LLM", like: "많이 읽은 말 잘하는 친구", why: "모델마다 잘하는 일이 달라요.", unit: "u1" },
-    { term: "프롬프트", like: "업무지시서", why: "결과의 품질을 결정해요.", unit: "u1" },
-    { term: "토큰", like: "원고지 칸", why: "길이 제한과 요금이 이 단위로 정해져요.", unit: "u1" },
-    { term: "컨텍스트", like: "AI의 책상 크기", why: "대화가 길어지면 앞의 내용을 잊어요.", unit: "u1" },
-    { term: "환각", like: "자신만만한 아는 척", why: "확인 습관이 필요한 이유예요.", unit: "u2" },
-    { term: "멀티모달", like: "눈과 귀도 있는 AI", why: "스크린샷이 긴 설명보다 빨라요.", unit: "u4" },
-    { term: "에이전트", like: "손발 있는 비서", why: "내 역할이 지시하고 검수하는 사람으로 바뀌어요.", unit: "u4" },
-    { term: "체크포인트", like: "게임 세이브", why: "망가져도 돌아갈 곳이 있어요.", unit: "u4" },
-    { term: "크레딧", like: "휴대폰 데이터 요금제", why: "큰 요청 한 번보다 작은 요청 여러 번이 덜 새요.", unit: "u4" },
-    { term: "프론트엔드 / 백엔드", like: "식당 홀 / 주방", why: "어디를 고칠지 정확히 말할 수 있어요.", unit: "u5" },
-    { term: "데이터베이스", like: "식당 장부", why: "새로고침해도 기록이 남으려면 필요해요.", unit: "u5" },
-    { term: "API 키", like: "출입증", why: "노출되면 남이 내 돈을 써요.", unit: "u5" },
-    { term: "배포 / URL", like: "가게 오픈 / 가게 주소", why: "남이 써볼 수 있어야 서비스예요.", unit: "u6" },
-    { term: "반응형", like: "접이식 가구", why: "대부분은 휴대폰으로 열어봐요.", unit: "u6" },
-    { term: "스킬", like: "레시피 카드", why: "반복하는 지시를 자산으로 바꿔요.", unit: "u7" },
-    { term: "MCP", like: "AI용 만능 USB 포트", why: "다른 서비스(노션, 드라이브 등)와 AI를 연결해요.", unit: "u7" },
-    { term: "RAG", like: "오픈북 시험", why: "내 자료를 근거로 답하게 해요.", unit: "u7" }
+    { term: "LLM", like: "많이 읽은 말 잘하는 친구", why: "모델마다 잘하는 일이 달라요.", cat: "AI 기본", unit: "u1" },
+    { term: "프롬프트", like: "업무지시서", why: "결과의 품질을 결정해요.", cat: "AI 기본", unit: "u1" },
+    { term: "토큰", like: "원고지 칸", why: "길이 제한과 요금이 이 단위로 정해져요.", cat: "AI 기본", unit: "u1" },
+    { term: "컨텍스트", like: "AI의 책상 크기", why: "대화가 길어지면 앞의 내용을 잊어요.", cat: "AI 기본", unit: "u1" },
+    { term: "환각", like: "자신만만한 아는 척", why: "확인 습관이 필요한 이유예요.", cat: "AI 기본", unit: "u2" },
+    { term: "멀티모달", like: "눈과 귀도 있는 AI", why: "스크린샷이 긴 설명보다 빨라요.", cat: "만들기", unit: "u4" },
+    { term: "에이전트", like: "손발 있는 비서", why: "내 역할이 지시하고 검수하는 사람으로 바뀌어요.", cat: "만들기", unit: "u4" },
+    { term: "체크포인트", like: "게임 세이브", why: "망가져도 돌아갈 곳이 있어요.", cat: "만들기", unit: "u4" },
+    { term: "크레딧", like: "휴대폰 데이터 요금제", why: "큰 요청 한 번보다 작은 요청 여러 번이 덜 새요.", cat: "만들기", unit: "u4" },
+    { term: "프론트엔드 / 백엔드", like: "식당 홀 / 주방", why: "어디를 고칠지 정확히 말할 수 있어요.", cat: "만들기", unit: "u5" },
+    { term: "데이터베이스", like: "식당 장부", why: "새로고침해도 기록이 남으려면 필요해요.", cat: "만들기", unit: "u5" },
+    { term: "API 키", like: "출입증", why: "노출되면 남이 내 돈을 써요.", cat: "만들기", unit: "u5" },
+    { term: "배포 / URL", like: "가게 오픈 / 가게 주소", why: "남이 써볼 수 있어야 서비스예요.", cat: "만들기", unit: "u6" },
+    { term: "반응형", like: "접이식 가구", why: "대부분은 휴대폰으로 열어봐요.", cat: "만들기", unit: "u6" },
+    { term: "스킬", like: "레시피 카드", why: "반복하는 지시를 자산으로 바꿔요.", cat: "AI 기본", unit: "u7" },
+    { term: "MCP", like: "AI용 만능 USB 포트", why: "다른 서비스(노션, 드라이브 등)와 AI를 연결해요.", cat: "AI 기본", unit: "u7" },
+    { term: "RAG", like: "오픈북 시험", why: "내 자료를 근거로 답하게 해요.", cat: "AI 기본", unit: "u7" }
   ],
 
-  skills: [
-    { name: "Superpowers", by: "obra", what: "바로 만들지 않고 질문을 하나씩 던져 설계를 확정한 뒤, 일을 2~5분 단위로 쪼개요.", fit: "기획", stars: 3 },
-    { name: "frontend-design", by: "Anthropic 공식", what: "AI가 만든 티가 나는 뻔한 디자인을 피하게 해줘요.", fit: "디자인", stars: 3 },
-    { name: "Karpathy guidelines", by: "forrestchang", what: "먼저 생각하기 · 단순하게 · 필요한 곳만 고치기 · 성공 기준 정하기.", fit: "제작", stars: 3 },
-    { name: "skill-creator", by: "Anthropic 공식", what: "나만의 스킬을 만들고 다듬도록 도와줘요.", fit: "확장", stars: 3 },
-    { name: "docx / pptx / xlsx / pdf", by: "Anthropic 공식", what: "문서, 발표자료, 표를 파일로 만들어줘요.", fit: "문서", stars: 3 },
-    { name: "gstack", by: "Garry Tan", what: "아이디어 검증(/office-hours)부터 QA(/qa), 배포(/ship)까지 역할별 명령 모음이에요.", fit: "전체", stars: 2 },
-    { name: "Taste Skill", by: "Leon Lin", what: "디자인의 다양성·움직임·밀도를 다이얼처럼 조절해요.", fit: "디자인", stars: 2 },
-    { name: "GSD (get-shit-done)", by: "glittercowboy", what: "긴 작업에서 품질이 떨어지는 문제를 막는 단계별 실행 시스템이에요. 중급용.", fit: "제작", stars: 1 }
+  // 스킬: 카테고리별. stars = 초급 추천도(3이 가장 먼저), src = 받을 수 있는 곳(GitHub 저장소)
+  skillStarter: ["Superpowers", "frontend-design", "Karpathy guidelines"],
+  skillCats: [
+    { id: "plan", title: "생각·기획", desc: "만들기 전에 무엇을 왜 만드는지 먼저 정리하게 해요.", items: [
+      { name: "Superpowers", by: "obra", src: "obra/superpowers", what: "바로 만들지 않고 질문을 하나씩 던져 설계를 확정한 뒤(brainstorming), 일을 2~5분 단위 계획으로 쪼개요(writing-plans).", when: "아이디어가 흐릿할 때, 큰 기능을 시작할 때", stars: 3 },
+      { name: "gstack · /office-hours", by: "Garry Tan", src: "garrytan/gstack", what: "스타트업 멘토처럼 '누가, 왜 쓰나요?'를 캐물어 아이디어를 검증해요. /plan-ceo-review로 범위도 점검해요.", when: "만들 가치가 있는지 확인하고 싶을 때", stars: 2 }
+    ] },
+    { id: "design", title: "디자인·UI", desc: "AI가 만든 티가 나는 뻔한 화면을 피하게 해요.", items: [
+      { name: "frontend-design", by: "Anthropic 공식", src: "anthropics/skills", what: "글꼴·색·여백을 의도적으로 고르게 해서, 템플릿 같은 화면을 피하게 해줘요.", when: "첫 화면을 만들 때", stars: 3 },
+      { name: "Taste Skill", by: "Leon Lin", what: "디자인의 다양성·움직임·밀도를 다이얼처럼 조절해요.", when: "같은 느낌의 화면이 반복될 때", stars: 2 },
+      { name: "web-design-guidelines", by: "Vercel", src: "vercel-labs/agent-skills", what: "접근성·반응형·폼 같은 웹 화면의 기본 규칙으로 내 화면을 점검해요.", when: "다 만들고 나서 점검할 때", stars: 2 },
+      { name: "theme-factory · canvas-design", by: "Anthropic 공식", src: "anthropics/skills", what: "색·글꼴 테마 세트를 만들거나(theme-factory), 포스터 같은 시각물을 만들어요(canvas-design).", when: "브랜드 느낌을 정하거나 홍보 이미지가 필요할 때", stars: 1 }
+    ] },
+    { id: "build", title: "만들기 습관", desc: "에이전트가 엉뚱한 곳을 고치거나 일을 키우지 않게 해요.", items: [
+      { name: "Karpathy guidelines", by: "forrestchang", src: "forrestchang/andrej-karpathy-skills", what: "먼저 생각하기 · 단순하게 · 필요한 곳만 고치기 · 성공 기준 정하기. 네 줄짜리 원칙이에요.", when: "항상. 가장 먼저 깔아둘 기본기", stars: 3 },
+      { name: "Superpowers · test-driven-development", by: "obra", src: "obra/superpowers", what: "고치기 전에 '성공하면 이렇게 동작해야 한다'는 확인 장치(테스트)부터 만들게 해요.", when: "같은 버그가 자꾸 다시 생길 때", stars: 1 },
+      { name: "react-best-practices", by: "Vercel", src: "vercel-labs/agent-skills", what: "React·Next.js 코드를 느려지지 않게 짜는 규칙 모음이에요.", when: "에이전트가 React로 만들 때", stars: 1 },
+      { name: "Supabase agent skills", by: "Supabase 공식", src: "supabase/agent-skills", what: "데이터베이스를 만들 때 보안 규칙(RLS)과 설계 실수를 피하게 해요.", when: "로그인·저장 기능에 Supabase를 쓸 때", stars: 1 },
+      { name: "GSD (get-shit-done)", by: "glittercowboy", src: "glittercowboy/get-shit-done", what: "긴 작업에서 품질이 떨어지는 문제를 막는 단계별 실행 시스템이에요. 중급용.", when: "작업이 길어져 에이전트가 앞의 내용을 잊을 때", stars: 1 }
+    ] },
+    { id: "check", title: "검수·고치기", desc: "'다 됐어요'라는 말을 그대로 믿지 않게 해요.", items: [
+      { name: "Superpowers · systematic-debugging", by: "obra", src: "obra/superpowers", what: "추측으로 고치지 않고, 원인을 좁혀 가며 찾게 해요. verification-before-completion은 '확인 없이 완료 금지'예요.", when: "같은 수정을 두 번 실패했을 때", stars: 2 },
+      { name: "gstack · /qa · /review", by: "Garry Tan", src: "garrytan/gstack", what: "/qa는 실제 브라우저로 화면을 눌러보며 버그를 찾고, /review는 코드를 출시 전에 검토해요.", when: "공개하기 직전", stars: 2 },
+      { name: "webapp-testing", by: "Anthropic 공식", src: "anthropics/skills", what: "브라우저 자동화(Playwright)로 내 웹앱을 직접 열어보고 스크린샷으로 확인해요.", when: "눌러봐야 아는 버그를 찾을 때", stars: 1 }
+    ] },
+    { id: "docs", title: "문서·발표", desc: "결과물을 파일로 받아요.", items: [
+      { name: "docx · pptx · xlsx · pdf", by: "Anthropic 공식", src: "anthropics/skills", what: "워드 문서, 발표 자료, 엑셀 표, PDF를 실제 파일로 만들어줘요.", when: "기획서·발표 자료가 필요할 때", stars: 3 },
+      { name: "doc-coauthoring", by: "Anthropic 공식", src: "anthropics/skills", what: "긴 문서를 질문 → 구조 → 초안 → 다듬기 순서로 같이 써요.", when: "서비스 소개서·제안서를 쓸 때", stars: 2 },
+      { name: "internal-comms · brand-guidelines", by: "Anthropic 공식", src: "anthropics/skills", what: "공지·업데이트 글의 형식을 잡거나, 정해 둔 브랜드 규칙대로 쓰게 해요.", when: "팀에 공유하는 글을 자주 쓸 때", stars: 1 }
+    ] },
+    { id: "ship", title: "공개·출시", desc: "남이 써볼 수 있는 상태로 내보내요.", items: [
+      { name: "gstack · /ship", by: "Garry Tan", src: "garrytan/gstack", what: "테스트 → 검토 → 커밋 → 푸시 → PR까지 출시 절차를 한 번에 밟아요.", when: "GitHub와 배포를 연결한 뒤", stars: 1 },
+      { name: "/security-review", by: "Claude Code 내장", what: "올리기 전에 비밀 키 노출, 위험한 코드 같은 보안 문제를 훑어봐요. 설치 없이 바로 써요.", when: "처음 공개하기 직전", stars: 2 }
+    ] },
+    { id: "extend", title: "나만의 확장", desc: "반복하는 일을 내 스킬·연결로 만들어요.", items: [
+      { name: "skill-creator", by: "Anthropic 공식", src: "anthropics/skills", what: "나만의 스킬을 만들고, 잘 작동하는지 시험하고 다듬도록 도와줘요.", when: "유닛 7에서 레시피를 스킬로 만들 때", stars: 3 },
+      { name: "mcp-builder", by: "Anthropic 공식", src: "anthropics/skills", what: "내가 쓰는 서비스를 AI에 연결하는 MCP 서버를 만들도록 안내해요. 중급용.", when: "AI가 내 데이터에 직접 접근해야 할 때", stars: 1 },
+      { name: "web-artifacts-builder", by: "Anthropic 공식", src: "anthropics/skills", what: "Claude 안에서 여러 화면이 있는 작은 웹앱(아티팩트)을 만들어요.", when: "설치 없이 Claude 안에서 바로 돌아가는 도구가 필요할 때", stars: 1 }
+    ] }
   ],
+  skillInstall: [
+    { where: "Claude 앱 (웹·데스크톱)", how: "설정 › 기능(Capabilities)에서 기본 스킬을 켜고, 받은 스킬 폴더를 zip으로 올려요.", cmd: "" },
+    { where: "Claude Code (터미널)", how: "플러그인 마켓에서 설치하거나, 스킬 폴더를 ~/.claude/skills 아래에 넣어요.", cmd: "/plugin marketplace add obra/superpowers" },
+    { where: "여러 에이전트 공통", how: "npx로 설치 도구를 빌려 실행해요. 저장소 주소(owner/repo)만 바꾸면 돼요.", cmd: "npx skills add supabase/agent-skills" },
+    { where: "웹앱 빌더 (Lovable 등)", how: "스킬을 설치할 수 없어요. 아래 '작업 원칙'을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.", cmd: "" }
+  ],
+
+  // 개발 도구 지도: 에이전트가 쓰는 말을 알아듣기 위한 최소한
+  devkit: [
+    { id: "terminal", title: "터미널과 명령어", lead: "코딩 에이전트(Claude Code, Codex 등)는 터미널에서 일해요. 직접 칠 일은 적지만, 에이전트가 '이 명령을 실행해도 될까요?' 물을 때 읽을 줄 알아야 해요.",
+      terms: [
+        { term: "터미널", like: "컴퓨터와 글자로 대화하는 창", body: "마우스 대신 글자로 컴퓨터에 일을 시키는 곳이에요. 맥은 '터미널', 윈도우는 'PowerShell'이에요.", why: "코딩 에이전트가 사는 곳이에요." },
+        { term: "명령어 · CLI", like: "리모컨 버튼", body: "정해진 단어를 입력하면 컴퓨터가 그 일을 해요. CLI는 명령어로 쓰는 프로그램이에요(claude, git, npm 등).", why: "설치 안내는 대부분 명령어 한 줄로 와요." },
+        { term: "폴더와 경로", like: "집 주소", body: "/Users/me/app처럼 파일 위치를 적는 방식이에요. 점 하나(.)는 지금 폴더, 점 두 개(..)는 한 칸 위 폴더예요.", why: "'파일을 찾을 수 없어요' 에러의 절반은 경로 문제예요." }
+      ],
+      cmds: "pwd            # 지금 어느 폴더에 있지?\nls             # 이 폴더에 뭐가 있지?\ncd 폴더이름     # 그 폴더로 들어가기 (cd .. 은 한 칸 위로)\nmkdir 이름      # 새 폴더 만들기\nCtrl + C       # 실행 중인 걸 멈추기" },
+    { id: "git", title: "Git과 GitHub", lead: "Git은 코드의 세이브 기록, GitHub는 그 기록을 올려 두는 클라우드예요. 배포 서비스도, 스킬도 대부분 GitHub에서 가져와요.",
+      terms: [
+        { term: "Git", like: "게임 세이브 기록", body: "파일이 바뀔 때마다 저장 지점을 남기는 도구예요. 언제든 예전 상태로 돌아갈 수 있어요.", why: "에이전트가 망가뜨려도 되돌릴 수 있어요." },
+        { term: "GitHub", like: "세이브 파일 클라우드", body: "Git 기록을 인터넷에 보관하고 남과 함께 쓰는 서비스예요. 개인은 무료로 충분해요.", why: "Vercel 같은 배포 서비스가 여기서 코드를 가져가요." },
+        { term: "저장소 (repo)", like: "프로젝트 한 개짜리 서랍", body: "한 프로젝트의 파일과 변경 기록 전체예요. 주소는 owner/repo 형식이에요.", why: "스킬 설치 안내에 obra/superpowers처럼 나와요." },
+        { term: "커밋", like: "세이브 버튼 + 메모", body: "지금 변경을 저장 지점으로 남기는 것이에요. 무엇을 바꿨는지 한 줄 메모를 붙여요.", why: "작게 자주 커밋할수록 되돌리기 쉬워요." },
+        { term: "푸시 · 풀", like: "업로드 · 다운로드", body: "내 컴퓨터의 커밋을 GitHub에 올리는 게 푸시, GitHub의 최신 내용을 받아오는 게 풀이에요.", why: "푸시해야 배포 사이트가 새로 고쳐져요." },
+        { term: "브랜치", like: "평행세계", body: "원본(main)을 건드리지 않고 따로 실험하는 갈래예요.", why: "실험이 망해도 원본은 안전해요." },
+        { term: "PR (풀 리퀘스트)", like: "합쳐도 될까요? 결재 서류", body: "브랜치의 변경을 원본에 합치자고 요청하고 검토받는 곳이에요.", why: "미리보기 링크로 확인하고 합치는 습관이 생겨요." },
+        { term: ".gitignore", like: "짐 쌀 때 빼는 목록", body: "GitHub에 올리지 않을 파일 목록이에요.", why: ".env(비밀 키 파일)를 여기 적어야 키가 새지 않아요." }
+      ],
+      cmds: "git status                 # 무엇이 바뀌었지?\ngit add .                  # 바뀐 걸 전부 세이브 준비\ngit commit -m \"메모\"       # 세이브 + 메모\ngit push                   # GitHub에 올리기\ngit log --oneline          # 세이브 기록 보기" },
+    { id: "pkg", title: "패키지와 실행", lead: "남이 만든 부품(패키지)을 가져다 쓰는 방법이에요. npx는 스킬과 MCP를 설치할 때 가장 자주 보는 명령이에요.",
+      terms: [
+        { term: "Node.js", like: "자바스크립트 엔진", body: "브라우저 밖에서도 자바스크립트를 실행하게 해줘요. 설치하면 npm과 npx가 함께 따라와요.", why: "많은 AI 도구와 스킬 설치가 Node.js를 요구해요." },
+        { term: "패키지 · 라이브러리", like: "레고 부품", body: "남이 만들어 공개한 코드 묶음이에요.", why: "필요한 기능 대부분은 이미 누군가 만들어 뒀어요." },
+        { term: "npm", like: "부품 가게 + 장바구니", body: "패키지를 내 프로젝트에 설치하고 관리해요. npm install은 목록표에 적힌 부품을 전부 받아와요.", why: "남의 프로젝트를 받으면 제일 먼저 실행하는 명령이에요." },
+        { term: "npx", like: "렌탈", body: "설치하지 않고 한 번 빌려서 바로 실행해요. 예: npx skills add owner/repo", why: "편하지만 인터넷의 코드를 그대로 실행해요. 출처가 확실한 것만 쓰세요." },
+        { term: "package.json", like: "부품 목록표", body: "프로젝트가 쓰는 패키지와 실행 명령(scripts)을 적은 파일이에요.", why: "npm run dev의 dev가 여기 적혀 있어요." },
+        { term: "pip · uv", like: "파이썬판 npm", body: "파이썬 패키지를 설치해요.", why: "데이터 분석·자동화 도구를 쓸 때 만나요." }
+      ],
+      cmds: "node -v                        # Node.js가 깔려 있나? (버전이 나오면 OK)\nnpm install                    # 목록표의 부품 전부 받기\nnpm run dev                    # 개발용 미리보기 켜기\nnpx skills add owner/repo      # 스킬 빌려서 설치하기" },
+    { id: "env", title: "실행 환경", lead: "'내 컴퓨터에서는 되는데'가 왜 생기는지, 비밀 키는 어디에 둬야 하는지에 대한 이야기예요.",
+      terms: [
+        { term: "localhost · 포트", like: "내 방 안의 가게 · 가게 호수", body: "localhost:3000은 내 컴퓨터에서만 열리는 주소예요. 3000은 문 번호예요.", why: "개발 중 미리보기 주소예요. 남에게 보내도 안 열려요." },
+        { term: "환경변수 · .env", like: "금고", body: "API 키 같은 비밀값을 코드 밖의 따로 된 파일에 두는 방식이에요.", why: "코드에 키를 직접 쓰면 GitHub에 올라가 노출돼요." },
+        { term: "Docker", like: "이삿짐 컨테이너", body: "프로그램과 실행 환경을 통째로 상자에 담아 어디서든 똑같이 돌게 해요.", why: "'내 컴퓨터에선 되는데'를 없애요. 초급 단계에선 거의 필요 없어요." },
+        { term: "이미지 · 컨테이너", like: "붕어빵 틀 · 붕어빵", body: "이미지는 설계도, 컨테이너는 그 설계도로 실제 돌아가고 있는 상자예요.", why: "Docker 안내문을 읽을 수 있게 돼요." },
+        { term: "빌드", like: "밀키트 조리", body: "개발용 코드를 배포용으로 묶고 압축하는 과정이에요.", why: "배포 실패 로그에 'Build failed'가 자주 나와요." }
+      ],
+      cmds: "" },
+    { id: "ship", title: "배포와 연결", lead: "만든 것을 인터넷에 올리고, 다른 서비스와 이어 붙이는 말들이에요.",
+      terms: [
+        { term: "Vercel · Netlify", like: "가게 임대 + 자동 오픈", body: "GitHub에 푸시하면 자동으로 빌드해서 인터넷에 올려줘요.", why: "무료로 내 서비스 주소가 생겨요." },
+        { term: "도메인", like: "간판 주소", body: "myapp.com처럼 사람이 읽는 주소예요.", why: "처음엔 무료 주소로 충분해요. 사면 1년에 1~2만 원대예요." },
+        { term: "API", like: "식당 주문 창구", body: "프로그램끼리 정해진 형식으로 요청하고 답을 받는 통로예요.", why: "날씨, 지도, AI 기능을 내 서비스에 붙일 때 써요." },
+        { term: "JSON", like: "택배 송장 양식", body: "{\"이름\": \"값\"} 모양으로 데이터를 주고받는 글자 형식이에요.", why: "설정 파일과 에러 메시지가 대부분 이 모양이에요." },
+        { term: "MCP 서버", like: "AI용 어댑터", body: "노션, GitHub 같은 서비스를 AI에 연결해 주는 작은 프로그램이에요.", why: "설정에 npx 한 줄로 추가하는 경우가 많아요." }
+      ],
+      cmds: "" }
+  ],
+  // 에이전트가 실행 허락을 구할 때 읽는 법. level: ok / check / stop
+  approvals: [
+    { cmd: "ls · cat · git status · git diff", level: "ok", say: "읽기만 해요. 허락해도 돼요." },
+    { cmd: "npm install · npm run dev", level: "ok", say: "부품을 받거나 미리보기를 켜요." },
+    { cmd: "npx 처음 보는 이름", level: "check", say: "무엇을 하는 도구인지, 어디서 온 건지 먼저 물어보세요." },
+    { cmd: "git commit · git push", level: "check", say: "무엇을 올리는지 한 줄 요약을 받고 허락해요." },
+    { cmd: "rm -rf · git reset --hard · git push --force", level: "stop", say: "지우거나 기록을 덮어써요. 왜 필요한지 먼저 물어보세요." },
+    { cmd: ".env 내용 출력 · 커밋", level: "stop", say: "비밀 키가 화면이나 GitHub에 노출돼요." },
+    { cmd: "sudo · curl … | sh", level: "stop", say: "관리자 권한으로, 또는 인터넷 스크립트를 바로 실행해요." }
+  ],
+  explainCmd: "아래 명령이 무엇을 하는지 초등학생도 알게 설명해줘.\n① 무엇을 하는지 한 줄 ② 지워지거나 바뀌는 게 있는지 ③ 되돌릴 수 있는지\n마지막에 '실행해도 됨 / 확인 필요 / 하지 말 것' 중 하나로 답해줘.\n\n[명령]",
   builderRules: "# 이 프로젝트의 작업 원칙\n\n[기획]\n- 요청이 모호하면 바로 만들지 말고 질문을 하나씩 먼저 해줘.\n- 큰 요청은 작은 단계로 나눈 계획을 먼저 보여주고, 내가 OK하면 진행해.\n\n[제작]\n- 무엇을 바꿀지 한 줄로 먼저 말하고 시작해.\n- 가장 단순한 방법을 써. 요청하지 않은 기능은 추가하지 마.\n- 내가 말한 부분만 수정하고 나머지는 건드리지 마.\n- 끝나면 무엇을 확인하면 성공인지 알려줘.\n\n[디자인]\n- 흔한 템플릿처럼 보이지 않게. 글꼴·여백·색을 일관되게, 모바일 먼저.\n\n[고치기]\n- 에러는 원인을 쉬운 말로 먼저 설명하고 고쳐줘.\n- 같은 수정을 2번 실패하면 멈추고 다른 방법을 제안해줘.\n\n[서비스 설명서]\n(여기에 붙여넣기)",
 
   selfCheck: [
