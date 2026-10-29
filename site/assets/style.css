@@ -475,6 +475,8 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
 .approval.stop .lv { background: var(--bad-soft); color: var(--bad); }
 .approval code { font-family: var(--mono); font-size: 0.86rem; font-weight: 600; overflow-wrap: anywhere; }
 .approval p { font-size: 0.92rem; color: var(--ink-2); }
+.approval .ask { grid-column: 2; font-size: 0.9rem; color: var(--ink); background: var(--sunken); border-radius: var(--r-sm); padding: 8px 12px; margin-top: 4px; }
+.approval .ask b { display: block; font-size: 0.74rem; font-weight: 750; color: var(--muted); margin-bottom: 2px; }
 
 /* 스킬 가이드 */
 .starter { display: grid; gap: 12px; padding: 22px 24px; border-radius: var(--r-lg); background: var(--ink); color: var(--bg); }
@@ -497,4 +499,5 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
   .starter-row, .install { grid-template-columns: 1fr; }
   .approval { grid-template-columns: 1fr; }
   .approval .lv { grid-row: auto; }
+  .approval .ask { grid-column: 1; }
 }

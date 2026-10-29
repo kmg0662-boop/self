@@ -360,13 +360,13 @@ window.COURSE = {
   ],
   // 에이전트가 실행 허락을 구할 때 읽는 법. level: ok / check / stop
   approvals: [
-    { cmd: "ls · cat · git status · git diff", level: "ok", say: "읽기만 해요. 허락해도 돼요." },
-    { cmd: "npm install · npm run dev", level: "ok", say: "부품을 받거나 미리보기를 켜요." },
-    { cmd: "npx 처음 보는 이름", level: "check", say: "무엇을 하는 도구인지, 어디서 온 건지 먼저 물어보세요." },
-    { cmd: "git commit · git push", level: "check", say: "무엇을 올리는지 한 줄 요약을 받고 허락해요." },
-    { cmd: "rm -rf · git reset --hard · git push --force", level: "stop", say: "지우거나 기록을 덮어써요. 왜 필요한지 먼저 물어보세요." },
-    { cmd: ".env 내용 출력 · 커밋", level: "stop", say: "비밀 키가 화면이나 GitHub에 노출돼요." },
-    { cmd: "sudo · curl … | sh", level: "stop", say: "관리자 권한으로, 또는 인터넷 스크립트를 바로 실행해요." }
+    { cmd: "ls · cat · git status · git diff", level: "ok", say: "읽기만 해요. 허락해도 돼요.", ask: "어떤 파일을 보려는 거예요?" },
+    { cmd: "npm install · npm run dev", level: "ok", say: "부품을 받거나 미리보기를 켜요.", ask: "무엇을 설치하나요? 처음 보는 패키지가 있나요?" },
+    { cmd: "npx 처음 보는 이름", level: "check", say: "무엇을 하는 도구인지, 어디서 온 건지 먼저 물어보세요.", ask: "이 도구는 누가 만들었고, 무엇을 하나요?" },
+    { cmd: "git commit · git push", level: "check", say: "무엇을 올리는지 한 줄 요약을 받고 허락해요.", ask: "무엇을 올리나요? 비밀 키(.env)는 빠졌나요?" },
+    { cmd: "rm -rf · git reset --hard · git push --force", level: "stop", say: "지우거나 기록을 덮어써요. 왜 필요한지 먼저 물어보세요.", ask: "무엇이 지워지나요? 되돌릴 수 있나요?" },
+    { cmd: ".env 내용 출력 · 커밋", level: "stop", say: "비밀 키가 화면이나 GitHub에 노출돼요.", ask: "키를 화면에 보이지 않고 할 방법은 없나요?" },
+    { cmd: "sudo · curl … | sh", level: "stop", say: "관리자 권한으로, 또는 인터넷 스크립트를 바로 실행해요.", ask: "관리자 권한 없이 할 수는 없나요? 스크립트 내용을 먼저 보여줄래요?" }
   ],
   explainCmd: "아래 명령이 무엇을 하는지 초등학생도 알게 설명해줘.\n① 무엇을 하는지 한 줄 ② 지워지거나 바뀌는 게 있는지 ③ 되돌릴 수 있는지\n마지막에 '실행해도 됨 / 확인 필요 / 하지 말 것' 중 하나로 답해줘.\n\n[명령]",
   builderRules: "# 이 프로젝트의 작업 원칙\n\n[기획]\n- 요청이 모호하면 바로 만들지 말고 질문을 하나씩 먼저 해줘.\n- 큰 요청은 작은 단계로 나눈 계획을 먼저 보여주고, 내가 OK하면 진행해.\n\n[제작]\n- 무엇을 바꿀지 한 줄로 먼저 말하고 시작해.\n- 가장 단순한 방법을 써. 요청하지 않은 기능은 추가하지 마.\n- 내가 말한 부분만 수정하고 나머지는 건드리지 마.\n- 끝나면 무엇을 확인하면 성공인지 알려줘.\n\n[디자인]\n- 흔한 템플릿처럼 보이지 않게. 글꼴·여백·색을 일관되게, 모바일 먼저.\n\n[고치기]\n- 에러는 원인을 쉬운 말로 먼저 설명하고 고쳐줘.\n- 같은 수정을 2번 실패하면 멈추고 다른 방법을 제안해줘.\n\n[서비스 설명서]\n(여기에 붙여넣기)",

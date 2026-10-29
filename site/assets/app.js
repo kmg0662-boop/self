@@ -225,9 +225,9 @@
           termsHtml(g.terms.map(function (t) { return { term: t.term, like: t.like, body: t.body, why: t.why }; })) + "</div>" +
           (g.cmds ? promptBox(g.cmds, "자주 보는 명령 (# 뒤는 설명)") : "") + "</section>";
       }).join("") +
-      '<section class="section dk" id="dk-approve"><p class="dk-no">!</p><h2>에이전트가 허락을 구하면</h2><p class="muted">코딩 에이전트는 위험할 수 있는 일을 하기 전에 물어봐요. 무조건 허락하지 말고 이 표로 신호를 읽으세요.</p>' +
+      '<section class="section dk" id="dk-approve"><p class="dk-no">!</p><h2>에이전트가 허락을 구하면</h2><p class="muted">코딩 에이전트는 위험할 수 있는 일을 하기 전에 물어봐요. 무조건 허락하지 말고, 신호를 읽고, 질문 한 줄을 던지세요. 답이 납득되면 그때 허락해요.</p>' +
       '<div class="approvals">' + C.approvals.map(function (a) {
-        return '<div class="approval ' + a.level + '"><span class="lv">' + LEVEL[a.level] + "</span><code>" + esc(a.cmd) + "</code><p>" + esc(a.say) + "</p></div>";
+        return '<div class="approval ' + a.level + '"><span class="lv">' + LEVEL[a.level] + "</span><code>" + esc(a.cmd) + "</code><p>" + esc(a.say) + '</p><p class="ask"><b>먼저 물어볼 질문</b> “' + esc(a.ask) + "”</p></div>";
       }).join("") + "</div>" +
       '<h3 class="sub">모르는 명령이 나오면</h3>' + promptBox(C.explainCmd, "AI에게 물어보는 프롬프트") + "</section></div>";
   }
