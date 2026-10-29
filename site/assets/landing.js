@@ -13,7 +13,7 @@
   var list = $("#units");
   if (list && C) {
     list.innerHTML = C.units.map(function (u) {
-      return '<li><a class="unit" href="study.html#' + u.id + '"><span class="no">' + u.no + "</span><h3>" + esc(u.title) + '</h3><span class="min">' + u.minutes + "분</span><p>" + esc(u.lead.split(". ")[0].replace(/\.$/, "")) + ". <b>→ " + esc(u.outcome) + "</b></p></a></li>";
+      return '<li><a class="unit" href="study.html#' + u.id + '"><span class="no">' + u.no + "</span><h3>" + esc(u.title) + (u.optional ? ' <i class="bonus">보너스</i>' : "") + '</h3><span class="min">' + u.minutes + "분</span><p>" + esc(u.lead.split(". ")[0].replace(/\.$/, "")) + ". <b>→ " + esc(u.outcome) + "</b></p></a></li>";
     }).join("");
   }
 
