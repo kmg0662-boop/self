@@ -55,15 +55,10 @@
     })(p);
   });
 
-  // 마지막 장면: 보이면 Plan B에 줄을 그음
   var start = $(".start");
-  if (start && "IntersectionObserver" in window) {
-    new IntersectionObserver(function (es, io) {
-      es.forEach(function (e) { if (e.isIntersecting) { start.classList.add("seen"); io.disconnect(); } });
-    }, { threshold: 0.45 }).observe(start);
-  } else if (start) { start.classList.add("seen"); }
 
   if (reduce) {
+    if (start) start.classList.add("seen");
     words.forEach(function (w) { w.classList.add("on"); });
     $all(".tcrei li, .line.add").forEach(function (el) { el.classList.add("on"); });
     var dm = $(".demo"); if (dm) dm.classList.add("started", "sharp");
@@ -71,6 +66,66 @@
   }
 
   var hero = $("#hero"), manifesto = $(".manifesto"), demo = $(".demo"), bar = $("#bar");
+  var film = $(".film"), frame = $(".film-frame"), caps = $all(".cap");
+  var darks = $all("[data-dark]");
+
+  // 스크롤 필름: 화면 근처에 오면 영상을 불러오고, 스크롤 진행률을 재생 위치로 씀
+  function Film(el) {
+    var self = this;
+    this.el = el;
+    this.video = el.querySelector("video");
+    this.p = 0;
+    this.cur = 0;
+    this.loaded = false;
+    this.ready = false;
+    this.video.addEventListener("loadeddata", function () {
+      self.ready = true;
+      el.classList.add("ready");
+    });
+  }
+  Film.prototype.load = function () {
+    if (this.loaded) return;
+    this.loaded = true;
+    var v = this.video, src = v.getAttribute("data-src");
+    if (!src || src.indexOf("__") === 0) return;
+    v.preload = "auto";
+    v.src = src;
+    v.load();
+    // iOS 사파리는 한 번 재생해야 첫 프레임을 그림
+    var pr = v.play();
+    if (pr && pr.then) pr.then(function () { v.pause(); }).catch(function () {});
+  };
+  Film.prototype.set = function (p) {
+    this.p = p;
+    this.el.style.setProperty("--fp", p.toFixed(3));
+  };
+  Film.prototype.tick = function () {
+    var v = this.video;
+    if (!this.ready || !v.duration) return;
+    var target = this.p * (v.duration - 0.05);
+    this.cur += (target - this.cur) * 0.18;
+    if (Math.abs(this.cur - target) < 0.004) this.cur = target;
+    if (!v.seeking && Math.abs(v.currentTime - this.cur) > 0.02) v.currentTime = this.cur;
+  };
+  var films = $all(".film-media").map(function (el) { return new Film(el); });
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        films.forEach(function (f) { if (f.el === e.target) f.load(); });
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: "150% 0px" });
+    films.forEach(function (f) { io.observe(f.el); });
+  } else {
+    films.forEach(function (f) { f.load(); });
+  }
+  function filmFor(sec) { return films.filter(function (f) { return sec && sec.contains(f.el); })[0]; }
+  var fManifesto = filmFor(manifesto), fFilm = filmFor(film), fStart = filmFor(start);
+  (function loop() {
+    films.forEach(function (f) { f.tick(); });
+    requestAnimationFrame(loop);
+  })();
   var marks = $all(".tcrei li").concat($all(".line.add"));
   var units = $all(".unit");
 
@@ -91,7 +146,9 @@
       hero.style.setProperty("--weigh", seg(p, 0, 0.9).toFixed(4));
     }
     if (manifesto) {
-      var lit = Math.round(Math.min(1, sceneP(manifesto) * 1.12) * words.length);
+      var mp = sceneP(manifesto);
+      if (fManifesto) fManifesto.set(Math.min(1, mp * 1.12));
+      var lit = Math.round(Math.min(1, mp * 1.12) * words.length);
       words.forEach(function (w, i) { w.classList.toggle("on", i < lit); });
     }
     if (demo) {
@@ -105,9 +162,28 @@
       var d = Math.abs(r.top + r.height / 2 - vh * 0.52) / (vh * 0.5);
       el.style.setProperty("--f", Math.max(0, 1 - d * 0.9).toFixed(3));
     });
-    if (bar && manifesto) {
-      var mr = manifesto.getBoundingClientRect();
-      bar.classList.toggle("invert", mr.top <= 40 && mr.bottom > 40);
+    if (film && frame) {
+      var fp = sceneP(film), open = ease(seg(fp, 0, 0.26));
+      frame.style.setProperty("--inset-y", ((1 - open) * 14).toFixed(2) + "%");
+      frame.style.setProperty("--inset-x", ((1 - open) * 16).toFixed(2) + "%");
+      frame.style.setProperty("--round", ((1 - open) * 28).toFixed(1) + "px");
+      frame.style.setProperty("--zoom", (1.08 - open * 0.08).toFixed(4));
+      if (fFilm) fFilm.set(seg(fp, 0.08, 0.96));
+      caps.forEach(function (c) {
+        c.classList.toggle("on", fp >= Number(c.getAttribute("data-from")) && fp < Number(c.getAttribute("data-to")));
+      });
+    }
+    if (start) {
+      var sp = sceneP(start);
+      if (fStart) fStart.set(sp);
+      start.classList.toggle("seen", sp > 0.55);
+    }
+    if (bar) {
+      bar.classList.toggle("invert", darks.some(function (d) {
+        var r = d.getBoundingClientRect();
+        if (d === film) return r.top <= 40 && r.bottom > 40 && seg(sceneP(film), 0, 0.26) > 0.85;
+        return r.top <= 40 && r.bottom > 40;
+      }));
     }
   }
 

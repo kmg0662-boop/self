@@ -17,6 +17,8 @@
   --accent-soft: #fff0e8;
   --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
   --mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+  --film: #0d0d0c;
+  --film-text: #f4f2ec;
   --pad: max(20px, env(safe-area-inset-left, 0px));
   --pad-r: max(20px, env(safe-area-inset-right, 0px));
 }
@@ -150,7 +152,8 @@ a { color: inherit; }
 @media (max-width: 600px) { .word { font-size: 30vw; } }
 
 /* 2. 선언 (먹 반전) */
-.manifesto { height: 240vh; background: var(--ink); color: var(--bg); }
+.manifesto { height: 240vh; background: var(--film); color: var(--film-text); }
+.manifesto .sticky > :not(.film-media) { position: relative; z-index: 1; }
 .manifesto .sticky { gap: 24px; }
 .fill {
   max-width: 21ch;
@@ -159,10 +162,32 @@ a { color: inherit; }
   line-height: 1.3;
   letter-spacing: -0.045em;
 }
-.fill .w { color: color-mix(in srgb, var(--bg) 22%, var(--ink)); transition: color 0.2s; }
-.fill .w.on { color: var(--bg); }
+.fill .w { color: color-mix(in srgb, var(--film-text) 24%, transparent); transition: color 0.2s; }
+.fill .w.on { color: var(--film-text); }
 .fill em { font-style: normal; }
 .fill em .w.on { color: var(--accent); }
+
+
+/* 스크롤 필름: 스크롤 진행률 = 영상 재생 위치. 영상 전에는 시작·끝 사진을 겹쳐 보여 줌 */
+.film-media { position: absolute; inset: 0; overflow: hidden; background: var(--film); }
+.film-media .still, .film-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film-media .still-b { opacity: var(--fp, 0); }
+.film-media video { opacity: 0; transition: opacity 0.6s; }
+.film-media.ready video { opacity: 1; }
+.manifesto .film-media { opacity: 0.62; }
+.manifesto .film-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--film) 8%, color-mix(in srgb, var(--film) 55%, transparent) 52%, transparent 100%); }
+@media (max-width: 760px) { .manifesto .film-media::after { background: color-mix(in srgb, var(--film) 62%, transparent); } }
+
+/* 펼치다: 작은 카드가 화면을 채움 */
+.film { height: 340vh; background: var(--bg); }
+.film .sticky { padding: 0; display: block; }
+.film-frame { position: absolute; inset: 0; clip-path: inset(var(--inset-y, 14%) var(--inset-x, 16%) round var(--round, 28px)); }
+.film-frame .film-media { transform: scale(var(--zoom, 1.08)); }
+.film-frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, color-mix(in srgb, var(--film) 72%, transparent) 0%, transparent 46%); pointer-events: none; }
+.film-caps { position: absolute; left: var(--pad); right: var(--pad-r); bottom: clamp(40px, 9vh, 96px); z-index: 1; display: grid; color: var(--film-text); }
+.cap { grid-area: 1 / 1; font-size: clamp(2.2rem, 6.4vw, 6rem); font-weight: 820; line-height: 1.06; letter-spacing: -0.055em; opacity: 0; transform: translateY(24px); transition: opacity 0.5s, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35); }
+.cap.on { opacity: 1; transform: none; }
+.cap b { color: var(--accent); font-weight: inherit; }
 
 /* 3. 질문 데모 */
 .demo { height: 300vh; }
@@ -249,10 +274,14 @@ a { color: inherit; }
 @media (max-width: 760px) { .promise-grid { grid-template-columns: 1fr; } }
 
 /* 6. 시작 */
-.start { min-height: 100vh; min-height: 100svh; display: grid; align-content: center; gap: clamp(32px, 6vh, 64px); padding: 110px var(--pad-r) 80px var(--pad); }
+.start { height: 240vh; }
+.start .sticky { padding: 0; display: block; }
+.start .film-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, color-mix(in srgb, var(--bg) 88%, transparent) 0%, color-mix(in srgb, var(--bg) 55%, transparent) 46%, transparent 78%), linear-gradient(0deg, color-mix(in srgb, var(--bg) 70%, transparent) 0%, transparent 34%); }
+.start-body { position: relative; z-index: 1; height: 100%; display: grid; align-content: center; gap: clamp(32px, 6vh, 64px); padding: 110px var(--pad-r) 80px var(--pad); }
+@media (max-width: 760px) { .start .film-media::after { background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 86%, transparent) 0%, color-mix(in srgb, var(--bg) 60%, transparent) 55%, color-mix(in srgb, var(--bg) 80%, transparent) 100%); } }
 .start-title { font-size: clamp(3rem, 11.5vw, 13rem); font-weight: 860; line-height: 0.98; letter-spacing: -0.065em; }
 .start-title span { color: var(--accent); }
-.start-title s { text-decoration: none; position: relative; color: var(--muted); font-weight: 300; }
+.start-title s { text-decoration: none; position: relative; color: var(--ink-2); font-weight: 300; }
 .start-title s::after { content: ""; position: absolute; left: -0.02em; right: -0.02em; top: 54%; height: 0.07em; border-radius: 99px; background: var(--accent); transform: rotate(-4deg) scaleX(var(--s-strike, 0)); transform-origin: left; transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.2s; }
 .start.seen .start-title s::after { --s-strike: 1; }
 .start-row { display: flex; align-items: center; gap: 20px 28px; flex-wrap: wrap; }
@@ -274,17 +303,23 @@ a { color: inherit; }
 .start-btn i { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-style: normal; transition: transform 0.25s; }
 .start-btn:hover { transform: translateY(-3px); }
 .start-btn:hover i { transform: translateX(4px); }
-.start-note { color: var(--muted); font-size: 0.92rem; }
+.start-note { color: var(--ink-2); font-size: 0.92rem; font-weight: 600; }
 
 .foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 24px var(--pad-r) calc(32px + env(safe-area-inset-bottom, 0px)) var(--pad); border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
 
 /* 움직임을 줄인 사용자: 최종 상태를 고정 없이 보여줌 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .hero, .manifesto, .demo { height: auto; }
+  .hero, .manifesto, .demo, .film, .start { height: auto; }
+  .film .sticky, .start .sticky { min-height: 100svh; position: relative; }
+  .film-media .still-b { opacity: 1; }
+  .film-media video { display: none; }
+  .film-frame { clip-path: none; }
+  .cap { opacity: 0; }
+  .cap:last-child { opacity: 1; transform: none; }
   .sticky { position: static; height: auto; min-height: 100svh; }
   .hero { --collapse: 1; --strike: 1; --reveal: 1; --weigh: 1; }
-  .fill .w { color: var(--bg); }
+  .fill .w { color: var(--film-text); }
   .line.add { max-height: none; opacity: 1; transform: none; }
   .demo .ans.vague { display: none; }
   .demo .ans.sharp { opacity: 1; transform: none; }
