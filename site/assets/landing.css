@@ -216,6 +216,14 @@ a { color: inherit; }
 .course-head h2 { font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 830; line-height: 1.08; letter-spacing: -0.05em; }
 .course-sub { color: var(--ink-2); max-width: 32ch; }
 .units { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--line); }
+.tracks-teaser { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.tracks-teaser a { display: grid; gap: 6px; height: 100%; padding: 18px 16px; border-radius: 16px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: var(--ink); transition: border-color 0.2s, transform 0.2s; }
+.tracks-teaser a:hover { border-color: var(--ink); transform: translateY(-2px); }
+.tracks-teaser b { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+.tracks-teaser span { font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+.tracks-teaser i { font-style: normal; font-size: 0.7rem; color: var(--accent); margin-top: auto; }
+@media (max-width: 900px) { .tracks-teaser { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .tracks-teaser { grid-template-columns: 1fr; } }
 .course-demo { display: grid; gap: 6px; margin-top: 40px; padding: 26px 28px; border-radius: 20px; background: var(--ink); color: var(--bg); text-decoration: none; transition: transform 0.2s; }
 .course-demo:hover { transform: translateY(-3px); }
 .course-demo .mono { font-size: 0.74rem; letter-spacing: 0.08em; color: var(--accent); }

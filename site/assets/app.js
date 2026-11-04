@@ -3,7 +3,7 @@
 
   var C = window.COURSE;
   var U = C.units;
-  var CORE = U.filter(function (u) { return !u.optional; }); // 보너스(선택) 유닛은 진도에서 빠짐
+  var CORE = [], BONUS = []; // 고른 트랙의 유닛으로 setTrack()이 채워요. 보너스(선택) 유닛은 진도에서 빠짐
   var KEY = "planbe:course:v2";
 
   // ---------- 저장 (이 기기에만) ----------
@@ -11,7 +11,7 @@
   function load() {
     try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { return blank(); }
   }
-  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" }, placed: {}, placement: { answers: {}, applied: 0 } }; }
+  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" }, placed: {}, placement: { answers: {}, applied: 0 }, track: "" }; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가: 이번 방문 동안만 유지 */ } }
 
   // ---------- 작은 도구 ----------
@@ -29,7 +29,6 @@
     if (state.last && !state.done[state.last]) return unitById(state.last);
     return CORE.filter(function (u) { return !state.done[u.id]; })[0] || null;
   }
-  var BONUS = U.filter(function (u) { return u.optional; });
   function bonusDone() { return BONUS.filter(function (u) { return state.done[u.id]; }).length; }
 
   // ---------- 다섯 계단 ----------
@@ -39,10 +38,25 @@
   function stageDone(s) { return s.units.filter(function (id) { return state.done[id]; }).length; }
   function stageById(no) { return S.filter(function (s) { return String(s.no) === String(no); })[0]; }
   function nowStage() {
-    var nx = nextUnit();
-    if (nx) return stageOf(nx);
-    return S.filter(function (s) { return stageDone(s) < s.units.length; })[0] || S[S.length - 1];
+    var nx = nextUnit(), ts = trackStages();
+    if (nx && ts.indexOf(stageOf(nx)) !== -1) return stageOf(nx);
+    return ts.filter(function (s) { return stageDone(s) < s.units.length; })[0] || ts[ts.length - 1];
   }
+
+  // ---------- 목적별 트랙: 모두 STEP 1을 함께 듣고, 고른 트랙의 계단으로 이어가요 ----------
+  var TR = C.tracks || [];
+  function trackById(id) { return TR.filter(function (t) { return t.id === id; })[0]; }
+  function myTrack() { return trackById(state.track) || trackById("build"); } // 아직 안 골랐으면 서비스 만들기
+  function trackStages() {
+    return [S[0]].concat((myTrack().stages || []).map(function (id) { return S.filter(function (s) { return s.id === id; })[0]; }));
+  }
+  function setTrack() {
+    var tu = [].concat.apply([], trackStages().map(stageUnits));
+    CORE = tu.filter(function (u) { return !u.optional; });
+    BONUS = tu.filter(function (u) { return u.optional; });
+  }
+  setTrack();
+  function ulabel(u) { return (u.kit ? "공구함 " : "UNIT ") + u.no; }
   function stepLabel(s) { return "STEP " + s.no + " · " + s.name; }
   function chipsHtml(list, cls) { return '<span class="chips' + (cls ? " " + cls : "") + '">' + list.map(function (w) { return "<span>" + esc(w) + "</span>"; }).join("") + "</span>"; }
 
@@ -92,7 +106,8 @@
 
   function renderNav(route) {
     var html = '<a class="nav-item' + '" href="#home"' + (route === "home" ? ' aria-current="page"' : "") + '><span class="nav-icon">⌂</span><span>내 학습</span><span></span></a>';
-    html += S.map(function (s) {
+    html += '<a class="nav-item nav-track" href="#tracks"' + (route === "tracks" ? ' aria-current="page"' : "") + '><span class="nav-icon" aria-hidden="true">◈</span><span>' + (state.track ? "내 트랙 · " + esc(myTrack().name) : "목적별 트랙 고르기") + "</span><span></span></a>";
+    html += trackStages().map(function (s) {
       return '<div class="nav-group nav-stage"><span>' + stepLabel(s) + (s.bonus ? " · 선택" : "") + '</span><span class="nav-count">' + stageDone(s) + "/" + s.units.length + "</span></div>" +
         stageUnits(s).map(function (u) {
           var cls = "nav-item" + (state.done[u.id] ? " done" : "") + (started(u) ? " started" : "");
@@ -124,14 +139,14 @@
       '<section class="hello"><p class="eyebrow">' + esc(C.title) + "</p><h1>" + (first ? "혼자서도 끝까지,<br>오늘 첫 유닛부터." : "다시 왔네요.<br>이어서 가볼까요?") + '</h1><p class="lead">' + esc(C.promise) + "</p></section>" +
       cta + (nx ? "" : '<a class="pf-link" href="#portfolio">내 포트폴리오 만들기 →</a>') +
       (first && !state.placement.applied ? '<div class="starts"><a class="start-card" href="#placement"><b>AI를 써본 적 있나요?</b><span>3분 진단으로 이미 아는 유닛은 건너뛰어요. 내게 필요한 유닛만 남겨줘요.</span><i aria-hidden="true">→</i></a><a class="start-card" href="demo.html"><b>완성품 먼저 보기</b><span>민규가 이 코스로 만든 서비스를 직접 써봐요. 목적지를 보고 출발하면 덜 헤매요.</span><i aria-hidden="true">→</i></a></div>' : "") +
-      ladderHtml() + reviewHtml() +
+      (state.track ? "" : trackPickHtml()) + ladderHtml() + reviewHtml() +
       '<div class="stats"><div class="stat"><b>' + doneCount() + "/" + CORE.length + "</b><span>완료한 유닛</span></div><div class=\"stat\"><b>" + progress() + "%</b><span>진도</span></div><div class=\"stat\"><b>" + (left ? hm(left) : "0분") + "</b><span>남은 시간</span></div></div>" +
-      '<section class="section"><h2>코스 지도</h2><p class="muted">유닛 ' + U.length + "개를 다섯 계단으로 묶었어요. 계단을 오를 때마다 쓰는 도구와 새로 알 말이 바뀌어요. 기본 코스는 STEP 3까지, 약 " + hm(totalMinutes()) + "이에요.</p>" + S.map(function (s) {
+      '<section class="section"><h2>코스 지도</h2><p class="muted">' + (myTrack().soon ? "모든 트랙이 함께 듣는 STEP 1부터 시작해요. '" + esc(myTrack().name) + "' 트랙은 준비 중이라 유닛 예고를 아래에 보여드려요." : "STEP 1은 모든 트랙이 함께 듣고, STEP 2부터는 '" + esc(myTrack().name) + "' 트랙이에요. 계단을 오를 때마다 쓰는 도구와 새로 알 말이 바뀌어요. 기본 코스는 STEP 3까지, 약 " + hm(totalMinutes()) + "이에요.") + ' <a href="#tracks">트랙 바꾸기 →</a></p>' + trackStages().map(function (s) {
         return '<div class="stage-block' + (s === nowStage() ? " now" : "") + '"><div class="stage-head"><span class="stage-no">STEP ' + s.no + "</span><div><b>" + esc(s.name) + " · " + esc(s.title) + (s.bonus ? ' <i class="bonus">보너스</i>' : "") + "</b><small>" + esc(s.sub) + '</small></div><span class="state">' + stageDone(s) + "/" + s.units.length + '</span></div><div class="unit-list">' + stageUnits(s).map(function (u) {
           var st = state.placed[u.id] ? "진단 통과" : state.done[u.id] ? "완료" : started(u) ? "진행 중" : hm(u.minutes);
           return '<a class="unit-row' + (state.done[u.id] ? " done" : "") + '" href="#' + u.id + '"><span class="no">' + u.no + "</span><span><b>" + esc(u.title) + "</b><small>결과물 · " + esc(u.outcome) + '</small></span><span class="state">' + st + "</span></a>";
         }).join("") + "</div></div>";
-      }).join("") + "</section>" +
+      }).join("") + (myTrack().soon ? trackPreviewHtml(myTrack()) : "") + "</section>" +
       '<section class="section card goal"><h2>내 목표 카드</h2><p class="muted">적어두면 의지가 약한 날에도 돌아올 이유가 돼요. 이 기기에만 저장돼요.</p>' +
       '<div class="field"><label for="goal-what">만들고 싶은 것 한 줄</label><input type="text" id="goal-what" data-goal="what" placeholder="회의가 끝나면 할 일을 자동으로 정리해주는 도구" value="' + esc(state.goal.what) + '"></div>' +
       '<div class="field"><label>공부할 요일 (30분씩)</label><div class="days" role="group" aria-label="공부할 요일">' + DAYS.map(function (d) {
@@ -141,14 +156,43 @@
       "</div>";
   }
 
+  // 목적별 트랙 고르기 (홈·진단·트랙 화면에서 같이 써요)
+  function trackButtons() {
+    return '<div class="track-picks" role="group" aria-label="배우는 목적">' + TR.map(function (t) {
+      return '<button type="button" class="track-pick" data-track="' + t.id + '" aria-pressed="' + (state.track === t.id) + '"><b>' + esc(t.name) + "</b><small>" + esc(t.who) + "</small>" + (t.soon ? "<i>준비 중</i>" : "") + "</button>";
+    }).join("") + "</div>";
+  }
+  function trackPickHtml() {
+    return '<section class="card track-pick-card"><p class="eyebrow">먼저 하나만 골라요</p><h2>무엇을 위해 배우나요?</h2><p class="muted">STEP 1(대화·공구함)은 모든 트랙이 함께 들어요. 그다음부터 목적에 맞는 유닛으로 갈라져요. 언제든 바꿀 수 있어요.</p>' + trackButtons() + "</section>";
+  }
+  function trackPreviewHtml(t) {
+    return '<div class="track-preview"><p class="eyebrow">' + esc(t.name) + " 트랙 · 준비 중</p><p>" + esc(t.goal) + ' <b>최종 결과물</b> ' + esc(t.project) + '</p><ol class="tp-list">' + (t.preview || []).map(function (x) {
+      return '<li><span class="no">' + esc(x.no) + "</span><span><b>" + esc(x.title) + "</b><small>" + esc(x.goal) + "</small></span></li>";
+    }).join("") + '</ol><p class="muted">기다리는 동안 \'서비스 만들기\' 트랙을 맛보기로 해도 좋아요. 유닛 진도는 그대로 남아요. <a href="#tracks">트랙 보기 →</a></p></div>';
+  }
+  function viewTracks() {
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">목적별 트랙</p><h1>목적이 순서를 정해요</h1><p class="lead">모든 트랙은 STEP 1(대화와 공구함 A)을 함께 들은 뒤 갈라져요. 같은 계단을 다른 재료로 올라요. 한 장짜리 결과물 → 반복을 템플릿으로 → 연결 → 자동화, 그리고 모든 유닛에 검증 한 번.</p></header>' +
+      '<div class="tracks">' + TR.map(function (t) {
+        var on = myTrack() === t && !!state.track;
+        var body = t.soon
+          ? '<ol class="tp-list">' + t.preview.map(function (x) { return '<li><span class="no">' + esc(x.no) + "</span><span><b>" + esc(x.title) + "</b><small>" + esc(x.goal) + "</small></span></li>"; }).join("") + "</ol>"
+          : '<ol class="tp-list">' + t.stages.map(function (id) { var st = S.filter(function (x) { return x.id === id; })[0]; return stageUnits(st).map(function (u) { return '<li><span class="no">' + esc(u.no) + '</span><span><a href="#' + u.id + '"><b>' + esc(u.title) + "</b></a><small>STEP " + st.no + " " + esc(st.name) + (u.optional ? " · 보너스" : "") + "</small></span></li>"; }).join(""); }).join("") + "</ol>";
+        return '<section class="card track' + (on ? " on" : "") + '" id="t-' + t.id + '"><p class="track-top"><b>' + esc(t.name) + "</b>" + (t.soon ? '<span class="tbadge">준비 중</span>' : '<span class="tbadge now">지금 열림</span>') + (on ? '<span class="tbadge ok">내 트랙</span>' : "") + "</p>" +
+          '<dl class="stage-dl"><div><dt>누구를 위해</dt><dd>' + esc(t.who) + "</dd></div><div><dt>목표</dt><dd>" + esc(t.goal) + "</dd></div><div><dt>최종 결과물</dt><dd>" + esc(t.project) + "</dd></div><div><dt>왜 이 트랙</dt><dd>" + esc(t.why) + "</dd></div></dl>" + body +
+          '<button type="button" class="btn ' + (on ? "secondary" : "accent") + ' small" data-track="' + t.id + '"' + (on ? " disabled" : "") + ">" + (on ? "지금 이 트랙이에요" : "이 트랙으로 하기") + "</button></section>";
+      }).join("") + "</div>" +
+      '<p class="muted">트랙을 바꿔도 끝낸 유닛과 기록은 그대로 남아요. 어느 트랙이 맞는지 모르겠다면 <a href="#placement">시작점 진단</a>에서 함께 골라요.</p></div>';
+  }
+
   // 지금 여기: 다섯 계단 중 현재 위치와 이 단계에서 할 일
   function ladderHtml() {
     var cur = nowStage();
-    return '<section class="ladder" aria-label="코스 단계"><ol class="ladder-steps">' + S.map(function (s) {
+    var ts = trackStages(), t = myTrack();
+    return '<section class="ladder" aria-label="코스 단계"><ol class="ladder-steps' + (ts.length < 5 ? " few" : "") + '">' + ts.map(function (s) {
       var full = stageDone(s) === s.units.length;
       var cls = (full ? "done" : "") + (s === cur ? " now" : "") + (s.bonus ? " opt" : "");
       return '<li class="' + cls.trim() + '"' + (s === cur ? ' aria-current="step"' : "") + '><span class="ls-no">' + (full ? "✓" : s.no) + "</span><b>" + esc(s.name) + "</b><small>" + (s === cur ? "지금 여기" : s.bonus ? "선택" : stageDone(s) + "/" + s.units.length) + "</small></li>";
-    }).join("") + "</ol>" +
+    }).join("") + (t.soon ? '<li class="opt soon"><span class="ls-no">2</span><b>' + esc(t.name) + "</b><small>준비 중</small></li>" : "") + "</ol>" +
       '<div class="card stage-now"><p class="eyebrow">지금 여기 · ' + stepLabel(cur) + "</p><h2>" + esc(cur.title) + '</h2><p class="muted">' + esc(cur.sub) + "</p>" +
       '<dl class="stage-dl"><div><dt>어디서</dt><dd>' + esc(cur.tool) + "</dd></div><div><dt>이 단계를 마치면</dt><dd>" + esc(cur.unlock) + "</dd></div><div><dt>꼭 알 말</dt><dd>" + chipsHtml(cur.must) + "</dd></div></dl>" +
       '<div class="finish-row"><button type="button" class="btn secondary small" data-gstage="' + cur.no + '">이 단계 용어 보기</button><a class="btn secondary small" href="#cheats">한 장 치트시트</a><a class="btn secondary small" href="#map">AI 사용 지도</a></div></div></section>';
@@ -163,7 +207,7 @@
       items.map(function (it) {
         var u = it.u, q = it.seen ? it.seen.q : reviewQuestion(u, state.review[u.id] || { stage: 0 });
         var picked = it.seen ? it.seen.picked : undefined, answered = picked !== undefined;
-        return '<div class="q rv" data-rv="' + u.id + '"><p class="rv-from">UNIT ' + u.no + " · " + esc(u.title) + "</p><h3>" + esc(q.q) + '</h3><div class="options">' + q.options.map(function (o, oi) {
+        return '<div class="q rv" data-rv="' + u.id + '"><p class="rv-from">' + ulabel(u) + " · " + esc(u.title) + "</p><h3>" + esc(q.q) + '</h3><div class="options">' + q.options.map(function (o, oi) {
           var cls = "opt" + (answered && oi === q.answer ? " right" : answered && oi === picked ? " wrong" : "");
           return '<button type="button" class="' + cls + '" data-ropt="' + oi + '"' + (answered ? " disabled" : "") + ">" + esc(o) + "</button>";
         }).join("") + "</div>" + (answered ? explainHtml(q, picked) + '<p class="rv-next muted">' + (picked === q.answer ? (it.seen.stage >= GAPS.length ? "이 유닛 복습은 끝났어요." : "다음 복습은 " + GAPS[it.seen.stage] + "일 뒤예요.") : "내일 다시 나와요. 유닛을 한 번 훑어봐도 좋아요.") + "</p>" : "") + "</div>";
@@ -196,7 +240,7 @@
     var seen = conceptSeen(u), r = function (t) { return rich(t, seen); };
     return '<article class="page">' +
       '<header class="unit-hero"><p class="crumb"><a href="#map">' + stepLabel(st) + "</a><span>" + esc(st.title) + " · " + (si + 1) + "/" + st.units.length + '번째 유닛</span></p><div class="meta"><span class="tag accent">' + esc(u.level) + "</span>" + (u.optional ? '<span class="tag">선택</span>' : "") + '<span class="tag">' + hm(u.minutes) + "</span>" + (state.placed[u.id] ? '<span class="tag" style="color:var(--ok)">진단 통과</span>' : state.done[u.id] ? '<span class="tag" style="color:var(--ok)">완료</span>' : "") + "</div>" +
-      '<h1><span class="no">UNIT ' + u.no + "</span>" + esc(u.title) + '</h1><p class="lead">' + r(u.lead) + '</p>' + (state.placed[u.id] ? '<p class="placed-note">시작점 진단에서 이미 안다고 나온 유닛이에요. 훑어보고 퀴즈만 풀어 봐도 좋아요.</p>' : "") + '<p class="gl-hint">점선 밑줄이 있는 말을 누르면 뜻이 바로 떠요.</p><div class="outcome"><b>결과물</b><span>' + esc(u.outcome) + "</span></div>" + (u.place ? '<div class="outcome place"><b>어디서</b><span>' + esc(u.place) + "</span></div>" : "") + "</header>" +
+      '<h1><span class="no">' + ulabel(u) + "</span>" + esc(u.title) + '</h1><p class="lead">' + r(u.lead) + '</p>' + (state.placed[u.id] ? '<p class="placed-note">시작점 진단에서 이미 안다고 나온 유닛이에요. 훑어보고 퀴즈만 풀어 봐도 좋아요.</p>' : "") + '<p class="gl-hint">점선 밑줄이 있는 말을 누르면 뜻이 바로 떠요.</p><div class="outcome"><b>결과물</b><span>' + esc(u.outcome) + "</span></div>" + (u.place ? '<div class="outcome place"><b>어디서</b><span>' + esc(u.place) + "</span></div>" : "") + "</header>" +
       '<section class="section"><h2><span class="num">01</span>왜 배우나요</h2><p class="why">' + r(u.why) + "</p></section>" +
       '<section class="section"><h2><span class="num">02</span>핵심 개념</h2><div class="concepts">' + u.concepts.map(function (c) {
         return '<div class="card concept"><h3>' + esc(c.term) + '<span class="like">' + esc(c.like) + "</span></h3><p>" + r(c.body) + "</p>" + figHtml(c.fig) + "</div>";
@@ -239,7 +283,11 @@
   function stageNextHtml(u) {
     var st = stageOf(u);
     if (st.units[st.units.length - 1] !== u.id) return "";
-    var nx = S[S.indexOf(st) + 1];
+    var ts = trackStages(), ti = ts.indexOf(st);
+    var nx = ti === -1 ? S[S.indexOf(st) + 1] : ts[ti + 1];
+    if (!nx && ti === 0 && myTrack().soon) {
+      return '<section class="card stage-next"><p class="eyebrow">' + stepLabel(st) + (stageDone(st) === st.units.length ? " 완료" : "의 마지막 유닛") + '</p><h2>공통 기초를 마치면, 트랙으로 갈라져요.</h2><p><b>이제 할 수 있는 것</b> ' + esc(st.unlock) + "</p>" + trackPreviewHtml(myTrack()) + "</section>";
+    }
     var full = stageDone(st) === st.units.length;
     return '<section class="card stage-next"><p class="eyebrow">' + (full ? stepLabel(st) + " 완료" : stepLabel(st) + "의 마지막 유닛") + "</p><h2>" + (full ? "한 계단 올라왔어요." : "이 유닛을 마치면 한 계단 올라가요.") + "</h2>" +
       '<p><b>이제 할 수 있는 것</b> ' + esc(st.unlock) + "</p>" +
@@ -252,7 +300,7 @@
     return f ? '<figure class="fig" role="img" aria-label="' + esc(f.label) + '">' + f.svg + "</figure>" : "";
   }
   function tutorText(u) {
-    return C.tutorTemplate.replace("{title}", "UNIT " + u.no + " " + u.title).replace("{concepts}", u.concepts.map(function (c) { return c.term; }).join(", "));
+    return C.tutorTemplate.replace("{title}", ulabel(u) + " " + u.title).replace("{concepts}", u.concepts.map(function (c) { return c.term; }).join(", "));
   }
   function explainHtml(q, picked) {
     var ok = picked === q.answer;
@@ -293,7 +341,7 @@
   var ALL_TERMS = C.glossary.concat([].concat.apply([], C.devkit.map(function (g) {
     return g.terms.map(function (t) { return { term: t.term, like: t.like, why: t.why, body: t.body, stage: "dev", group: g }; });
   })));
-  var GLOSS_CATS = [{ id: "all", label: "전체" }].concat(S.map(function (s) { return { id: String(s.no), label: s.no + " " + s.name }; }), [{ id: "dev", label: "개발 도구" }]);
+  var GLOSS_CATS = [{ id: "all", label: "전체" }].concat(S.map(function (s) { return { id: String(s.no), label: s.no + " " + s.name }; }), [{ id: "base", label: "기초" }, { id: "dev", label: "개발 도구" }]);
   var glossCat = "all", glossQ = "";
   function glossList() {
     var q = glossQ.trim().toLowerCase();
@@ -312,8 +360,8 @@
     return list.map(function (t) {
       var u = unitById(t.unit);
       var link = u ? '<a href="#' + u.id + '">유닛 ' + u.no + " · " + esc(u.title) + " →</a>" : t.group ? '<a href="#devkit">개발 도구 지도 · ' + esc(t.group.title) + " →</a>" : "";
-      var s = t.stage && t.stage !== "dev" ? stageById(t.stage) : null;
-      var badges = (s ? '<span class="tbadge">STEP ' + s.no + " " + esc(s.name) + "</span>" : "") + (t.later ? '<span class="tbadge later">나중에 알아도 돼요</span>' : "") + (t.old ? '<span class="tbadge old">옛 용어</span>' : "");
+      var s = t.stage && t.stage !== "dev" && t.stage !== "base" ? stageById(t.stage) : null;
+      var badges = (s ? '<span class="tbadge">STEP ' + s.no + " " + esc(s.name) + "</span>" : t.stage === "base" ? '<span class="tbadge">기초 · 공구함</span>' : "") + (t.later ? '<span class="tbadge later">나중에 알아도 돼요</span>' : "") + (t.old ? '<span class="tbadge old">옛 용어</span>' : "");
       return '<div class="term">' + (badges ? '<p class="tbadges">' + badges + "</p>" : "") + "<h3>" + esc(t.term) + (t.en ? "<small>" + esc(t.en) + "</small>" : "") + '</h3><span class="like">= ' + esc(t.like) + "</span>" + (t.body ? '<p class="body">' + esc(t.body) + "</p>" : "") + '<p class="why">' + (t.body ? "<b>왜?</b> " : "") + esc(t.why) + "</p>" + link + "</div>";
     }).join("");
   }
@@ -360,7 +408,7 @@
   // ---------- 화면: 한 장 치트시트 ----------
   function viewCheats() {
     return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 인쇄해서 책상 옆에</p><h1>한 장 치트시트</h1><p class="lead">계단마다 꼭 알 말, 지킬 습관, 하지 말 것을 한 장씩 담았어요. 프롬프트 패턴과 화면에 뜨는 낯선 문구 풀이도 함께예요.</p><div class="finish-row"><button type="button" class="btn small" data-print>인쇄 · PDF로 저장</button></div></header>' +
-      '<nav class="jump" aria-label="이 페이지 목차"><button type="button" data-jump="c-steps"><span>1</span>계단별 한 장</button><button type="button" data-jump="c-patterns"><span>2</span>프롬프트 패턴 ' + C.patterns.length + '</button><button type="button" data-jump="c-phrases"><span>3</span>화면 문구 사전</button></nav>' +
+      '<nav class="jump" aria-label="이 페이지 목차"><button type="button" data-jump="c-steps"><span>1</span>계단별 한 장</button><button type="button" data-jump="c-patterns"><span>2</span>프롬프트 패턴 ' + C.patterns.length + '</button><button type="button" data-jump="c-phrases"><span>3</span>화면 문구 사전</button><button type="button" data-jump="c-md"><span>4</span>마크다운 한 장</button></nav>' +
       '<section class="section dk" id="c-steps"><p class="dk-no">01</p><h2>계단별 한 장</h2><div class="sheets">' + S.map(function (s) {
         return '<article class="card sheet"><header><span class="stage-no">STEP ' + s.no + "</span><h3>" + esc(s.name) + " · " + esc(s.title) + (s.bonus ? ' <i class="bonus">보너스</i>' : "") + "</h3><p>" + esc(s.sub) + '</p></header><dl class="stage-dl"><div><dt>어디서</dt><dd>' + esc(s.tool) + "</dd></div><div><dt>꼭 알 말</dt><dd>" + chipsHtml(s.must) + '</dd></div></dl><div class="sheet-cols"><div><p class="sheet-h ok">지킬 습관</p><ul>' + s.habits.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + '</ul></div><div><p class="sheet-h no">하지 말 것</p><ul>' + s.dont.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + '</ul></div></div><p class="sheet-end"><b>마치면</b> ' + esc(s.unlock) + "</p></article>";
       }).join("") + "</div></section>" +
@@ -370,11 +418,14 @@
       '<section class="section dk" id="c-phrases"><p class="dk-no">03</p><h2>화면 문구 사전</h2><p class="muted">에이전트와 개발 도구는 영어로 말을 걸어요. 자주 보는 문구의 뜻과 그때 할 일이에요. 도구와 버전마다 문구가 조금씩 달라요.</p><div class="approvals phrases">' + C.phrases.map(function (x) {
         var s = stageById(x.stage);
         return '<div class="approval phrase"><span class="lv">STEP ' + s.no + "</span><code>" + esc(x.say) + "</code><p>" + esc(x.mean) + '</p><p class="ask"><b>이렇게 해요</b>' + esc(x.act) + "</p></div>";
-      }).join("") + '</div><p class="muted">명령어가 나오면 <a href="#devkit">개발 도구 지도의 허락 가이드</a>를 함께 보세요.</p></section></div>';
+      }).join("") + '</div><p class="muted">명령어가 나오면 <a href="#devkit">개발 도구 지도의 허락 가이드</a>를 함께 보세요.</p></section>' +
+      '<section class="section dk" id="c-md"><p class="dk-no">04</p><h2>마크다운 한 장</h2><p class="muted">AI 답변, CLAUDE.md, SKILL.md, 노션이 모두 쓰는 글자 약속이에요. 실제로 쓰는 건 아홉 가지뿐이에요.</p><div class="table-wrap"><table class="tbl md-tbl"><thead><tr><th>이렇게 쓰면</th><th>이렇게 보여요</th><th>언제·주의</th></tr></thead><tbody>' + C.mdCheat.map(function (x) {
+        return "<tr><td><pre>" + esc(x.md) + "</pre></td><th>" + esc(x.show) + "</th><td>" + esc(x.use) + "</td></tr>";
+      }).join("") + '</tbody></table></div><div class="md-where"><p><b>모양으로 보이는 곳</b> ' + esc(C.mdWhere.yes) + '</p><p><b>기호 그대로 보이는 곳</b> ' + esc(C.mdWhere.no) + '</p></div><p class="muted">기호가 그대로 보이는 곳에 붙일 때는 AI에게 \'마크다운 기호 없이 평문으로 다시 써줘\'라고 하거나, 서식 없이 붙여넣기를 써요.</p></section></div>';
   }
 
   // ---------- 본문 속 용어 툴팁: 유닛마다 용어를 처음 나올 때 한 번만 연결 ----------
-  var GL_STOP = ["포트", "풀", "이미지", "프로젝트", "명령", "도구", "빌드", "컨테이너", "패키지"];
+  var GL_STOP = ["포트", "풀", "이미지", "프로젝트", "명령", "도구", "빌드", "컨테이너", "패키지", "연결", "구독"];
   var GL_KEYS = null, GL_RE = null;
   function glKeys() {
     if (GL_KEYS) return GL_KEYS;
@@ -413,9 +464,9 @@
   function glPop(btn) {
     var t = ALL_TERMS[Number(btn.getAttribute("data-gl"))], pop = $("#gl-pop");
     if (!pop) { pop = document.createElement("div"); pop.id = "gl-pop"; pop.className = "gl-pop"; pop.setAttribute("role", "dialog"); document.body.appendChild(pop); }
-    var s = t.stage && t.stage !== "dev" ? stageById(t.stage) : null;
+    var s = t.stage && t.stage !== "dev" && t.stage !== "base" ? stageById(t.stage) : null;
     pop.setAttribute("aria-label", t.term);
-    pop.innerHTML = '<p class="gl-top">' + (s ? "STEP " + s.no + " " + esc(s.name) : "개발 도구") + '<button type="button" class="gl-x" data-gl-close aria-label="닫기">✕</button></p><h3>' + esc(t.term) + (t.en ? "<small>" + esc(t.en) + "</small>" : "") + '</h3><p class="like">= ' + esc(t.like) + "</p>" + (t.body ? "<p>" + esc(t.body) + "</p>" : "") + '<p class="why"><b>왜?</b> ' + esc(t.why) + '</p><button type="button" class="gl-more" data-gq="' + esc(t.term) + '">용어 사전에서 보기 →</button>';
+    pop.innerHTML = '<p class="gl-top">' + (s ? "STEP " + s.no + " " + esc(s.name) : t.stage === "base" ? "기초 · 공구함" : "개발 도구") + '<button type="button" class="gl-x" data-gl-close aria-label="닫기">✕</button></p><h3>' + esc(t.term) + (t.en ? "<small>" + esc(t.en) + "</small>" : "") + '</h3><p class="like">= ' + esc(t.like) + "</p>" + (t.body ? "<p>" + esc(t.body) + "</p>" : "") + '<p class="why"><b>왜?</b> ' + esc(t.why) + '</p><button type="button" class="gl-more" data-gq="' + esc(t.term) + '">용어 사전에서 보기 →</button>';
     pop.hidden = false;
     var r = btn.getBoundingClientRect(), w = Math.min(340, window.innerWidth - 24);
     pop.style.width = w + "px";
@@ -438,15 +489,17 @@
   }
   function viewPlacement() {
     var P = C.placement, A = state.placement.answers;
-    var answered = P.items.filter(function (it) { var a = A[it.unit]; return a && a.k !== undefined && a.did !== undefined; }).length;
+    var items = P.items.filter(function (it) { return CORE.some(function (u) { return u.id === it.unit; }); });
+    var answered = items.filter(function (it) { var a = A[it.unit]; return a && a.k !== undefined && a.did !== undefined; }).length;
     return '<div class="page"><header class="hello"><p class="eyebrow">도구 · 3분이면 끝나요</p><h1>어디서 시작할까요?</h1><p class="lead">AI를 이미 써봤다면 아는 유닛까지 다시 할 필요는 없어요. 유닛마다 <b>문제 하나</b>와 <b>경험 하나</b>를 물어요. 둘 다 갖춰야 건너뛰어요.</p><p class="muted">왜 둘 다냐고요? 운전 이론을 아는 것과 실제로 몰아본 것이 다르듯, 아는 것과 해본 것은 달라서요.</p></header>' +
-      '<div class="pl-list">' + P.items.map(function (it, i) {
+      '<section class="card pl-item"><p class="pl-unit"><span>0</span>목적</p><h3>무엇을 위해 배우나요?</h3>' + trackButtons() + (myTrack().soon ? '<p class="muted">이 트랙은 준비 중이라, 지금은 공통 기초(STEP 1)만 진단해요.</p>' : "") + "</section>" +
+      '<div class="pl-list">' + items.map(function (it, i) {
         var u = unitById(it.unit), a = A[it.unit] || {};
-        return '<section class="card pl-item"><p class="pl-unit"><span>' + (i + 1) + "/" + P.items.length + "</span>유닛 " + u.no + " · " + esc(u.title) + "</p><h3>" + esc(it.q) + '</h3><div class="options">' + it.options.map(function (o, oi) {
+        return '<section class="card pl-item"><p class="pl-unit"><span>' + (i + 1) + "/" + items.length + "</span>" + (u.kit ? "공구함 " : "유닛 ") + u.no + " · " + esc(u.title) + "</p><h3>" + esc(it.q) + '</h3><div class="options">' + it.options.map(function (o, oi) {
           return '<button type="button" class="opt pl-opt" data-pk="' + it.unit + '" data-pv="' + oi + '" aria-pressed="' + (a.k === oi) + '">' + esc(o) + "</button>";
         }).join("") + '</div><p class="pl-did">' + esc(it.did) + '</p><div class="sc-tabs" role="group" aria-label="경험"><button type="button" data-pd="' + it.unit + '" data-pv="1" aria-pressed="' + (a.did === true) + '">해봤어요</button><button type="button" data-pd="' + it.unit + '" data-pv="0" aria-pressed="' + (a.did === false) + '">아직이요</button></div></section>';
       }).join("") + "</div>" +
-      (answered < P.items.length ? '<p class="muted pl-left">' + (P.items.length - answered) + "개 남았어요. 모두 답하면 아래에 추천 경로가 나와요.</p>" : plResultHtml()) + "</div>";
+      (answered < items.length ? '<p class="muted pl-left">' + (items.length - answered) + "개 남았어요. 모두 답하면 아래에 추천 경로가 나와요.</p>" : plResultHtml()) + "</div>";
   }
   function plResultHtml() {
     var path = plPath();
@@ -483,7 +536,7 @@
     lines.push("## 만든 것", "- " + (state.goal.what || "(목표 카드를 채워주세요)"), pf.url ? "- 링크: " + pf.url : "- 링크: (배포한 주소를 적어주세요)", "");
     lines.push(briefText(), "");
     lines.push("## 유닛별 배움");
-    U.forEach(function (u) { if (state.reflect[u.id]) lines.push("- UNIT " + u.no + " " + u.title + ": " + state.reflect[u.id]); });
+    U.forEach(function (u) { if (state.reflect[u.id]) lines.push("- " + ulabel(u) + " " + u.title + ": " + state.reflect[u.id]); });
     if (pf.lesson) lines.push("", "## 가장 큰 배움", pf.lesson);
     lines.push("", "## 진도", "- 완료한 유닛 " + doneCount() + "/" + CORE.length + (bonusDone() ? " + 보너스 " + bonusDone() + "개" : ""));
     var sc = C.selfCheck.map(function (q, i) { var a = state.self.start[i], b = state.self.end[i]; return a || b ? "- " + q + ": " + (a || "-") + " → " + (b || "-") : ""; }).filter(Boolean);
@@ -503,7 +556,7 @@
       '<section class="section"><h2>한눈에 보기</h2><div class="pf-grid">' +
       '<div class="card"><p class="eyebrow">만든 것</p><p class="pf-big">' + esc(state.goal.what || "목표 카드가 비어 있어요") + "</p>" + (pf.url ? '<a href="' + esc(pf.url) + '" target="_blank" rel="noopener">' + esc(pf.url) + " ↗</a>" : '<a href="#home">목표 카드 채우기 →</a>') + "</div>" +
       '<div class="card"><p class="eyebrow">진도</p><p class="pf-big">' + doneCount() + "/" + CORE.length + '</p><p class="muted">완료한 유닛' + (bonusDone() ? " + 보너스 " + bonusDone() + "개" : "") + "</p></div></div>" +
-      '<div class="card pf-reflect"><p class="eyebrow">유닛별 한 줄 회고 ' + reflected.length + "개</p>" + (reflected.length ? "<ul>" + reflected.map(function (u) { return "<li><b>UNIT " + u.no + "</b> " + esc(state.reflect[u.id]) + "</li>"; }).join("") + "</ul>" : '<p class="muted">유닛 끝의 \'스스로 점검\'에서 한 줄 회고를 쓰면 여기에 모여요.</p>') + "</div></section>" +
+      '<div class="card pf-reflect"><p class="eyebrow">유닛별 한 줄 회고 ' + reflected.length + "개</p>" + (reflected.length ? "<ul>" + reflected.map(function (u) { return "<li><b>" + ulabel(u) + "</b> " + esc(state.reflect[u.id]) + "</li>"; }).join("") + "</ul>" : '<p class="muted">유닛 끝의 \'스스로 점검\'에서 한 줄 회고를 쓰면 여기에 모여요.</p>') + "</div></section>" +
       '<section class="section" id="pf-out"><h2>복사해서 공유하기</h2><p class="muted">노션, 블로그, 이력서에 그대로 붙여넣을 수 있는 형식(마크다운)이에요.</p>' + promptBox(portfolioText(), "내 포트폴리오") + "</section></div>";
   }
 
@@ -536,15 +589,20 @@
       '<h3 class="sub">모르는 명령이 나오면</h3>' + promptBox(C.explainCmd, "AI에게 물어보는 프롬프트") + "</section></div>";
   }
 
+  var LV = { click: "클릭", line: "한 줄", key: "열쇠" };
+  var TRACK_LABEL = { work: "업무", plan: "기획", build: "서비스", content: "콘텐츠", study: "공부", korea: "한국 특화" };
+  var skillTrack = "all";
+  // 설정 화면 안내(글)는 그대로, 명령(/로 시작하거나 여러 줄)은 복사 상자로
+  function installHtml(s) { return /^\//.test(s.install) || s.install.indexOf("\n") !== -1 ? promptBox(s.install, "설치 명령") : '<p class="inst-how">' + esc(s.install) + "</p>"; }
   function stars(n) { var s = ""; for (var i = 1; i <= 3; i++) s += i <= n ? "★" : "<i>★</i>"; return '<span class="stars" aria-label="초급 추천도 ' + n + '">' + s + "</span>"; }
   var skillCat = "all";
   function skillByName(n) { return [].concat.apply([], C.skillCats.map(function (c) { return c.items; })).filter(function (s) { return s.name === n; })[0]; }
   function srcLink(s) { return s.src ? '<a class="src" href="https://github.com/' + esc(s.src) + '" target="_blank" rel="noopener">github.com/' + esc(s.src) + " ↗</a>" : ""; }
   function skillCard(s) {
-    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small>" + (s.pop ? '<span class="pop" title="GitHub 별 수, 2026년 10월 기준">' + esc(s.pop) + "</span>" : "") + "</h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" +
+    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small>" + (s.pop ? '<span class="pop" title="GitHub 별 수, 2026년 11월 기준">' + esc(s.pop) + "</span>" : "") + '<span class="lv lv-' + (s.lv || "line") + '" title="설치 난이도">' + LV[s.lv || "line"] + "</span></h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" +
       (s.note ? '<p class="snote">' + esc(s.note) + "</p>" : "") +
       (s.ba ? '<div class="ba"><div><span>전</span><p>' + esc(s.ba.before) + '</p></div><div><span>후</span><p>' + esc(s.ba.after) + "</p></div></div>" : "") +
-      '<details class="inst"><summary>Claude Code 설치 명령</summary>' + promptBox(s.install, "설치 명령") + "</details>" + srcLink(s) + "</div>";
+      '<details class="inst"><summary>' + (s.lv === "click" ? "연결·설치 방법" : "Claude Code 설치 명령") + "</summary>" + installHtml(s) + "</details>" + srcLink(s) + "</div>";
   }
   var finder = { goal: "", tool: "" };
   function finderHtml() {
@@ -558,7 +616,7 @@
     if (g && t) {
       var picks = g.picks.map(skillByName);
       result = '<div class="finder-result"><p class="how">' + esc(t.how) + "</p>" + picks.map(function (s, i) {
-        var body = t.id === "code" ? promptBox(s.install, "설치 명령") : t.id === "app" ? (s.src ? srcLink(s) : '<p class="muted">Claude Code 전용이에요.</p>') : "";
+        var body = t.id === "code" || s.lv === "click" ? installHtml(s) : t.id === "app" ? (s.src ? srcLink(s) : '<p class="muted">Claude Code 전용이에요.</p>') : "";
         return '<div class="pick"><b>' + (i + 1) + "</b><div><h3>" + esc(s.name) + (s.pop ? ' <span class="pop">' + esc(s.pop) + "</span>" : "") + "</h3><p>" + esc(s.what) + "</p>" + body + "</div></div>";
       }).join("") + (t.id === "builder" ? promptBox(C.builderRules, "프로젝트 지침에 붙여넣기") : "") + "</div>";
     } else {
@@ -571,13 +629,16 @@
   function viewSkills() {
     var all = [].concat.apply([], C.skillCats.map(function (c) { return c.items; }));
     var starter = C.skillStarter.map(function (n) { return all.filter(function (s) { return s.name === n; })[0]; });
-    var cats = C.skillCats.filter(function (c) { return skillCat === "all" || c.id === skillCat; });
+    var inTrack = C.skillCats.filter(function (c) { return skillTrack === "all" || c.track === skillTrack; });
+    var cats = inTrack.filter(function (c) { return skillCat === "all" || c.id === skillCat; });
     return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 08에서 써요</p><h1>스킬 가이드</h1><p class="lead">스킬은 고수가 정리한 업무 매뉴얼을 AI에게 장착하는 거예요. 처음에는 별 셋짜리 두세 개만 쓰세요. 장비를 다 껴도 레벨이 낮으면 못 쓰거든요.</p></header>' +
       '<section class="starter"><p class="eyebrow">처음이라면 이 3개만</p><div class="starter-row">' + starter.map(function (s, i) {
         return '<div><b>' + (i + 1) + "</b><span>" + esc(s.name) + "</span><small>" + esc(s.when) + "</small></div>";
       }).join("") + "</div></section>" + finderHtml() +
-      '<div class="filters" role="group" aria-label="스킬 분류"><button type="button" class="filter" data-scat="all" aria-pressed="' + (skillCat === "all") + '">전체 ' + all.length + "</button>" +
-      C.skillCats.map(function (c) { return '<button type="button" class="filter" data-scat="' + c.id + '" aria-pressed="' + (skillCat === c.id) + '">' + esc(c.title) + " " + c.items.length + "</button>"; }).join("") + "</div>" +
+      '<div class="lv-guide"><p class="eyebrow">설치 난이도 사다리</p><ol><li><span class="lv lv-click">클릭</span>claude.ai 커넥터·공식 플러그인. 설정 화면에서 눌러 연결해요.</li><li><span class="lv lv-line">한 줄</span>Claude Code에 명령 한두 줄. 출처를 확인하고 설치해요.</li><li><span class="lv lv-key">열쇠</span>API 키·OAuth·실행 환경이 필요해요. 공구함 B 이후에 도전해요.</li></ol><p class="muted">앱스토어 공식 앱 → 회사가 만든 업무 앱 묶음 → 개인 개발자 앱 → 직접 배선 공사 순서라고 생각하면 쉬워요.</p></div>' +
+      '<div class="filters" role="group" aria-label="트랙별"><button type="button" class="filter" data-strack="all" aria-pressed="' + (skillTrack === "all") + '">모든 트랙</button>' + Object.keys(TRACK_LABEL).map(function (k) { return '<button type="button" class="filter" data-strack="' + k + '" aria-pressed="' + (skillTrack === k) + '">' + TRACK_LABEL[k] + "</button>"; }).join("") + "</div>" +
+      '<div class="filters" role="group" aria-label="스킬 분류"><button type="button" class="filter" data-scat="all" aria-pressed="' + (skillCat === "all") + '">전체 ' + [].concat.apply([], inTrack.map(function (c) { return c.items; })).length + "</button>" +
+      inTrack.map(function (c) { return '<button type="button" class="filter" data-scat="' + c.id + '" aria-pressed="' + (skillCat === c.id) + '">' + esc(c.title) + " " + c.items.length + "</button>"; }).join("") + "</div>" +
       cats.map(function (c) {
         return '<section class="section skill-cat"><h2>' + esc(c.title) + '</h2><p class="muted">' + esc(c.desc) + '</p><div class="skill-table">' + c.items.map(skillCard).join("") + "</div></section>";
       }).join("") +
@@ -610,6 +671,7 @@
     else if (r === "glossary") html = viewGlossary();
     else if (r === "map") html = viewMap();
     else if (r === "placement") html = viewPlacement();
+    else if (r === "tracks") html = viewTracks();
     else if (r === "cheats") html = viewCheats();
     else if (r === "devkit") html = viewDevkit();
     else if (r === "recipes") html = viewRecipes();
@@ -623,7 +685,7 @@
     closeSide();
     window.scrollTo(0, 0);
     $("#view").focus({ preventScroll: true });
-    var t = u ? "UNIT " + u.no + " " + u.title : (TOOLS.filter(function (x) { return x.id === r; })[0] || { title: "내 학습" }).title;
+    var t = u ? ulabel(u) + " " + u.title : r === "tracks" ? "목적별 트랙" : (TOOLS.filter(function (x) { return x.id === r; })[0] || { title: "내 학습" }).title;
     document.title = t + " · PLAN_Be 독학 코스";
   }
   function current() { return (location.hash || "#home").slice(1); }
@@ -677,7 +739,7 @@
       state.review[cu.id] = { stage: 0, at: Date.now() };
       save();
       var nx = U[U.indexOf(cu) + 1];
-      toast("UNIT " + cu.no + " 완료! " + (nx ? "다음 유닛으로 가요" : "코스를 완주했어요"));
+      toast(ulabel(cu) + " 완료! " + (nx ? "다음 유닛으로 가요" : "코스를 완주했어요"));
       location.hash = nx ? nx.id : "home";
       return;
     }
@@ -760,6 +822,17 @@
     var gs = t.closest("[data-gstage]");
     if (gs) { glossCat = gs.getAttribute("data-gstage"); glossQ = ""; if (current() === "glossary") route(); else location.hash = "glossary"; return; }
     if (t.closest("[data-print]")) { window.print(); return; }
+    var tk = t.closest("[data-track]");
+    if (tk && !tk.disabled) {
+      state.track = tk.getAttribute("data-track");
+      save();
+      setTrack();
+      toast("'" + myTrack().name + "' 트랙으로 정했어요" + (myTrack().soon ? ". 지금은 공통 기초부터 해요" : ""));
+      route();
+      return;
+    }
+    var stk = t.closest("[data-strack]");
+    if (stk) { skillTrack = stk.getAttribute("data-strack"); skillCat = "all"; $("#view").innerHTML = viewSkills(); return; }
     var scat = t.closest("[data-scat]");
     if (scat) { skillCat = scat.getAttribute("data-scat"); $("#view").innerHTML = viewSkills(); return; }
     var jump = t.closest("[data-jump]");

@@ -812,3 +812,59 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
 .gl-more { justify-self: start; margin-top: 2px; border: 0; background: none; padding: 4px 0; font: inherit; font-size: 0.82rem; font-weight: 750; color: var(--muted); cursor: pointer; }
 .gl-more:hover { color: var(--ink); }
 @media print { .gl { text-decoration: none; } .gl-hint, .gl-pop { display: none !important; } }
+
+/* ---------- 목적별 트랙 ---------- */
+.nav-track { color: var(--accent-text); font-weight: 700; }
+.track-pick-card { display: grid; gap: 12px; border-color: var(--ink); }
+.track-pick-card h2 { font-size: 1.35rem; font-weight: 820; }
+.track-picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.track-pick { position: relative; display: grid; gap: 4px; text-align: left; padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; min-height: 88px; align-content: start; }
+.track-pick:hover { border-color: var(--ink); }
+.track-pick b { font-size: 1rem; font-weight: 800; }
+.track-pick small { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+.track-pick i { position: absolute; top: 10px; right: 10px; font-style: normal; font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: var(--sunken); color: var(--muted); }
+.track-pick[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.track-pick[aria-pressed="true"] small { color: #c9c7c1; }
+.track-preview { display: grid; gap: 10px; padding: 16px 18px; border-radius: var(--r); background: var(--sunken); }
+.track-preview > p:nth-child(2) { font-size: 0.95rem; color: var(--ink-2); }
+.track-preview b { font-size: 0.82rem; color: var(--accent-text); margin-left: 4px; }
+.tp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.tp-list li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 10px 12px; border-radius: var(--r-sm); background: var(--surface); border: 1px solid var(--line); }
+.tp-list .no { font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--accent-text); }
+.tp-list b { display: block; font-weight: 750; font-size: 0.95rem; margin: 0; color: var(--ink); }
+.tp-list a { text-decoration: none; color: inherit; }
+.tp-list a:hover b { color: var(--accent-text); }
+.tp-list small { display: block; font-size: 0.82rem; color: var(--muted); }
+.tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.track { display: grid; gap: 12px; align-content: start; scroll-margin-top: 88px; }
+.track.on { border-color: var(--ink); box-shadow: var(--shadow-2); }
+.track-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.track-top b { font-size: 1.2rem; font-weight: 820; margin-right: 4px; }
+.track .btn { justify-self: start; }
+.tbadge.ok { background: var(--ok-soft); color: var(--ok); }
+.ladder-steps.few { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ladder-steps li.soon b { color: var(--muted); }
+@media (max-width: 760px) { .tracks { grid-template-columns: 1fr; } }
+
+/* 스킬: 설치 난이도 */
+.lv { display: inline-flex; align-items: center; font-size: 0.68rem; font-weight: 800; padding: 1px 8px; border-radius: 99px; margin-left: 6px; vertical-align: 2px; white-space: nowrap; letter-spacing: 0; }
+.lv-click { background: var(--ok-soft); color: var(--ok); }
+.lv-line { background: var(--accent-soft); color: var(--accent-text); }
+.lv-key { background: var(--ink); color: var(--bg); }
+.lv-guide { display: grid; gap: 8px; padding: 16px 18px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
+.lv-guide ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.92rem; }
+.lv-guide .lv { margin: 0 8px 0 0; min-width: 3.4rem; justify-content: center; }
+.inst-how { font-size: 0.9rem; color: var(--ink-2); padding: 10px 12px; border-radius: var(--r-sm); background: var(--sunken); }
+
+/* 치트시트: 마크다운 한 장 */
+.md-tbl pre { margin: 0; font-family: var(--mono); font-size: 0.82rem; white-space: pre-wrap; color: var(--ink); }
+.md-tbl tbody th { white-space: normal; }
+.md-where { display: grid; gap: 4px; padding: 12px 16px; border-radius: var(--r-sm); background: var(--sunken); font-size: 0.92rem; }
+.md-where b { font-size: 0.8rem; color: var(--accent-text); margin-right: 6px; }
+@media (max-width: 600px) {
+  .md-tbl { min-width: 0; }
+  .md-tbl thead { display: none; }
+  .md-tbl tr { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .md-tbl tr:last-child { border-bottom: 0; }
+  .md-tbl td, .md-tbl tbody th { border: 0; padding: 2px 14px; }
+}
