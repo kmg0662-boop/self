@@ -905,3 +905,30 @@ details.stage-block[open] > summary .state::after { content: " ▾"; }
 .my-record > summary span { color: var(--muted); font-size: 0.9rem; }
 .my-record[open] { display: grid; gap: 16px; padding-bottom: 16px; }
 .my-record > .card { margin: 0 16px; }
+
+/* ---------- 처음 한 번: 시작 화면 ---------- */
+body.focus .app { grid-template-columns: 1fr; }
+body.focus .side, body.focus .scrim { display: none; }
+body.focus .menu-btn, body.focus .top-progress { visibility: hidden; }
+.page.ob { max-width: 620px; gap: 22px; padding-top: clamp(8px, 4vw, 40px); }
+.ob h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); font-weight: 840; letter-spacing: -0.04em; line-height: 1.2; }
+.ob-step { font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--accent-text); }
+.ob-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ob-opts.two { grid-template-columns: 1fr 1fr; }
+.ob-opt { display: grid; gap: 4px; align-content: start; text-align: left; min-height: 92px; padding: 18px 20px; border-radius: var(--r-lg); border: 1.5px solid var(--line-2); background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; box-shadow: var(--shadow-1); transition: border-color 0.15s, transform 0.15s; }
+.ob-opt:hover, .ob-opt:focus-visible { border-color: var(--ink); transform: translateY(-2px); }
+.ob-opt b { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+.ob-opt small { font-size: 0.88rem; color: var(--muted); }
+.ob-opt.soft { background: transparent; border-style: dashed; box-shadow: none; }
+.ob-go { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 16px; text-align: left; padding: 24px 26px; border: 0; border-radius: var(--r-lg); background: var(--ink); color: var(--bg); font: inherit; cursor: pointer; box-shadow: var(--shadow-2); }
+.ob-go small { grid-column: 1; font-size: 0.82rem; opacity: 0.7; font-weight: 650; }
+.ob-go b { grid-column: 1; font-size: 1.35rem; font-weight: 820; letter-spacing: -0.03em; }
+.ob-go span { grid-column: 2; grid-row: 1 / span 2; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-size: 1.3rem; font-weight: 800; }
+.ob-go:hover span { transform: translateX(3px); }
+.ob-road { font-size: 1rem; color: var(--ink-2); line-height: 1.7; }
+.ob-alt { font-size: 0.92rem; }
+.ob-alt a { font-weight: 700; color: var(--accent-text); }
+.ob-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 6px; }
+.ob-link { border: 0; background: none; font: inherit; font-size: 0.9rem; font-weight: 650; color: var(--muted); cursor: pointer; padding: 8px 0; min-height: 40px; }
+.ob-link:hover { color: var(--ink); }
+@media (max-width: 520px) { .ob-opts { grid-template-columns: 1fr; } .ob-opt { min-height: 0; padding: 16px 18px; } }

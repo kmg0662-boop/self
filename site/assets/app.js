@@ -11,7 +11,7 @@
   function load() {
     try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { return blank(); }
   }
-  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" }, placed: {}, placement: { answers: {}, applied: 0 }, track: "" }; }
+  function blank() { return { missions: {}, quiz: {}, done: {}, doneAt: {}, review: {}, reflect: {}, last: "", goal: { what: "", days: [] }, brief: {}, self: { start: {}, end: {} }, portfolio: { name: "", url: "", lesson: "" }, placed: {}, placement: { answers: {}, applied: 0 }, track: "", onboarded: false }; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가: 이번 방문 동안만 유지 */ } }
 
   // ---------- 작은 도구 ----------
@@ -165,8 +165,7 @@
     return '<div class="page">' +
       '<section class="hello"><p class="eyebrow">' + esc(C.title) + "</p><h1>" + (first ? "혼자서도 끝까지,<br>오늘 첫 유닛부터." : "다시 왔네요.<br>이어서 가볼까요?") + '</h1><p class="lead">' + esc(C.promise) + "</p></section>" +
       cta + (nx ? "" : '<a class="pf-link" href="#portfolio">내 포트폴리오 만들기 →</a>') +
-      (first && !state.placement.applied ? '<div class="starts"><a class="start-card" href="#placement"><b>AI를 써본 적 있나요?</b><span>3분 진단으로 이미 아는 유닛은 건너뛰어요. 내게 필요한 유닛만 남겨줘요.</span><i aria-hidden="true">→</i></a><a class="start-card" href="demo.html"><b>완성품 먼저 보기</b><span>민규가 이 코스로 만든 서비스를 직접 써봐요. 목적지를 보고 출발하면 덜 헤매요.</span><i aria-hidden="true">→</i></a></div>' : "") +
-      (state.track ? "" : trackPickHtml()) + ladderHtml() + reviewHtml() +
+      ladderHtml() + reviewHtml() +
       '<div class="stats"><div class="stat"><b>' + doneCount() + "/" + CORE.length + "</b><span>완료한 유닛</span></div><div class=\"stat\"><b>" + progress() + "%</b><span>진도</span></div><div class=\"stat\"><b>" + (left ? hm(left) : "0분") + "</b><span>남은 시간</span></div></div>" +
       '<section class="section"><h2>코스 지도</h2><p class="muted">' + (myTrack().soon ? "모든 트랙이 함께 듣는 STEP 1부터 시작해요. '" + esc(myTrack().name) + "' 트랙은 준비 중이라 유닛 예고를 아래에 보여드려요." : "STEP 1은 모든 트랙이 함께 듣고, STEP 2부터는 '" + esc(myTrack().name) + "' 트랙이에요. 계단을 오를 때마다 쓰는 도구와 새로 알 말이 바뀌어요. 기본 코스는 STEP 3까지, 약 " + hm(totalMinutes()) + "이에요.") + ' <a href="#tracks">트랙 바꾸기 →</a></p>' + trackStages().map(function (s) {
         var isNow = s === nowStage(), full = stageDone(s) === s.units.length;
@@ -191,9 +190,7 @@
       return '<button type="button" class="track-pick" data-track="' + t.id + '" aria-pressed="' + (state.track === t.id) + '"><b>' + esc(t.name) + "</b><small>" + esc(t.who) + "</small>" + (t.soon ? "<i>준비 중</i>" : "") + "</button>";
     }).join("") + "</div>";
   }
-  function trackPickHtml() {
-    return '<section class="card track-pick-card"><p class="eyebrow">먼저 하나만 골라요</p><h2>무엇을 위해 배우나요?</h2><p class="muted">STEP 1(대화·공구함)은 모든 트랙이 함께 들어요. 그다음부터 목적에 맞는 유닛으로 갈라져요. 언제든 바꿀 수 있어요.</p>' + trackButtons() + "</section>";
-  }
+
   function trackPreviewHtml(t) {
     return '<div class="track-preview"><p class="eyebrow">' + esc(t.name) + " 트랙 · 준비 중</p><p>" + esc(t.goal) + ' <b>최종 결과물</b> ' + esc(t.project) + '</p><ol class="tp-list">' + (t.preview || []).map(function (x) {
       return '<li><span class="no">' + esc(x.no) + "</span><span><b>" + esc(x.title) + "</b><small>" + esc(x.goal) + "</small></span></li>";
@@ -212,6 +209,40 @@
       }).join("") + "</div>" +
       '<p class="muted">트랙을 바꿔도 끝낸 유닛과 기록은 그대로 남아요. 어느 트랙이 맞는지 모르겠다면 <a href="#placement">시작점 진단</a>에서 함께 골라요.</p></div>';
   }
+
+  // ---------- 처음 한 번: 시작 화면 (질문 하나씩, 두 번 누르면 시작) ----------
+  var ob = { step: 1, exp: "", active: false }; // active = 이번 방문에 시작 화면을 열었음(질문 도중 트랙이 정해져도 끝까지 보여주려고)
+  function needsStart() { return !state.onboarded && !state.track && !state.last && !Object.keys(state.done).length; }
+  function viewStart() {
+    var head = function (n) { return '<p class="ob-step">' + (n <= 2 ? n + " / 2" : "준비 끝") + '</p>'; };
+    var nav = function (back) { return '<p class="ob-nav">' + (back ? '<button type="button" class="ob-link" data-ob-back>← 이전</button>' : "<span></span>") + '<button type="button" class="ob-link" data-ob-skip>건너뛰고 바로 시작</button></p>'; };
+    var body;
+    if (ob.step === 1) {
+      body = head(1) + "<h1>무엇을 하고 싶나요?</h1><p class=\"lead\">가장 가까운 하나만 골라요. 나중에 언제든 바꿀 수 있어요.</p>" +
+        '<div class="ob-opts">' + TR.map(function (t) {
+          return '<button type="button" class="ob-opt" data-ob-track="' + t.id + '"><b>' + esc(t.short) + "</b><small>" + esc(t.ex) + "</small></button>";
+        }).join("") + '<button type="button" class="ob-opt soft" data-ob-track=""><b>아직 모르겠어요</b><small>공통 기초부터 하고 나중에 골라요</small></button></div>' + nav(false);
+    } else if (ob.step === 2) {
+      body = head(2) + "<h1>AI를 얼마나 써 봤나요?</h1><p class=\"lead\">ChatGPT·Claude·Gemini 같은 대화형 AI 기준이에요.</p>" +
+        '<div class="ob-opts two"><button type="button" class="ob-opt" data-ob-exp="new"><b>거의 처음이에요</b><small>처음부터 차근차근</small></button><button type="button" class="ob-opt" data-ob-exp="used"><b>자주 써요</b><small>3분 진단으로 아는 건 건너뛰기</small></button></div>' + nav(true);
+    } else {
+      var t = state.track ? myTrack() : null, s1 = trackStages()[0];
+      var s1min = stageUnits(s1).filter(function (u) { return !u.optional; }).reduce(function (a, u) { return a + u.minutes; }, 0);
+      var first = CORE[0];
+      var go = ob.exp === "used"
+        ? '<button type="button" class="ob-go" data-ob-go="placement"><small>여기서 시작해요</small><b>시작점 진단 · 3분</b><span aria-hidden="true">→</span></button>'
+        : '<button type="button" class="ob-go" data-ob-go="' + first.id + '"><small>여기서 시작해요</small><b>' + first.no + " " + esc(first.title) + " · " + hm(first.minutes) + '</b><span aria-hidden="true">→</span></button>';
+      var road = !t
+        ? "STEP 1 대화(공통, 약 " + hm(s1min) + ")부터 해요. 트랙은 목차의 '내 트랙'에서 언제든 고를 수 있어요."
+        : t.soon
+          ? "'" + esc(t.name) + "' 트랙은 준비 중이라, 지금은 모든 트랙이 함께 듣는 STEP 1 대화(약 " + hm(s1min) + ")부터 해요. 트랙이 열리면 바로 이어져요."
+          : "STEP 1 대화(공통) → '" + esc(t.name) + "' 트랙. 기본 코스는 약 " + hm(totalMinutes()) + "이에요.";
+      body = head(3) + "<h1>좋아요, 길이 정해졌어요.</h1>" + go + '<p class="ob-road">' + road + "</p>" + (ob.exp === "used" ? '<p class="muted ob-alt">진단 없이 처음부터 하고 싶다면 <a href="#' + first.id + '" data-ob-done>' + first.no + " " + esc(first.title) + "</a></p>" : "") +
+        '<p class="ob-alt"><a href="demo.html" data-ob-done>완성품 먼저 구경하기 →</a></p>' + nav(true);
+    }
+    return '<div class="page ob">' + body + "</div>";
+  }
+  function obDone() { state.onboarded = true; save(); }
 
   // 자료실: 도구를 묶음별로 한 화면에
   function viewLibrary() {
@@ -718,7 +749,9 @@
     else if (r === "portfolio") html = viewPortfolio();
     else if (r === "skills") html = viewSkills();
     else if (r === "stuck") html = viewStuck();
+    else if (r === "start" || (r === "home" && !state.onboarded && (needsStart() || ob.active))) { r = "start"; ob.active = true; html = viewStart(); }
     else { r = "home"; html = viewHome(); }
+    document.body.classList.toggle("focus", r === "start");
     glClose();
     $("#view").innerHTML = html;
     renderNav(r);
@@ -859,6 +892,15 @@
     }
     if (t.closest("[data-pl-apply]")) { plApply(true); return; }
     if (t.closest("[data-pl-none]")) { plApply(false); return; }
+    var obt = t.closest("[data-ob-track]");
+    if (obt) { state.track = obt.getAttribute("data-ob-track"); setTrack(); ob.step = 2; route(); return; }
+    var obe = t.closest("[data-ob-exp]");
+    if (obe) { ob.exp = obe.getAttribute("data-ob-exp"); ob.step = 3; route(); return; }
+    if (t.closest("[data-ob-back]")) { ob.step = Math.max(1, ob.step - 1); route(); return; }
+    if (t.closest("[data-ob-skip]")) { obDone(); location.hash = CORE[0].id; return; }
+    var obg = t.closest("[data-ob-go]");
+    if (obg) { obDone(); location.hash = obg.getAttribute("data-ob-go"); return; }
+    if (t.closest("[data-ob-done]")) obDone();
     var nv = t.closest("[data-nav]");
     if (nv) { var nk = nv.getAttribute("data-nav"); navOpen[nk] = nv.getAttribute("aria-expanded") !== "true"; renderNav(current()); return; }
     var gs = t.closest("[data-gstage]");
