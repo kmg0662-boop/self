@@ -3,7 +3,7 @@
 
   var C = window.COURSE;
   var U = C.units;
-  var CORE = [], BONUS = []; // 고른 트랙의 유닛으로 setTrack()이 채워요. 보너스(선택) 유닛은 진도에서 빠짐
+  var CORE = [], BONUS = [], SEQ = []; // SEQ = 고른 트랙의 유닛 순서(보너스 포함). 고른 트랙의 유닛으로 setTrack()이 채워요. 보너스(선택) 유닛은 진도에서 빠짐
   var KEY = "planbe:course:v2";
 
   // ---------- 저장 (이 기기에만) ----------
@@ -26,7 +26,7 @@
   function progress() { return Math.round((doneCount() / CORE.length) * 100); }
   function started(u) { var m = state.missions[u.id]; return !!(m && m.some(Boolean)); }
   function nextUnit() {
-    if (state.last && !state.done[state.last]) return unitById(state.last);
+    if (state.last && !state.done[state.last] && SEQ.some(function (u) { return u.id === state.last; })) return unitById(state.last);
     return CORE.filter(function (u) { return !state.done[u.id]; })[0] || null;
   }
   function bonusDone() { return BONUS.filter(function (u) { return state.done[u.id]; }).length; }
@@ -52,10 +52,13 @@
   }
   function setTrack() {
     var tu = [].concat.apply([], trackStages().map(stageUnits));
+    SEQ = tu;
     CORE = tu.filter(function (u) { return !u.optional; });
     BONUS = tu.filter(function (u) { return u.optional; });
   }
   setTrack();
+  // 이전·다음·완료 이동은 고른 트랙 안에서. 트랙 밖 유닛을 직접 열었으면 전체 순서로.
+  function seqOf(u) { return SEQ.indexOf(u) !== -1 ? SEQ : U; }
   function ulabel(u) { return (u.kit ? "공구함 " : "UNIT ") + u.no; }
   function stepLabel(s) { return "STEP " + s.no + " · " + s.name; }
   function chipsHtml(list, cls) { return '<span class="chips' + (cls ? " " + cls : "") + '">' + list.map(function (w) { return "<span>" + esc(w) + "</span>"; }).join("") + "</span>"; }
@@ -302,8 +305,8 @@
   function viewUnit(u) {
     state.last = u.id;
     save();
-    var i = U.indexOf(u);
-    var prev = U[i - 1], next = U[i + 1];
+    var L = seqOf(u), i = L.indexOf(u);
+    var prev = L[i - 1], next = L[i + 1];
     var m = state.missions[u.id] || [];
     var qs = state.quiz[u.id] || {};
     var st = stageOf(u), si = st.units.indexOf(u.id);
@@ -581,7 +584,7 @@
         var label, why, cls;
         if (p.pass) { cls = "skip"; label = "건너뛰기"; why = "문제도 맞히고 해본 적도 있어요."; }
         else if (p.must) { cls = "must"; label = "꼭 하기"; why = p.must.why; }
-        else { cls = "do"; label = "하기"; why = !p.known ? "정답은 '" + p.it.options[p.it.answer] + "'예요. 이 유닛에서 왜 그런지 다뤄요." : "아는 것을 직접 해보는 유닛이에요."; }
+        else { cls = "do"; label = "하기"; why = !p.it ? "진단 문항이 없는 유닛이라 직접 해 봐요." : !p.known ? "정답은 '" + p.it.options[p.it.answer] + "'예요. 이 유닛에서 왜 그런지 다뤄요." : "아는 것을 직접 해보는 유닛이에요."; }
         return '<li class="' + cls + '"><span class="no">' + p.u.no + "</span><div><b>" + esc(p.u.title) + "</b><small>" + esc(why) + '</small></div><span class="pl-tag">' + label + "</span></li>";
       }).join("") + "</ol>" +
       '<div class="finish-row"><button type="button" class="btn accent" data-pl-apply>이 경로로 시작하기 →</button><button type="button" class="btn secondary" data-pl-none>전부 처음부터 할게요</button></div>' +
@@ -811,8 +814,8 @@
       state.doneAt[cu.id] = Date.now();
       state.review[cu.id] = { stage: 0, at: Date.now() };
       save();
-      var nx = U[U.indexOf(cu) + 1];
-      toast(ulabel(cu) + " 완료! " + (nx ? "다음 유닛으로 가요" : "코스를 완주했어요"));
+      var CL = seqOf(cu), nx = CL[CL.indexOf(cu) + 1];
+      toast(ulabel(cu) + " 완료! " + (nx ? "다음 유닛으로 가요" : myTrack().soon ? "공통 기초를 마쳤어요. 트랙 예고를 보여드릴게요" : "코스를 완주했어요"));
       location.hash = nx ? nx.id : "home";
       return;
     }
