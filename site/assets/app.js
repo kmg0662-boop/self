@@ -89,34 +89,61 @@
   }
 
   // ---------- 목차 ----------
+  // 도구. pin = 목차에 늘 보이는 것(3개). 나머지는 자료실(#library)에서 묶음별로 찾아요.
+  var TOOL_GROUPS = [
+    { id: "learn", title: "배울 때 옆에 두기" },
+    { id: "make", title: "만들 때 쓰기" },
+    { id: "me", title: "나의 기록" },
+    { id: "see", title: "구경하기" }
+  ];
   var TOOLS = [
-    { id: "placement", icon: "◐", title: "시작점 진단" },
-    { id: "demo", icon: "▶", title: "민규의 서비스 써보기", href: "demo.html" },
-    { id: "portfolio", icon: "◎", title: "내 포트폴리오" },
-    { id: "prompts", icon: "✎", title: "프롬프트 모음" },
-    { id: "brief", icon: "▤", title: "서비스 설명서 작성기" },
-    { id: "glossary", icon: "Aa", title: "용어 사전" },
-    { id: "map", icon: "▦", title: "AI 사용 지도" },
-    { id: "cheats", icon: "▭", title: "한 장 치트시트" },
-    { id: "devkit", icon: "⌘", title: "개발 도구 지도" },
-    { id: "recipes", icon: "☰", title: "직무별 레시피" },
-    { id: "skills", icon: "◇", title: "스킬 가이드" },
-    { id: "stuck", icon: "?", title: "막혔을 때" }
+    { id: "glossary", icon: "Aa", title: "용어 사전", group: "learn", pin: true, desc: "모든 용어를 비유와 '왜?'까지. 계단별로 거를 수 있어요." },
+    { id: "cheats", icon: "▭", title: "한 장 치트시트", group: "learn", pin: true, desc: "계단별 한 장, 프롬프트 패턴, 화면 문구 사전, 마크다운 한 장" },
+    { id: "map", icon: "▦", title: "AI 사용 지도", group: "learn", desc: "다섯 계단, 하네스 해부도, 같은 개념 다른 이름, 도구 지도" },
+    { id: "devkit", icon: "⌘", title: "개발 도구 지도", group: "learn", desc: "터미널·Git·npx 같은 말과, 에이전트가 허락을 구할 때 읽는 법" },
+    { id: "prompts", icon: "✎", title: "프롬프트 모음", group: "make", desc: "[대괄호]만 바꿔 쓰는 기획·제작·고치기 프롬프트" },
+    { id: "brief", icon: "▤", title: "서비스 설명서 작성기", group: "make", desc: "AI에게 일을 넘길 때 쓰는 인수인계서를 채워요" },
+    { id: "recipes", icon: "☰", title: "직무별 레시피", group: "make", desc: "기획·마케팅·영업·인사·교육·창업, 직무별로 바로 쓰는 프롬프트" },
+    { id: "skills", icon: "◇", title: "스킬 가이드", group: "make", desc: "스킬 58개, 트랙별·설치 난이도별로 골라요" },
+    { id: "portfolio", icon: "◎", title: "내 포트폴리오", group: "me", desc: "만든 것과 배운 것을 한 장으로 모아 공유해요" },
+    { id: "placement", icon: "◐", title: "시작점 진단", group: "me", desc: "이미 아는 유닛은 건너뛰고 내게 필요한 것만 남겨요" },
+    { id: "tracks", icon: "◈", title: "목적별 트랙", group: "me", desc: "배우는 목적에 맞는 트랙을 고르거나 바꿔요" },
+    { id: "demo", icon: "▶", title: "민규의 서비스 써보기", group: "see", href: "demo.html", desc: "이 코스로 만든 완성품을 직접 눌러 봐요" },
+    { id: "stuck", icon: "?", title: "막혔을 때", pin: true, desc: "자주 막히는 순간과 푸는 법" },
+    { id: "library", icon: "≡", title: "자료실 전체 보기", desc: "" }
   ];
 
+  var navOpen = {};
+  function navIsOpen(key, stages, route) {
+    if (navOpen[key] !== undefined) return navOpen[key];
+    var here = stages.some(function (s) { return s.units.indexOf(route) !== -1; });
+    if (route && unitById(route)) return here;
+    return stages.indexOf(nowStage()) !== -1;
+  }
   function renderNav(route) {
     var html = '<a class="nav-item' + '" href="#home"' + (route === "home" ? ' aria-current="page"' : "") + '><span class="nav-icon">⌂</span><span>내 학습</span><span></span></a>';
     html += '<a class="nav-item nav-track" href="#tracks"' + (route === "tracks" ? ' aria-current="page"' : "") + '><span class="nav-icon" aria-hidden="true">◈</span><span>' + (state.track ? "내 트랙 · " + esc(myTrack().name) : "목적별 트랙 고르기") + "</span><span></span></a>";
-    html += trackStages().map(function (s) {
-      return '<div class="nav-group nav-stage"><span>' + stepLabel(s) + (s.bonus ? " · 선택" : "") + '</span><span class="nav-count">' + stageDone(s) + "/" + s.units.length + "</span></div>" +
-        stageUnits(s).map(function (u) {
-          var cls = "nav-item" + (state.done[u.id] ? " done" : "") + (started(u) ? " started" : "");
-          return '<a class="' + cls + '" href="#' + u.id + '"' + (route === u.id ? ' aria-current="page"' : "") + '><span class="nav-no">' + u.no + "</span><span>" + esc(u.title) + '</span><span class="dot" aria-label="' + (state.done[u.id] ? "완료" : "미완료") + '"></span></a>';
-        }).join("");
+    var unitLink = function (u) {
+      var cls = "nav-item" + (state.done[u.id] ? " done" : "") + (started(u) ? " started" : "");
+      return '<a class="' + cls + '" href="#' + u.id + '"' + (route === u.id ? ' aria-current="page"' : "") + '><span class="nav-no">' + u.no + "</span><span>" + esc(u.title) + '</span><span class="dot" aria-label="' + (state.done[u.id] ? "완료" : "미완료") + '"></span></a>';
+    };
+    var head = function (key, label, count, open) {
+      return '<button type="button" class="nav-group nav-stage" data-nav="' + key + '" aria-expanded="' + open + '"><span class="nav-chev" aria-hidden="true">' + (open ? "▾" : "▸") + "</span><span>" + label + '</span><span class="nav-count">' + count + "</span></button>";
+    };
+    var ts = trackStages(), core = ts.filter(function (s) { return !s.bonus; }), bonus = ts.filter(function (s) { return s.bonus; });
+    html += '<div class="nav-group nav-tree-title">학습 트리</div>';
+    html += core.map(function (s) {
+      var full = stageDone(s) === s.units.length, open = navIsOpen(s.id, [s], route);
+      return head(s.id, stepLabel(s), full ? "✓" : stageDone(s) + "/" + s.units.length, open) + (open ? stageUnits(s).map(unitLink).join("") : "");
     }).join("");
+    if (bonus.length) {
+      var bu = [].concat.apply([], bonus.map(function (s) { return s.units; })), bopen = navIsOpen("bonus", bonus, route);
+      html += head("bonus", "보너스 · 선택", bu.filter(function (id) { return state.done[id]; }).length + "/" + bu.length, bopen) +
+        (bopen ? bonus.map(function (s) { return '<div class="nav-sub">' + stepLabel(s) + "</div>" + stageUnits(s).map(unitLink).join(""); }).join("") : "");
+    }
     html += '<div class="nav-group">도구</div>';
-    html += TOOLS.map(function (t) {
-      return '<a class="nav-item" href="' + (t.href || "#" + t.id) + '"' + (route === t.id ? ' aria-current="page"' : "") + '><span class="nav-icon" aria-hidden="true">' + t.icon + "</span><span>" + esc(t.title) + "</span><span></span></a>";
+    html += TOOLS.filter(function (t) { return t.pin || t.id === "library"; }).map(function (t) {
+      return '<a class="nav-item' + (t.id === "library" ? " nav-lib" : "") + '" href="' + (t.href || "#" + t.id) + '"' + (route === t.id ? ' aria-current="page"' : "") + '><span class="nav-icon" aria-hidden="true">' + t.icon + "</span><span>" + esc(t.title) + "</span><span></span></a>";
     }).join("");
     $("#side-nav").innerHTML = html;
     var p = progress();
@@ -142,17 +169,19 @@
       (state.track ? "" : trackPickHtml()) + ladderHtml() + reviewHtml() +
       '<div class="stats"><div class="stat"><b>' + doneCount() + "/" + CORE.length + "</b><span>완료한 유닛</span></div><div class=\"stat\"><b>" + progress() + "%</b><span>진도</span></div><div class=\"stat\"><b>" + (left ? hm(left) : "0분") + "</b><span>남은 시간</span></div></div>" +
       '<section class="section"><h2>코스 지도</h2><p class="muted">' + (myTrack().soon ? "모든 트랙이 함께 듣는 STEP 1부터 시작해요. '" + esc(myTrack().name) + "' 트랙은 준비 중이라 유닛 예고를 아래에 보여드려요." : "STEP 1은 모든 트랙이 함께 듣고, STEP 2부터는 '" + esc(myTrack().name) + "' 트랙이에요. 계단을 오를 때마다 쓰는 도구와 새로 알 말이 바뀌어요. 기본 코스는 STEP 3까지, 약 " + hm(totalMinutes()) + "이에요.") + ' <a href="#tracks">트랙 바꾸기 →</a></p>' + trackStages().map(function (s) {
-        return '<div class="stage-block' + (s === nowStage() ? " now" : "") + '"><div class="stage-head"><span class="stage-no">STEP ' + s.no + "</span><div><b>" + esc(s.name) + " · " + esc(s.title) + (s.bonus ? ' <i class="bonus">보너스</i>' : "") + "</b><small>" + esc(s.sub) + '</small></div><span class="state">' + stageDone(s) + "/" + s.units.length + '</span></div><div class="unit-list">' + stageUnits(s).map(function (u) {
+        var isNow = s === nowStage(), full = stageDone(s) === s.units.length;
+        return '<details class="stage-block' + (isNow ? " now" : "") + '"' + (isNow ? " open" : "") + '><summary class="stage-head"><span class="stage-no">STEP ' + s.no + "</span><div><b>" + esc(s.name) + " · " + esc(s.title) + (s.bonus ? ' <i class="bonus">보너스</i>' : "") + "</b><small>" + esc(s.sub) + '</small></div><span class="state">' + (full ? "✓ " : "") + stageDone(s) + "/" + s.units.length + '</span></summary><div class="unit-list">' + stageUnits(s).map(function (u) {
           var st = state.placed[u.id] ? "진단 통과" : state.done[u.id] ? "완료" : started(u) ? "진행 중" : hm(u.minutes);
           return '<a class="unit-row' + (state.done[u.id] ? " done" : "") + '" href="#' + u.id + '"><span class="no">' + u.no + "</span><span><b>" + esc(u.title) + "</b><small>결과물 · " + esc(u.outcome) + '</small></span><span class="state">' + st + "</span></a>";
-        }).join("") + "</div></div>";
+        }).join("") + "</div></details>";
       }).join("") + (myTrack().soon ? trackPreviewHtml(myTrack()) : "") + "</section>" +
+      '<details class="my-record"' + (first && !state.goal.what ? " open" : "") + '><summary><b>내 기록</b><span>' + (state.goal.what ? "목표 · " + esc(state.goal.what) : "목표 카드가 비어 있어요. 열어서 채워 보세요") + "</span></summary>" +
       '<section class="section card goal"><h2>내 목표 카드</h2><p class="muted">적어두면 의지가 약한 날에도 돌아올 이유가 돼요. 이 기기에만 저장돼요.</p>' +
       '<div class="field"><label for="goal-what">만들고 싶은 것 한 줄</label><input type="text" id="goal-what" data-goal="what" placeholder="회의가 끝나면 할 일을 자동으로 정리해주는 도구" value="' + esc(state.goal.what) + '"></div>' +
       '<div class="field"><label>공부할 요일 (30분씩)</label><div class="days" role="group" aria-label="공부할 요일">' + DAYS.map(function (d) {
         return '<button type="button" class="day" data-day="' + d + '" aria-pressed="' + (state.goal.days.indexOf(d) !== -1) + '">' + d + "</button>";
       }).join("") + "</div><small>일주일에 세 번이면 약 3주 만에 완주해요.</small></div></section>" +
-      selfCheckHtml() +
+      selfCheckHtml() + "</details>" +
       "</div>";
   }
 
@@ -182,6 +211,16 @@
           '<button type="button" class="btn ' + (on ? "secondary" : "accent") + ' small" data-track="' + t.id + '"' + (on ? " disabled" : "") + ">" + (on ? "지금 이 트랙이에요" : "이 트랙으로 하기") + "</button></section>";
       }).join("") + "</div>" +
       '<p class="muted">트랙을 바꿔도 끝낸 유닛과 기록은 그대로 남아요. 어느 트랙이 맞는지 모르겠다면 <a href="#placement">시작점 진단</a>에서 함께 골라요.</p></div>';
+  }
+
+  // 자료실: 도구를 묶음별로 한 화면에
+  function viewLibrary() {
+    var card = function (t) { return '<a class="lib-card" href="' + (t.href || "#" + t.id) + '"><span class="lib-icon" aria-hidden="true">' + t.icon + "</span><span><b>" + esc(t.title) + "</b><small>" + esc(t.desc) + "</small></span></a>"; };
+    return '<div class="page wide"><header class="hello"><p class="eyebrow">자료실</p><h1>필요할 때 꺼내 쓰는 도구</h1><p class="lead">유닛을 따라가다가 필요할 때 여기서 꺼내 쓰면 돼요. 자주 쓰는 용어 사전, 치트시트, 막혔을 때는 왼쪽 목차에도 있어요.</p></header>' +
+      TOOL_GROUPS.map(function (g) {
+        return '<section class="section"><h2>' + esc(g.title) + '</h2><div class="lib-grid">' + TOOLS.filter(function (t) { return t.group === g.id; }).map(card).join("") + "</div></section>";
+      }).join("") +
+      '<section class="section"><h2>막혔을 때</h2><div class="lib-grid">' + card(TOOLS.filter(function (t) { return t.id === "stuck"; })[0]) + "</div></section></div>";
   }
 
   // 지금 여기: 다섯 계단 중 현재 위치와 이 단계에서 할 일
@@ -665,13 +704,14 @@
     var r = (location.hash || "#home").slice(1);
     var u = unitById(r);
     var html;
-    if (u) html = viewUnit(u);
+    if (u) { html = viewUnit(u); var us = stageOf(u); navOpen[us.bonus ? "bonus" : us.id] = true; }
     else if (r === "prompts") html = viewPrompts();
     else if (r === "brief") html = viewBrief();
     else if (r === "glossary") html = viewGlossary();
     else if (r === "map") html = viewMap();
     else if (r === "placement") html = viewPlacement();
     else if (r === "tracks") html = viewTracks();
+    else if (r === "library") html = viewLibrary();
     else if (r === "cheats") html = viewCheats();
     else if (r === "devkit") html = viewDevkit();
     else if (r === "recipes") html = viewRecipes();
@@ -685,7 +725,7 @@
     closeSide();
     window.scrollTo(0, 0);
     $("#view").focus({ preventScroll: true });
-    var t = u ? ulabel(u) + " " + u.title : r === "tracks" ? "목적별 트랙" : (TOOLS.filter(function (x) { return x.id === r; })[0] || { title: "내 학습" }).title;
+    var t = u ? ulabel(u) + " " + u.title : (TOOLS.filter(function (x) { return x.id === r; })[0] || { title: "내 학습" }).title;
     document.title = t + " · PLAN_Be 독학 코스";
   }
   function current() { return (location.hash || "#home").slice(1); }
@@ -819,6 +859,8 @@
     }
     if (t.closest("[data-pl-apply]")) { plApply(true); return; }
     if (t.closest("[data-pl-none]")) { plApply(false); return; }
+    var nv = t.closest("[data-nav]");
+    if (nv) { var nk = nv.getAttribute("data-nav"); navOpen[nk] = nv.getAttribute("aria-expanded") !== "true"; renderNav(current()); return; }
     var gs = t.closest("[data-gstage]");
     if (gs) { glossCat = gs.getAttribute("data-gstage"); glossQ = ""; if (current() === "glossary") route(); else location.hash = "glossary"; return; }
     if (t.closest("[data-print]")) { window.print(); return; }

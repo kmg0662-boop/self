@@ -868,3 +868,40 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
   .md-tbl tr:last-child { border-bottom: 0; }
   .md-tbl td, .md-tbl tbody th { border: 0; padding: 2px 14px; }
 }
+
+/* ---------- 학습 트리: 접고 펼치는 목차 ---------- */
+button.nav-stage { width: 100%; border: 0; background: none; font: inherit; font-size: 0.78rem; font-weight: 750; color: var(--ink-2); text-align: left; cursor: pointer; padding: 10px 10px 8px; border-radius: var(--r-sm); justify-content: flex-start; gap: 8px; min-height: 40px; align-items: center; }
+button.nav-stage:hover { background: var(--sunken); color: var(--ink); }
+button.nav-stage[aria-expanded="true"] { color: var(--ink); }
+button.nav-stage .nav-count { margin-left: auto; color: var(--muted); }
+.nav-chev { width: 12px; font-size: 0.7rem; color: var(--muted); }
+.nav-tree-title { padding-top: 14px; }
+.nav-sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); padding: 6px 10px 2px 30px; }
+.nav-lib { color: var(--muted); }
+
+/* 자료실 */
+.lib-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.lib-card { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; padding: 16px 18px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: border-color 0.2s, transform 0.2s; }
+.lib-card:hover { border-color: var(--ink); transform: translateY(-1px); }
+.lib-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--sunken); font-weight: 800; color: var(--accent-text); }
+.lib-card b { display: block; font-weight: 800; }
+.lib-card small { display: block; font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+@media (max-width: 640px) { .lib-grid { grid-template-columns: 1fr; } }
+
+/* 홈: 접히는 코스 지도, 내 기록 */
+details.stage-block > summary { list-style: none; cursor: pointer; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); }
+details.stage-block > summary::-webkit-details-marker { display: none; }
+details.stage-block > summary:hover { border-color: var(--ink); }
+details.stage-block[open] > summary { border-color: transparent; background: transparent; padding-left: 0; padding-right: 0; }
+details.stage-block > summary .state::after { content: " ▸"; }
+details.stage-block[open] > summary .state::after { content: " ▾"; }
+.stage-block + .stage-block { margin-top: 6px; }
+.my-record { border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface); }
+.my-record > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 18px 22px; }
+.my-record > summary::-webkit-details-marker { display: none; }
+.my-record > summary b { font-size: 1.15rem; font-weight: 800; }
+.my-record > summary b::after { content: " ▸"; color: var(--muted); font-size: 0.9rem; }
+.my-record[open] > summary b::after { content: " ▾"; }
+.my-record > summary span { color: var(--muted); font-size: 0.9rem; }
+.my-record[open] { display: grid; gap: 16px; padding-bottom: 16px; }
+.my-record > .card { margin: 0 16px; }
