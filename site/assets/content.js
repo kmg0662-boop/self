@@ -27,7 +27,7 @@ window.COURSE = {
         { text: "웹앱 빌더 하나(Lovable 등)에 가입해요. 유닛 5부터 써요." },
         { text: "(선택) GitHub 계정도 만들어 두세요. 유닛 7에서 배포할 때, 유닛 8에서 스킬을 받을 때 만나요.", link: "#devkit", linkText: "GitHub가 뭔지 먼저 보기" },
         { text: "일상에서 '이거 왜 이렇게 불편하지?' 싶었던 순간을 3개 적어요. 작고 사소할수록 좋아요." },
-        { text: "아래 '내 학습' 화면에서 목표 카드를 채워요. 만들고 싶은 것 한 줄과 공부할 요일을 적어요." }
+        { text: "'내 학습' 화면 맨 아래 '내 기록'을 열고 목표 카드를 채워요. 만들고 싶은 것 한 줄과 공부할 요일을 적어요.", link: "#home", linkText: "내 학습으로" }
       ],
       mission: ["대화형 AI 계정 만들기", "웹앱 빌더 계정 만들기", "불편했던 순간 3개 메모하기", "목표 카드 채우기"],
       quiz: [
@@ -174,6 +174,48 @@ window.COURSE = {
       ]
     },
     {
+      id: "ta", no: "A", kit: true, minutes: 40, level: "기초",
+      title: "내 컴퓨터와 AI 사이",
+      lead: "AI를 잘 쓰는 사람과 자꾸 막히는 사람의 차이는 프롬프트보다 이 사이에 있어요. 파일, 서식, 계정처럼 아무도 따로 알려주지 않는 것들이에요.",
+      outcome: "확장자 보기 켜기, 마크다운 문서 1개, 내 AI 계정 지도 1장",
+      place: "내 컴퓨터(파일 탐색기·Finder) + 대화형 AI",
+      why: "초보자가 처음 올리는 질문은 대부분 프롬프트가 아니라 '파일이 안 열려요', '별표가 잔뜩 보여요', 'Plus를 결제했는데 API는 왜 안 돼요?'예요. 이 빈틈은 AI가 아니라 내 컴퓨터와 AI 사이에 있어요. 한 번만 정리해 두면 어떤 트랙을 가든 덜 막혀요.",
+      concepts: [
+        { term: "확장자와 파일 형식", like: "택배 상자의 품목 라벨", body: "이름 끝의 .pdf, .md, .csv가 파일 종류를 알려줘요. AI에 올릴 수 있는지, 어떤 앱으로 열지가 여기서 정해져요. 윈도우는 기본으로 확장자를 숨겨서 CLAUDE.md가 CLAUDE.md.txt가 되는 사고가 자주 나요. AI에게 줄 때는 TXT·MD·CSV처럼 글자로 된 파일이 가장 쉽고, 스캔한 PDF·사진·HWP 순으로 어려워져요." },
+        { term: "마크다운", like: "원고 교정 부호", body: "# 제목, **굵게**, - 목록처럼 기호로 모양을 표시하는 약속이에요. AI 답변, CLAUDE.md, SKILL.md가 모두 이 형식이에요. 노션·GitHub·ChatGPT 화면은 기호를 모양으로 바꿔 보여주지만(렌더링), 카톡·한글·메모장은 기호를 그대로 보여줘요. 그래서 별표가 보이면 AI가 고장 난 게 아니라, 받는 앱이 마크다운을 못 읽는 거예요." },
+        { term: "구독 · API 키 · 커넥터", like: "월회원권 · 쓴 만큼 내는 사물함 열쇠 · 열쇠 맡기기", body: "ChatGPT Plus 같은 구독은 채팅 화면을 쓰는 월정액이고, API 키는 프로그램이 AI를 부를 때 쓰는 종량제 열쇠라 요금이 따로예요. 파일 업로드는 복사본을 한 번 건네는 것이고, 커넥터는 드라이브·메일과 계속 연결해 두는 거예요. 연결한 만큼 AI가 볼 수 있으니 필요한 것만 연결해요." }
+      ],
+      steps: [
+        { text: "파일 확장명이 보이게 켜요. 윈도우는 파일 탐색기 › 보기 › 표시 › 파일 확장명, 맥은 Finder › 설정 › 고급 › '모든 파일 확장자 보기'예요." },
+        { text: "AI에게 표 하나를 마크다운으로 만들어 달라고 한 뒤, 카톡(또는 메모장)과 노션에 각각 붙여넣어 비교해요. 그다음 '서식 없이 붙여넣기'(윈도우 Ctrl+Shift+V)로 다시 붙여 봐요.", prompt: "아래 내용을 마크다운 표로 만들어줘. 제목은 # 하나로, 중요한 말은 **굵게** 해줘.\n\n[이번 주 할 일 3개와 마감일]" },
+        { text: "메모장에서 '할 일.md' 파일을 직접 만들어요. 제목(#), 목록(-), 체크박스(- [ ]) 세 가지만 써 봐요. 치트시트의 마크다운 한 장을 옆에 띄워 두세요.", link: "#cheats", linkText: "마크다운 한 장 보기" },
+        { text: "내 AI 계정 지도를 적어요. 쓰는 서비스, 요금제, API 키가 있는지, 연결한 서비스와 해제하는 곳까지요.", prompt: "# 내 AI 계정 지도\n| 서비스 | 요금제 | API 키 | 연결한 것 | 해제하는 곳 |\n| --- | --- | --- | --- | --- |\n| ChatGPT | 무료 | 없음 | 없음 | 설정 › 앱 |" },
+        { text: "에러가 나면 캡처 대신 글자를 그대로 복사해 AI에 붙여넣는 연습을 해요. 터미널에서 Ctrl+C는 복사가 아니라 '실행 중단'이라는 것도 기억해요." }
+      ],
+      mission: ["파일 확장명 보기 켜기", "마크다운 표를 두 앱에 붙여 비교하기", "'할 일.md' 직접 만들기", "내 AI 계정 지도 1장 쓰기"],
+      quiz: [
+        { q: "AI가 만든 표를 카톡에 붙였더니 ** 기호가 잔뜩 보여요. 가장 맞는 설명은?", options: ["AI가 고장 났다", "카톡이 마크다운 기호를 모양으로 바꿔 보여주지 않는다", "파일이 손상됐다"], answer: 1, explain: "마크다운은 기호로 모양을 표시하는 약속이에요. 카톡은 그 약속을 모르는 앱이라 기호가 그대로 보여요." },
+        { q: "ChatGPT Plus를 결제했는데, 내 앱에서 API를 쓰려니 요금이 따로 나온대요. 왜일까요?", options: ["Plus는 채팅 화면 구독이고, API는 따로 계산하는 종량제라서", "결제가 실패해서", "API는 원래 무료라서"], answer: 0, explain: "구독은 사람이 채팅 화면에서 쓰는 요금이에요. 프로그램이 AI를 부르는 API는 쓴 만큼 따로 내요." },
+        { q: "AI가 가장 정확하게 읽는 자료는?", options: ["스캔해서 만든 PDF", "표를 찍은 사진", "글자로 된 CSV나 텍스트 파일"], answer: 2, explain: "글자로 된 파일은 그대로 읽히지만, 스캔본과 사진은 글자 인식을 한 번 거쳐서 틀릴 수 있어요." }
+      ],
+      case: {
+        story: "민규는 AI가 만든 주간 보고 표를 팀 단톡방에 붙였다가 별표와 세로줄이 잔뜩 섞인 메시지를 보냈어요.",
+        draft: "(AI 답을 그대로 복사해서 카톡에 붙여넣기)",
+        miss: "카톡은 마크다운을 읽지 못해서 **, |, # 같은 기호가 그대로 보였어요. 팀원이 '이게 뭐예요?'라고 물었어요.",
+        artifact: "민규의 새 습관\n1. 노션·문서로 옮길 때: 그대로 붙여넣기 (모양이 살아요)\n2. 카톡·메일 본문에: AI에게 '마크다운 기호 없이 평문으로 다시 써줘'\n3. 표가 꼭 필요하면: 노션에 붙이고 링크를 공유",
+        note: "문제는 AI가 아니라 '받는 앱이 마크다운을 읽는가'였어요. 받는 곳에 맞춰 형식을 바꿔요."
+      },
+      think: [
+        "내가 자주 쓰는 앱 중 마크다운을 모양으로 보여주는 앱과 기호 그대로 보여주는 앱은 무엇인가요?",
+        "파일을 '올리는 것'과 서비스를 '연결하는 것'은 무엇이 다를까요? 어느 쪽을 더 조심해야 할까요?"
+      ],
+      stuck: [
+        { symptom: "AI에 HWP 파일이 안 올라가요", fix: "한글에서 PDF나 DOCX로 '다른 이름으로 저장'한 뒤 올려요. ChatGPT·Gemini는 HWP를 읽지만 도구마다 달라요. 공문서는 HWPX로 바뀌는 중이라 HWPX가 더 잘 읽혀요." },
+        { symptom: "zip을 풀었더니 한글 파일명이 깨졌어요", fix: "맥과 윈도우가 한글 이름을 저장하는 방식이 달라서 생겨요. 반디집이나 7-Zip으로 풀어 보고, 보낼 때도 반디집으로 압축해요." },
+        { symptom: "AI가 만든 파일이 어디 갔는지 모르겠어요", fix: "먼저 다운로드 폴더를 보세요. 브라우저에서 받은 파일은 대부분 거기 있어요. 파일 이름의 일부로 검색해도 돼요." }
+      ]
+    },
+    {
       id: "u3", no: "04", minutes: 45, level: "기획",
       title: "내 문제를 찾는 법",
       lead: "좋은 서비스는 기능이 많은 서비스가 아니라, 한 가지 불편함을 확실히 없애는 서비스예요.",
@@ -272,9 +314,10 @@ window.COURSE = {
         { text: "핵심기능을 연결해요.", prompt: "서비스 설명서의 핵심기능을 연결해줘: 사용자가 [입력]하면 [결과]가 보이게. 끝나면 내가 무엇을 눌러서 확인하면 되는지 알려줘." },
         { text: "에러가 나면 그대로 옮겨요.", prompt: "[어디]에서 [무엇]을 했더니 아래 에러가 났어. 원인을 초등학생도 알게 먼저 설명하고, 그다음 고쳐줘.\n\n[에러 메시지 붙여넣기]" },
         { text: "데이터가 새로고침하면 사라지나요? 필요하면 저장 기능을 요청해요.", prompt: "새로고침해도 입력한 내용이 남도록 저장 기능을 추가해줘. 가장 단순한 방법으로." },
-        { text: "작동하면 버전을 저장하고, 막힌 것과 푼 방법을 한 줄 기록해요." }
+        { text: "일부러 한 번 되돌려 봐요. 작은 수정을 하나 요청한 뒤, 저장해 둔 버전으로 돌아가요. 되돌릴 수 있다는 걸 몸으로 알면 겁 없이 실험할 수 있어요. 유닛 09의 Git 커밋도 같은 생각의 강력한 버전이에요." },
+        { text: "작동하면 버전을 저장하고, 막힌 것과 푼 방법을 한 줄 기록해요. 기록이 남는 앱이 필요하다면 다음 유닛 06+에서 저장과 로그인을 붙여요.", link: "#udb", linkText: "유닛 06+ 저장과 로그인" }
       ],
-      mission: ["핵심기능 연결하기", "에러를 1번 이상 AI에게 설명받기(안 났다면 통과)", "작동하는 버전 저장하기", "막힘 기록 한 줄 남기기"],
+      mission: ["핵심기능 연결하기", "에러를 1번 이상 AI에게 설명받기(안 났다면 통과)", "일부러 한 번 되돌려 보기", "작동하는 버전 저장하기", "막힘 기록 한 줄 남기기"],
       quiz: [
         { q: "같은 에러를 고쳐달라고 두 번 했는데 그대로예요. 다음 행동은?", options: ["세 번째로 똑같이 요청", "저장한 버전으로 되돌리고 요청을 더 작게 쪼갠다", "포기한다"], answer: 1, explain: "같은 길을 맴도는 중이에요. 길을 바꿔야 빠져나와요." },
         { q: "에러 메시지를 받았을 때 가장 좋은 첫 행동은?", options: ["에러 문구를 그대로 복사해 AI에게 쉬운 설명을 요청한다", "무시하고 다른 기능을 만든다", "에러가 사라질 때까지 새로고침한다"], answer: 0, explain: "계기판 경고등처럼 에러 문구에는 원인의 힌트가 있어요. 그대로 옮겨야 정확한 설명을 받아요." },
@@ -298,6 +341,48 @@ window.COURSE = {
       ]
     },
     {
+      id: "udb", no: "06+", minutes: 60, level: "제작",
+      title: "기억하는 앱: 저장과 로그인",
+      lead: "새로고침하면 내가 쓴 게 사라지는 앱은 다시 쓰고 싶지 않아요. 이제 앱에 장부를 붙일 차례예요.",
+      outcome: "입력이 저장되고, 로그인한 사람만 자기 기록을 보는 앱",
+      place: "웹앱 빌더의 데이터베이스 연결 (Lovable + Supabase, Google AI Studio Build 내장 DB 등)",
+      why: "지금까지 만든 화면은 메모지처럼 새로고침하면 사라져요. 매주 쓰는 서비스가 되려면 기록이 남아야 하고, 기록이 남으면 '누가 무엇을 볼 수 있나'가 중요해져요. 비개발자 후기에서 가장 많이 막히는 곳도 여기예요. 그래서 작게, 표 하나부터 시작해요.",
+      concepts: [
+        { term: "테이블과 CRUD", like: "엑셀 시트 한 장과 넣기·읽기·고치기·지우기", body: "데이터베이스는 표(테이블)가 여러 장 든 장부예요. 줄 하나가 기록 하나, 칸 하나가 항목 하나예요. 앱이 하는 일은 결국 넣기(Create), 읽기(Read), 고치기(Update), 지우기(Delete) 네 가지라서 CRUD라고 불러요. 처음엔 테이블 하나, 칸 서너 개면 충분해요." },
+        { term: "로그인과 권한", like: "아파트 출입카드와 우리 집 열쇠", body: "로그인은 '누구인지' 확인하는 출입카드이고, 권한은 '무엇을 볼 수 있는지' 정하는 집 열쇠예요. 로그인만 있고 권한 규칙이 없으면 남의 기록이 보일 수 있어요. 빌더에게 '로그인한 사람은 자기가 만든 기록만 보게 해줘'라고 꼭 따로 말해요. Supabase에서는 이 규칙을 RLS라고 불러요." },
+        { term: "개인정보 최소 수집", like: "필요한 짐만 싸기", body: "받을수록 지킬 것도 많아져요. 이름·전화번호·생년월일이 정말 필요한지 먼저 물어보세요. 필요 없는 칸을 만들지 않는 게 가장 좋은 보안이에요." }
+      ],
+      steps: [
+        { text: "무엇을 저장할지 표로 먼저 설계해요. 설계는 무료 대화형 AI에서 끝내야 빌더 크레딧이 덜 새요.", prompt: "내 서비스에서 저장해야 할 데이터를 테이블로 설계해줘. 테이블은 1개만, 칸은 5개 이하로. 각 칸의 이름(영문), 뜻, 예시 값을 표로 보여주고, 개인정보에 해당하는 칸은 따로 표시해줘. 꼭 필요하지 않은 칸은 빼자고 제안해줘.\n\n[서비스 설명서 붙여넣기]" },
+        { text: "빌더에서 데이터베이스를 연결해요. Lovable은 Supabase 연결, Google AI Studio Build는 내장 DB 켜기처럼 메뉴 이름은 도구마다 달라요." },
+        { text: "저장 기능만 먼저 요청하고, 새로고침해도 남는지 확인해요. 잘 되면 버전을 저장해요." },
+        { text: "로그인을 붙이고, 권한 규칙을 꼭 함께 요청해요.", prompt: "로그인 기능을 추가해줘. 로그인한 사람은 자기가 만든 기록만 보고 고칠 수 있어야 해. 다른 사람의 기록은 목록에도 나오면 안 돼. 어떻게 막았는지 쉬운 말로 설명해줘." },
+        { text: "계정 두 개로 직접 시험해요. A로 쓴 기록이 B에게 보이면 실패예요. 보이면 그 증상을 그대로 빌더에게 말해요." }
+      ],
+      mission: ["저장할 데이터 표 설계하기(칸 5개 이하)", "저장 후 새로고침해도 남는지 확인하기", "로그인을 붙이고 권한 규칙 요청하기", "계정 두 개로 서로의 기록이 안 보이는지 시험하기"],
+      quiz: [
+        { q: "새로고침하면 입력이 사라지는 앱에 필요한 것은?", options: ["더 예쁜 디자인", "데이터를 저장하는 데이터베이스", "더 빠른 인터넷"], answer: 1, explain: "화면은 메모지, 데이터베이스는 장부예요. 장부에 적어야 다음에도 남아요." },
+        { q: "로그인은 되는데 다른 사람의 기록이 보여요. 무엇이 빠졌을까요?", options: ["권한 규칙(누가 무엇을 볼 수 있나)", "로그인 버튼 색", "비밀번호 길이"], answer: 0, explain: "로그인은 '누구인지', 권한은 '무엇을 볼 수 있는지'예요. 둘은 따로 정해야 해요." },
+        { q: "회원가입 화면에 생년월일 칸을 넣을까 고민돼요. 먼저 할 질문은?", options: ["다른 앱도 받으니까 넣는다", "나중에 쓸지 모르니 일단 받는다", "이 서비스에 정말 필요한가?"], answer: 2, explain: "받지 않은 정보는 샐 일도 없어요. 필요한 것만 받는 게 가장 좋은 보안이에요." }
+      ],
+      case: {
+        story: "팀원들이 매주 쓰게 되자, 민규의 서비스에 '지난주 정리 다시 보기'가 필요해졌어요.",
+        draft: "로그인이랑 저장 기능 넣어줘",
+        miss: "저장은 됐지만 권한 규칙이 없어서, 지훈이 로그인하자 다른 팀의 회의 기록까지 목록에 보였어요.",
+        artifact: "민규의 두 번째 요청\n테이블: meetings(id, owner, title, memo, created_at) · 개인정보 칸 없음\n규칙: 로그인한 사람은 owner가 자기인 기록만 보고 고친다\n시험: 민규·지훈 계정으로 각각 쓰고 서로 안 보이는지 확인 → 통과, 'v3 저장·로그인' 저장",
+        note: "'로그인'과 '누가 무엇을 보나'를 따로 말하고, 계정 두 개로 직접 시험했어요."
+      },
+      think: [
+        "내 서비스가 저장하는 정보 중, 새면 누가 곤란해질 정보는 무엇인가요?",
+        "로그인 없이도 되는 서비스라면, 굳이 로그인을 붙여야 할까요? 왜일까요?"
+      ],
+      stuck: [
+        { symptom: "데이터베이스 연결에서 계속 에러가 나요", fix: "에러 문구를 그대로 빌더에게 주고, 한 번에 테이블 하나만 만들게 해요. 두 번 실패하면 저장한 버전으로 되돌리고 저장 기능만 다시 요청해요." },
+        { symptom: "CSV 업로드가 자꾸 실패해요", fix: "첫 줄(칸 이름)이 테이블 칸 이름과 똑같은지, 파일이 UTF-8로 저장됐는지 확인해요. 열 개수를 줄인 작은 파일로 먼저 시험해요." },
+        { symptom: "크레딧이 금방 닳아요", fix: "테이블 설계는 무료 대화형 AI에서 끝내고, 빌더에는 확정된 설계만 붙여넣어요." }
+      ]
+    },
+    {
       id: "u6", no: "07", minutes: 45, level: "공개",
       title: "공개하고 검증받기",
       lead: "내 화면에서만 작동하는 서비스는 아직 서비스가 아니에요. 링크를 보내고, 남이 써보는 순간 진짜가 돼요.",
@@ -309,12 +394,13 @@ window.COURSE = {
         { term: "사용자 검증", like: "시식 코너", body: "설명하지 말고 링크만 주고 지켜보세요. 질문은 세 개면 충분해요: 무엇을 하는 서비스 같나요? 어디서 멈칫했나요? 또 쓰고 싶나요, 왜요?" }
       ],
       steps: [
+        { text: "공개하기 전에 안전 체크리스트를 통과해요. 하나라도 '모름'이면 AI에게 확인을 부탁하고, 고친 뒤에 공개해요.", prompt: "공개 전 안전 체크리스트\n- [ ] API 키·비밀번호가 화면이나 코드에 보이지 않는다 (.env나 빌더의 비밀값 설정에 있다)\n- [ ] 로그인한 사람은 자기 기록만 본다 (계정 두 개로 시험했다)\n- [ ] 받는 개인정보는 꼭 필요한 것뿐이다\n- [ ] 사용량·크레딧·요금 한도를 알고 있다\n- [ ] 에러가 나면 어디서 확인하는지 안다\n\n위 체크리스트로 내 서비스를 점검해줘. 내가 확인할 수 없는 항목은 확인하는 방법을 알려줘." },
         { text: "배포하고, 링크를 내 휴대폰에서 열어봐요. 코딩 에이전트로 만들었다면 GitHub에 푸시 → Vercel 연결 순서예요.", link: "#devkit", linkText: "GitHub·Vercel 용어 보기" },
         { text: "지인 3명에게 링크와 질문 3개를 보내요.", prompt: "안녕! 내가 혼자 AI로 만든 서비스야. 설명 없이 한 번 써봐줘 🙏\n[링크]\n\n1) 무엇을 하는 서비스 같아?\n2) 어디서 멈칫했어?\n3) 또 쓰고 싶어? 왜?" },
         { text: "피드백을 정리해요.", prompt: "아래 피드백을 공통 문제 / 개별 의견 / 지금 바로 고칠 것 1개로 나누고, 고칠 것은 Before → After 표로 만들어줘.\n\n[피드백 붙여넣기]" },
         { text: "가장 중요한 하나를 고치고 다시 배포해요." }
       ],
-      mission: ["배포하고 휴대폰에서 열기", "3명에게 써보게 하기", "피드백 정리하기", "하나 고치고 다시 배포하기"],
+      mission: ["공개 전 안전 체크리스트 통과하기", "배포하고 휴대폰에서 열기", "3명에게 써보게 하기", "피드백 정리하기", "하나 고치고 다시 배포하기"],
       quiz: [
         { q: "사용자 검증에서 가장 피해야 할 것은?", options: ["쓰는 동안 옆에서 사용법을 계속 설명하기", "설명 없이 써보게 하기", "멈칫한 곳을 물어보기"], answer: 0, explain: "설명이 필요하다는 것 자체가 고칠 점이에요. 지켜보기만 해야 진짜 문제가 보여요." },
         { q: "배포한 뒤 가장 먼저 확인할 곳은?", options: ["내 휴대폰에서 링크로 열어보기", "내 컴퓨터의 미리보기", "코드 파일"], answer: 0, explain: "사용자는 대부분 휴대폰으로 열어요. 미리보기에서 되던 게 실제 링크에서 안 될 때도 있어요." },
@@ -352,7 +438,8 @@ window.COURSE = {
         { text: "이 코스에서 두 번 이상 쓴 프롬프트를 하나 골라요." },
         { text: "6칸 레시피로 다시 써요.", prompt: "1. 역할: 너는 [○○]를 돕는 [△△]야\n2. 언제 쓰나: 사용자가 [□□]를 주면\n3. 순서: 1) … 2) … 3) …\n4. 출력 형식: [표 / 3줄 / 템플릿]\n5. 금지: 추측한 숫자 금지, 모르면 '확인 필요'라고 표시\n6. 좋은 예시: [예시 1개]" },
         { text: "쓰는 도구의 스킬·프로젝트·GPTs·Gems에 저장하고, 새 대화에서 한 번 써봐요. Claude 스킬은 폴더 하나예요. 그 안의 SKILL.md 맨 위에 이름과 '언제 쓰는지' 설명을 적고, 아래에 6칸 레시피를 넣어요. AI는 이 설명 한 줄을 보고 언제 스킬을 꺼낼지 정해요.", prompt: "---\nname: weekly-report\ndescription: 이번 주 회의 메모를 팀장 보고용 주간 보고 표로 정리한다. 사용자가 '주간 보고'를 요청하거나 회의 메모 여러 개를 줄 때 쓴다.\n---\n\n# 주간 보고 정리\n(여기에 6칸 레시피)" },
-        { text: "도구 › 스킬 가이드에서 인기 스킬을 살펴보고 하나를 장착해봐요.", link: "#skills", linkText: "스킬 가이드 열기" },
+        { text: "SKILL.md가 든 폴더를 zip으로 묶어 claude.ai › 설정 › 기능 › 스킬에 올리면, 터미널 없이도 내 스킬을 불러 쓸 수 있어요. 같은 파일은 유닛 09에서 .claude/skills 폴더에 넣어 다시 만나요." },
+        { text: "도구 › 스킬 가이드에서 인기 스킬을 살펴보고 하나를 장착해봐요. 설치 전에는 다섯 가지를 확인해요. 관리가 끝난(archived) 저장소가 아닌가, SKILL.md를 직접 읽었나, 권한과 키를 최소로 줬나, 사용 통계 수집을 껐나, 정말 필요한 것만 설치했나. 별 수는 인기의 증거이지 안전의 증거가 아니에요.", link: "#skills", linkText: "스킬 가이드 열기" },
         { text: "스킬로 만들 후보가 떠오르지 않으면 직무별 레시피에서 내 직무의 프롬프트를 골라 그대로 써보세요. 세 번 쓰게 되면 그게 스킬 후보예요.", link: "#recipes", linkText: "직무별 레시피 열기" }
       ],
       mission: ["반복한 프롬프트 하나 고르기", "6칸 레시피로 다시 쓰기", "스킬로 저장하고 한 번 써보기"],
@@ -377,6 +464,50 @@ window.COURSE = {
       ]
     },
     {
+      id: "tb", no: "B", kit: true, minutes: 60, level: "보너스", optional: true,
+      title: "에디터와 터미널 첫날",
+      lead: "코딩 에이전트는 에디터라는 작업실에서, 터미널이라는 인터폰으로 일해요. 처음 한 번만 같이 들어가 보면 다음부터는 낯설지 않아요.",
+      outcome: "VS Code로 연 내 작업 폴더 + README.md + 터미널에서 버전 확인",
+      place: "VS Code (Cursor·Antigravity도 같아요) + 통합 터미널",
+      why: "Cursor, Windsurf, Antigravity는 모두 VS Code를 고쳐 만든 도구라서, VS Code 첫날 개념만 익히면 네 도구에 다 통해요. 유닛 09에서 Claude Code를 쓸 때 가장 많이 막히는 곳도 프롬프트가 아니라 '폴더를 어디서 열었나'와 '명령을 못 찾는다(command not found)'예요.",
+      concepts: [
+        { term: "폴더 열기 = 작업 범위", like: "작업실 문", body: "워드는 파일 하나를 열지만, 코드 에디터는 폴더를 열어요. AI가 볼 수 있는 범위가 곧 그 폴더라서, 파일 하나만 열면 에이전트는 옆 파일을 못 봐요. 처음 열 때 '이 폴더 작성자를 신뢰하나요?'라고 물어요. 내가 만든 폴더는 신뢰, 남이 준 폴더는 제한 모드로 둘러보는 게 안전해요(워크스페이스 신뢰)." },
+        { term: "통합 터미널과 PATH", like: "작업실 안 인터폰과 컴퓨터의 전화번호부", body: "보기 › 터미널을 열면 에디터 아래에 명령 창이 생겨요. 명령을 치면 컴퓨터는 PATH라는 전화번호부에서 그 프로그램을 찾아요. 설치했는데 'command not found'가 뜨면 전화번호부에 아직 안 올라간 거예요. 첫 처방은 터미널을 새로 열고 다시 --version을 쳐 보는 거예요." },
+        { term: ".env와 숨김 파일", like: "금고와 서랍 속 서랍", body: "API 키 같은 비밀은 코드가 아니라 .env 파일에 두고, .gitignore에 적어 GitHub에 올라가지 않게 해요. 점(.)으로 시작하는 파일은 숨김 파일이라 탐색기에서 '숨긴 항목 보기'를 켜야 보여요." }
+      ],
+      steps: [
+        { text: "VS Code를 설치하고, 확장(Extensions)에서 Korean Language Pack을 설치해요. 메뉴는 한국어가 되지만 에러는 영어로 나온다는 걸 기억해요." },
+        { text: "문서 폴더에 영문 소문자, 공백 없는 이름으로 새 폴더를 만들어요(예: ai-work). 한글이나 공백이 든 경로는 일부 도구에서 오류가 날 수 있어요." },
+        { text: "파일 › 폴더 열기로 그 폴더를 열고, 신뢰를 묻는 창에서 '신뢰'를 골라요." },
+        { text: "README.md를 만들어 제목 하나와 목록 두 줄을 쓰고, 미리보기(윈도우 Ctrl+Shift+V, 맥 Cmd+Shift+V)로 모양이 바뀌는 걸 확인해요." },
+        { text: "보기 › 터미널을 열고 지금 위치를 확인해요.", prompt: "pwd        # 지금 어느 폴더에 있지?\nls         # 이 폴더에 뭐가 있지? (윈도우 cmd는 dir)\nnode -v    # Node.js가 깔려 있나? (버전이 나오면 OK)" },
+        { text: "확장을 설치할 때는 게시자와 설치 수를 확인하는 습관을 들여요. 확장은 내 권한으로 동작해요." },
+        { text: "Claude Code를 설치했다면 claude --version으로 확인하고, 이 폴더에서 claude를 실행해요. 이어지는 유닛 09에서 함께 해요.", link: "#u8", linkText: "유닛 09 코딩 에이전트로" }
+      ],
+      mission: ["VS Code와 한국어 팩 설치하기", "영문 폴더를 만들어 열고 '신뢰' 고르기", "README.md 미리보기 확인하기", "터미널에서 pwd와 node -v 실행하기"],
+      quiz: [
+        { q: "코드 에디터가 파일이 아니라 폴더를 여는 가장 큰 이유는?", options: ["폴더가 더 빨라서", "AI와 도구가 볼 수 있는 작업 범위가 곧 그 폴더라서", "파일은 열 수 없어서"], answer: 1, explain: "폴더가 작업실이에요. 에이전트는 작업실 안의 파일만 보고 고쳐요." },
+        { q: "Claude Code를 설치했는데 'command not found'가 떠요. 가장 먼저 할 일은?", options: ["컴퓨터를 초기화한다", "다른 AI를 설치한다", "터미널을 새로 열고 claude --version을 다시 친다"], answer: 2, explain: "설치 직후엔 열려 있던 터미널이 새 위치(PATH)를 모를 수 있어요. 새 터미널이 첫 처방이에요." },
+        { q: "API 키는 어디에 두는 게 맞을까요?", options: [".env 파일에 두고 .gitignore에 적는다", "README.md에 적어 둔다", "코드 맨 위에 적는다"], answer: 0, explain: ".env는 금고, .gitignore는 '이건 올리지 마' 목록이에요. 둘이 함께 있어야 키가 새지 않아요." }
+      ],
+      case: {
+        story: "민규는 Claude Code를 설치하고, 바탕화면에서 바로 claude를 실행했어요.",
+        draft: "C:\\Users\\민규\\Desktop> claude\n> 회의 할 일 정리 페이지 만들어줘",
+        miss: "바탕화면 전체가 작업 범위가 되어 에이전트가 상관없는 파일까지 읽으려 했고, 한글 경로에서 일부 명령이 실패했어요.",
+        artifact: "1. 문서 폴더에 meeting-todo 폴더 만들기\n2. VS Code › 폴더 열기 › 신뢰\n3. 보기 › 터미널 → pwd로 위치 확인\n4. 그 자리에서 claude 실행",
+        note: "어디서 실행하느냐가 곧 AI에게 무엇을 보여주느냐예요."
+      },
+      think: [
+        "작업 폴더를 따로 만드는 것은 AI 안전과 어떤 관계가 있을까요?",
+        "영어 에러 메시지를 그대로 복사해 AI에게 묻는 것과, 번역해서 묻는 것 중 무엇이 나을까요? 왜일까요?"
+      ],
+      stuck: [
+        { symptom: "'claude: command not found'가 떠요", fix: "터미널을 껐다 켜고 claude --version을 다시 쳐요. 윈도우는 설치 위치(%USERPROFILE%\\.local\\bin)가 PATH에 없을 수 있어요. 에러 문구를 그대로 대화형 AI에 붙여넣고 PATH에 추가하는 방법을 물어보세요." },
+        { symptom: "에디터 터미널과 바깥 터미널의 결과가 달라요", fix: "VS Code 터미널 오른쪽 위에서 셸 종류(PowerShell, cmd, zsh)를 확인해요. 설치할 때 쓴 셸과 같은 셸을 골라요." },
+        { symptom: ".env 파일이 안 보여요", fix: "점으로 시작하는 숨김 파일이에요. 윈도우는 탐색기 보기 › 숨긴 항목, 맥은 Finder에서 Cmd+Shift+. 을 눌러요. VS Code 탐색기에서는 보통 보여요." }
+      ]
+    },
+    {
       id: "u8", no: "09", minutes: 60, level: "보너스", optional: true,
       title: "코딩 에이전트로 졸업하기",
       lead: "웹앱 빌더로 첫 서비스를 만들었다면, 이제 내 컴퓨터에서 직접 일하는 코딩 에이전트로 한 단계 올라갈 차례예요.",
@@ -385,12 +516,13 @@ window.COURSE = {
       why: "웹앱 빌더는 빠르지만 크레딧과 기능에 한계가 있어요. 코딩 에이전트는 내 컴퓨터의 파일을 직접 다루고, GitHub와 Vercel로 이어져 오래 쓸 서비스를 자유롭게 키울 수 있어요. 대신 에이전트가 하려는 일을 읽고 허락할 줄 알아야 해요.",
       concepts: [
         { term: "하네스", fig: "harness", like: "컨설턴트를 둘러싼 사무실", body: "모델(Claude, GPT)은 방 안에서 쪽지만 주고받는 똑똑한 컨설턴트예요. 하네스는 그를 둘러싼 사무실이에요. 책상과 전화(도구), '이 서랍 열어도 되나요?' 묻는 안내데스크(권한), 아침마다 놓이는 인수인계 바인더(CLAUDE.md), 꽉 찬 책상을 정리하는 비서(컴팩션). 'Claude Code가 하네스이고, Claude는 그 안의 모델'이에요. AI가 매번 확실히 하게 만드는 답은 더 좋은 문장보다 사무실 설정인 경우가 많아요." },
-        { term: "안전 운전 3종 세트", like: "운전 연수의 브레이크·내비·후진 기어", body: "① 권한 모드: 어디까지 묻지 않고 할지 정해요. Shift+Tab으로 바꾸고, 처음엔 매번 묻는 기본 모드로 시작해요. 자동(auto) 모드도 안전을 보장하지는 않아요. ② 플랜 모드: 파일을 고치기 전에 조사하고 계획만 보여줘요. ③ 되돌리기: Esc를 두 번 누르거나 /rewind로 이전 상태로 돌아가요. 단, 명령이 지운 파일은 못 돌아올 수 있어서 Git 커밋이 함께 필요해요." },
+        { term: "안전 운전 3종 세트", like: "운전 연수의 브레이크·내비·후진 기어", body: "① 권한 모드: 어디까지 묻지 않고 할지 정해요. Shift+Tab으로 바꿔요. v2.1.283부터는 대화형 세션이 자동(auto) 모드로 시작하는데, 공식 문서도 auto가 안전을 보장하지 않는다고 밝혀요. 처음엔 Shift+Tab으로 매번 묻는 기본 모드로 바꿔 두세요. ② 플랜 모드: 파일을 고치기 전에 조사하고 계획만 보여줘요. ③ 되돌리기: Esc를 두 번 누르거나 /rewind로 이전 상태로 돌아가요. 단, 명령이 지운 파일은 못 돌아올 수 있어서 Git 커밋이 함께 필요해요." },
         { term: "웹앱 빌더 vs 코딩 에이전트", like: "밀키트와 내 부엌", body: "웹앱 빌더는 재료와 조리법이 준비된 밀키트예요. 코딩 에이전트는 내 부엌에서 요리사를 부리는 것이에요. 더 자유롭지만 부엌(내 컴퓨터, 터미널)을 알아야 해요." },
         { term: "CLAUDE.md", like: "출근한 요리사에게 주는 주방 규칙", body: "프로젝트 폴더에 두는 설명서예요. Claude Code는 일을 시작할 때마다 이 파일을 먼저 읽어요. 유닛 04의 서비스 설명서와 작업 원칙을 여기에 옮겨요. 200줄 이하로 짧게 유지하세요. 길수록 덜 따라요. 대화로만 한 지시는 긴 대화를 요약(컴팩션)할 때 빠질 수 있지만, 파일에 적은 규칙은 남아요. Codex·Cursor 같은 다른 도구는 같은 역할의 AGENTS.md를 읽어요." },
         { term: "Git 세이브와 자동 배포", fig: "deployFlow", like: "게임 세이브와 자동 오픈", body: "작은 단위로 커밋해 두면 언제든 되돌릴 수 있어요. GitHub에 푸시하면 연결된 Vercel이 새 버전을 자동으로 올려요." }
       ],
       steps: [
+        { text: "VS Code와 터미널이 처음이라면 공구함 B부터 해요. 폴더를 어디서 여느냐가 곧 AI에게 무엇을 보여주느냐예요.", link: "#tb", linkText: "공구함 B 에디터와 터미널 첫날" },
         { text: "터미널을 열고 Node.js가 있는지 확인해요. 버전이 나오지 않으면 nodejs.org에서 LTS 버전을 설치해요.", prompt: "node -v" },
         { text: "Claude Code를 설치해요. 설치 방법은 바뀔 수 있으니 공식 문서도 함께 확인해요.", prompt: "npm install -g @anthropic-ai/claude-code", link: "#devkit", linkText: "npm이 낯설다면 개발 도구 지도" },
         { text: "새 폴더를 만들고 그 안에서 claude를 실행해요. 처음에는 로그인 안내가 나와요.", prompt: "mkdir my-service\ncd my-service\nclaude" },
@@ -469,19 +601,19 @@ window.COURSE = {
   // 코스의 다섯 계단: 유닛을 단계로 묶어 '지금 어디쯤인지, 다음에 뭐가 달라지는지' 보여줘요.
   // must = 이 단계에서 꼭 알 말, later = 나중에 알아도 될 말, habits/dont = 한 장 치트시트
   stages: [
-    { id: "s1", no: 1, name: "대화", title: "AI와 대화하기", units: ["u0", "u1", "u2", "us"],
-      sub: "잘 묻고, 답을 판단하고, 안전하게 써요.",
+    { id: "s1", no: 1, name: "대화", title: "AI와 대화하기", units: ["u0", "u1", "u2", "us", "ta"],
+      sub: "잘 묻고, 답을 판단하고, 안전하게 쓰고, 내 컴퓨터와 AI 사이 기초까지 다져요. 모든 트랙이 함께 들어요.",
       tool: "대화형 AI 앱 하나 (ChatGPT · Claude · Gemini)",
       unlock: "내 일을 AI에게 정확히 설명하고, 믿어도 되는 답을 골라낼 수 있어요.",
-      must: ["LLM", "프롬프트 · TCREI", "컨텍스트 창", "컨텍스트 로트", "환각", "빠른 모드 vs 생각 모드", "데이터 신호등"],
+      must: ["LLM", "프롬프트 · TCREI", "컨텍스트 창", "환각", "데이터 신호등", "확장자", "마크다운", "구독 · API 키"],
       later: ["토큰 단가", "온도(옛 용어)", "모델 버전 이름"],
       habits: ["새 일은 새 대화에서", "숫자·인용·출처는 직접 확인", "붙여넣기 전에 신호등 확인"],
       dont: ["주민번호·계좌·계약서 원문 붙여넣기", "확인 안 한 AI 답을 내 이름으로 내기"] },
-    { id: "s2", no: 2, name: "만들기", title: "말로 서비스 만들기", units: ["u3", "u4", "u5", "u6"],
+    { id: "s2", no: 2, name: "만들기", title: "말로 서비스 만들기", units: ["u3", "u4", "u5", "udb", "u6"],
       sub: "설명서를 쓰고, 작게 맡기고, 고쳐서 공개해요.",
       tool: "웹앱 빌더 (Lovable · Google AI Studio Build 등) 또는 아티팩트",
       unlock: "링크 하나로 남이 써볼 수 있는 내 서비스가 생겨요.",
-      must: ["바이브 코딩", "PRD(서비스 설명서)", "MVP", "플랜 모드", "체크포인트", "배포 · URL"],
+      must: ["바이브 코딩", "PRD(서비스 설명서)", "MVP", "플랜 모드", "체크포인트", "데이터베이스 · 로그인", "배포 · URL"],
       later: ["React 같은 프레임워크 이름", "데이터베이스·로그인 구조"],
       habits: ["설명서 먼저, 계획 확인 후 만들기", "한 번에 하나만 고치기", "잘 되면 바로 저장"],
       dont: ["API 키를 화면이나 코드에 적기", "개인정보를 받는 서비스를 검토 없이 공개"] },
@@ -493,7 +625,7 @@ window.COURSE = {
       later: ["파인튜닝", "임베딩 · 벡터 DB"],
       habits: ["세 번 반복하면 스킬 후보", "스킬엔 '하지 말 것'과 예시", "연결은 필요한 것만"],
       dont: ["출처 모르는 스킬·플러그인 설치", "모든 앱을 한꺼번에 연결"] },
-    { id: "s4", no: 4, name: "맡기기", title: "코딩 에이전트와 하네스", units: ["u8"], bonus: true,
+    { id: "s4", no: 4, name: "맡기기", title: "코딩 에이전트와 하네스", units: ["tb", "u8"], bonus: true,
       sub: "내 컴퓨터에서 일하는 에이전트를 안전하게 운전해요.",
       tool: "Claude Code · Codex · Cursor 같은 코딩 에이전트",
       unlock: "크레딧 걱정 없이 오래 키울 서비스를 내 폴더와 GitHub에서 다뤄요.",
@@ -515,6 +647,7 @@ window.COURSE = {
   // must = 실력과 상관없이 꼭 하는 유닛과 그 이유
   placement: {
     items: [
+      { unit: "ta", q: "AI가 만든 표를 카톡에 붙였더니 ** 와 | 기호가 잔뜩 보여요. 왜일까요?", options: ["AI가 고장 나서", "카톡이 마크다운 기호를 모양으로 바꿔 보여주지 않아서", "인터넷이 느려서"], answer: 1, did: "AI 답을 다른 앱에 옮길 때 서식을 맞춰 붙여넣거나, 마크다운으로 문서를 써 본 적이 있다" },
       { unit: "u1", q: "같은 AI에게 같은 걸 물어도 사람마다 답의 질이 다른 가장 큰 이유는?", options: ["유료 요금제를 써서", "질문을 영어로 해서", "맥락(누가, 왜, 어떤 예시)을 얼마나 줬는지"], answer: 2, did: "원하는 결과가 나올 때까지 맥락·예시·형식을 넣어 프롬프트를 고쳐 써 본 적이 있다" },
       { unit: "u2", q: "AI가 '연구에 따르면 직장인의 73%가…'라고 답했어요. 먼저 할 일은?", options: ["출처를 묻고 원문을 직접 확인한다", "그대로 보고서에 쓴다", "다른 AI에게 같은 질문을 해서 같으면 믿는다"], answer: 0, did: "AI 답의 숫자나 출처를 직접 확인해서 틀린 걸 잡아낸 적이 있다" },
       { unit: "u4", q: "웹앱 빌더에게 처음 맡기기 가장 좋은 요청은?", options: ["앱 전체를 한 번에 만들어줘", "설명서를 주고 첫 화면만 만들어줘", "알아서 멋지게 만들어줘"], answer: 1, did: "Lovable·아티팩트 같은 도구로 말로 화면을 만들어 본 적이 있다" },
@@ -528,6 +661,48 @@ window.COURSE = {
       { unit: "u3", why: "이 코스의 모든 유닛이 여기서 쓰는 서비스 설명서로 이어져요. 내 서비스가 정해져야 다음이 의미 있어요." }
     ]
   },
+
+  // 목적별 트랙: 모두 STEP 1(대화 + 공구함 A)을 함께 듣고, 고른 트랙의 유닛으로 이어가요.
+  // stages = 이 트랙이 쓰는 계단(STEP 2~), soon = 아직 준비 중(preview로 유닛 예고만 보여줌)
+  tracks: [
+    { id: "work", short: "업무를 빠르게", ex: "메일·회의록·엑셀·보고서", name: "업무 효율·자동화", who: "문서·메일·회의·엑셀에 하루를 쓰는 직장인", goal: "매주 반복하는 업무를 AI로 줄이고, 초안까지 자동으로 만들어요.", project: "나만의 주간 업무 자동화 패키지 + AI 사용 규칙 1장", why: "한국 직장인이 AI를 가장 많이 쓰는 곳(검색·요약, 문서, 번역)이라 수요가 가장 커요.", soon: true,
+      preview: [
+        { no: "W1", title: "문서·메일·번역 10분 컷", goal: "긴 문서를 3줄 보고·답장·외국어 메일로 바꾸고 템플릿으로 저장" },
+        { no: "W2", title: "회의 → 회의록 → 할 일", goal: "녹음·전사본을 회의록, 담당자별 할 일, 후속 메일로" },
+        { no: "W3", title: "엑셀·시트, 말로 분석하기", goal: "표를 올려 수식·피벗·차트·인사이트까지, 숫자는 직접 검산" },
+        { no: "W4", title: "보고서·발표자료로 마무리", goal: "분석 결과를 5장짜리 보고 자료로" },
+        { no: "W5", title: "연결하기: 메일·드라이브·캘린더", goal: "커넥터 하나를 안전하게 연결하고 권한 범위 설명하기" },
+        { no: "W6", title: "반복 업무를 예약 작업과 노코드로", goal: "예약 작업 1개와 노코드 흐름 1개, 보내기는 사람이" }
+      ] },
+    { id: "plan", short: "아이디어를 기획서로", ex: "하고 싶은 일 정리, 사업계획서", name: "아이디어·기획", who: "기획자, 예비 창업자, 하고 싶은 게 있는데 정리가 안 되는 사람", goal: "막연한 아이디어를 근거 있는 1페이지 기획서로 만들어요.", project: "검증된 1페이지 기획 패키지 (서비스 만들기의 설명서로 그대로 이어져요)", why: "한국 직장인 업무에서 '창의적 사고'가 가장 많이 늘고 있어요.", soon: true,
+      preview: [
+        { no: "P1", title: "AI를 생각 파트너로: 되묻게 하기", goal: "AI가 나를 인터뷰하게 해서 1문장 문제 정의로" },
+        { no: "P2", title: "발산과 수렴: 30개에서 3개로", goal: "양 먼저, 묶고, 점수 매겨 고르기" },
+        { no: "P3", title: "시장·경쟁 리서치와 출처 검증", goal: "모든 숫자에 출처가 달린 2쪽 브리프" },
+        { no: "P4", title: "고객 이해: 페르소나·여정", goal: "AI 모의 인터뷰 다음엔 실제 한 명 인터뷰" },
+        { no: "P5", title: "검증과 결정: go/no-go", goal: "가장 위험한 가정을 1주 실험으로 확인" },
+        { no: "P6", title: "기획서·사업계획서로 설득하기", goal: "1페이지 기획서와 AI 심사위원의 질문 10개" }
+      ] },
+    { id: "build", short: "나만의 서비스 만들기", ex: "앱·웹 서비스를 직접", name: "서비스 만들기", who: "내 불편함을 푸는 작은 서비스를 직접 만들고 싶은 사람", goal: "코딩 없이 작동하는 서비스를 만들어 링크로 공개해요.", project: "공개 URL이 있는 내 서비스", why: "아직 쓰는 사람은 적지만 가장 빠르게 커지는 용도예요.", stages: ["s2", "s3", "s4", "s5"] },
+    { id: "content", short: "글·SNS·영상 만들기", ex: "블로그, 인스타, 숏폼", name: "콘텐츠·마케팅", who: "자영업자, 마케터, 블로그·SNS·유튜브 크리에이터", goal: "내 목소리로 글·이미지·영상을 만들고 책임 있게 게시해요.", project: "1주 캠페인 패키지 (보이스 가이드, 글, SNS, 이미지, 숏폼)", why: "마케팅 글과 블로그는 거의 전부 업무용이고, 이미지·영상 활용이 늘고 있어요.", soon: true,
+      preview: [
+        { no: "C1", title: "내 브랜드와 고객 정리하기", goal: "1쪽 브랜드 보이스 가이드를 프로젝트 지침으로" },
+        { no: "C2", title: "키워드와 글: 블로그·뉴스레터", goal: "검색 의도에 맞고 사실 확인을 거친 긴 글" },
+        { no: "C3", title: "하나 만들어 여러 채널로", goal: "한 글을 SNS·광고 카피로 바꾸기" },
+        { no: "C4", title: "이미지와 디자인: 브랜드 일관성", goal: "색과 글꼴이 통일된 이미지 세트" },
+        { no: "C5", title: "숏폼 영상 만들기", goal: "대본부터 자막까지 30~60초 영상 1편" },
+        { no: "C6", title: "법·윤리·성과", goal: "AI 표시·저작권 체크리스트와 1주 지표 리뷰" }
+      ] },
+    { id: "study", short: "공부·자격증·리포트", ex: "AI를 과외 선생님으로", name: "공부·리서치", who: "학생, 자격증·업무 지식을 공부하는 직장인, 보고서·논문을 쓰는 사람", goal: "AI를 답지가 아니라 과외 선생님으로 쓰고, 검증된 출처로 정리해요.", project: "나만의 학습·리서치 포트폴리오", why: "정보 검색과 학습 지원은 가장 많은 사람이 AI를 쓰는 이유예요.", soon: true,
+      preview: [
+        { no: "L1", title: "AI를 답지 말고 과외 선생님으로", goal: "학습 모드로 개념을 스스로 설명할 수 있게" },
+        { no: "L2", title: "내 자료로 공부방 만들기", goal: "NotebookLM에 교재를 올리고 인용 확인" },
+        { no: "L3", title: "기억에 남기기: 퀴즈와 플래시카드", goal: "틀린 문제로 다시 만드는 복습 루틴" },
+        { no: "L4", title: "더 넓게 찾기: 딥 리서치와 논문", goal: "논문 5~8편 문헌 매트릭스" },
+        { no: "L5", title: "믿을 수 있나? 검증과 인용", goal: "AI가 준 인용 10개 감사" },
+        { no: "L6", title: "정직하게 쓰기와 노트 시스템", goal: "AI 활용 기록서 쓰기" }
+      ] }
+  ],
 
   prompts: [
     { cat: "기획", title: "핵심기능 좁히기", text: "나는 [불편함]을 겪는 사람이야. 이걸 해결할 서비스의 핵심기능 후보 5개를 표로 정리하고, 혼자 일주일 안에 코딩 없이 만들 수 있는 가장 작은 1개를 추천해줘. 이유는 2줄로." },
@@ -618,66 +793,122 @@ window.COURSE = {
     { term: "크롤링 · 스크래핑", en: "crawling · scraping", like: "남의 가게 진열대 사진 찍기", body: "웹페이지 내용을 프로그램으로 자동 수집하는 것이에요.", why: "이용약관·robots.txt를 확인하고 개인정보는 모으지 않아요. 공식 API가 있으면 그게 먼저예요.", stage: 5, unit: "ua" },
     { term: "비대화형 실행", en: "claude -p · headless", like: "메모 남기고 퇴근", body: "대화 없이 한 번 실행하고 끝나는 방식이에요. 예전엔 '헤드리스 모드'라고 불렀어요.", why: "예약 실행이나 자동화 스크립트에 에이전트를 붙일 때 써요.", stage: 5, later: true },
     { term: "워크트리", en: "git worktree", like: "작업대 여러 개", body: "같은 프로젝트를 서로 다른 작업 폴더로 펼쳐, 에이전트 여러 명이 동시에 고치게 하는 Git 기능이에요.", why: "여러 일을 병렬로 맡길 때 서로 덮어쓰지 않아요.", stage: 5, later: true },
-    { term: "Agent SDK", like: "하네스 부품 상자", body: "Claude Code의 엔진을 내 프로그램 안에 넣어 쓰는 개발 도구예요.", why: "나만의 에이전트 서비스를 만들 때 만나요.", stage: 5, later: true }
+    { term: "Agent SDK", like: "하네스 부품 상자", body: "Claude Code의 엔진을 내 프로그램 안에 넣어 쓰는 개발 도구예요.", why: "나만의 에이전트 서비스를 만들 때 만나요.", stage: 5, later: true },
+    { term: "확장자", en: "file extension", like: "택배 상자의 품목 라벨", body: "파일 이름 끝의 .pdf, .md, .csv처럼 파일 종류를 알려주는 글자예요. 윈도우는 기본으로 숨겨 두어서 '파일 확장명 보기'를 켜야 보여요.", why: "AI에 올릴 수 있는지, 어떤 앱으로 열지가 여기서 정해져요. CLAUDE.md가 CLAUDE.md.txt가 되는 사고도 막아요.", stage: "base", unit: "ta" },
+    { term: "경로", en: "path", like: "시·구·동·호 집 주소", body: "파일이 있는 위치를 적은 주소예요. 윈도우는 C:\\Users\\민규\\문서, 맥은 /Users/minkyu/Documents처럼 써요.", why: "에이전트에게 '이 폴더를 보고 해'라고 정확히 말하려면 필요해요. 한글·공백이 든 경로는 일부 도구에서 오류가 나요.", stage: "base", unit: "ta" },
+    { term: "다운로드 폴더", like: "우편함", body: "브라우저에서 받은 파일이 기본으로 저장되는 곳이에요.", why: "'AI가 만든 파일이 어디 갔지?'의 답은 대부분 여기예요.", stage: "base", unit: "ta" },
+    { term: "에러 원문", like: "의사에게 증상을 그대로 말하기", body: "에러 메시지를 캡처하거나 요약하지 않고 글자 그대로 복사한 것이에요.", why: "AI와 커뮤니티가 정확하게 진단할 수 있어요. 터미널에서 Ctrl+C는 복사가 아니라 실행 중단이에요.", stage: "base", unit: "ta" },
+    { term: "마크다운", en: "Markdown · .md", like: "원고 교정 부호", body: "# 제목, **굵게**, - 목록처럼 기호로 글의 모양을 표시하는 약속이에요.", why: "AI 답변, CLAUDE.md, SKILL.md, 노션이 모두 이 형식이에요. 카톡·한글·메모장은 기호를 그대로 보여줘요.", stage: "base", unit: "ta" },
+    { term: "렌더링", en: "rendering", like: "교정 부호가 인쇄물로 바뀌는 순간", body: "마크다운 같은 기호를 실제 모양(큰 제목, 굵은 글씨, 표)으로 바꿔 보여주는 것이에요.", why: "별표가 보이면 AI 고장이 아니라 받는 앱이 렌더링을 안 하는 거예요.", stage: "base", unit: "ta" },
+    { term: "서식 없이 붙여넣기", en: "paste as plain text", like: "포장을 벗기고 내용물만", body: "글꼴·색·기호 같은 서식을 빼고 글자만 붙여넣는 방법이에요. 윈도우는 Ctrl+Shift+V예요(앱마다 조금 달라요).", why: "AI 답을 문서나 메신저에 옮길 때 모양이 깨지는 걸 막아요.", stage: "base", unit: "ta" },
+    { term: "구독 · 종량제", en: "subscription · pay-as-you-go API", like: "월회원권 · 쓴 만큼 내는 사물함", body: "구독(ChatGPT Plus 등)은 채팅 화면을 쓰는 월정액이고, API는 프로그램이 AI를 부를 때 쓴 만큼 내는 종량제예요.", why: "'Plus를 결제했는데 API는 왜 안 돼요?'의 답이에요. 자동화·앱 연결에는 요금이 따로 들어요.", stage: "base", unit: "ta" },
+    { term: "업로드 vs 연결", en: "upload vs connector", like: "복사본 건네기 vs 열쇠 맡기기", body: "업로드는 파일을 한 번 건네는 것이고, 연결(커넥터)은 드라이브·메일을 계속 볼 수 있게 열어 두는 것이에요.", why: "연결한 만큼 AI가 볼 수 있어요. 필요한 것만 연결하고 해제하는 곳을 알아 둬요.", stage: "base", unit: "ta" },
+    { term: "2단계 인증", en: "2FA", like: "현관 비밀번호 + 지문", body: "비밀번호에 더해 휴대폰 앱(OTP)이나 문자로 한 번 더 확인하는 방식이에요. 비밀번호 관리자를 함께 쓰면 계정마다 다른 비밀번호를 쓸 수 있어요.", why: "결제 정보와 API 키가 묶인 AI 계정은 털리면 피해가 커요.", stage: "base", unit: "ta" },
+    { term: "브라우저 프로필", like: "회사 가방과 개인 가방", body: "한 브라우저 안에서 계정별로 방을 나눠 쓰는 기능이에요.", why: "회사 드라이브와 개인 AI 계정이 섞이지 않게 해요. '파일이 안 보여요'는 다른 계정으로 로그인된 경우가 많아요.", stage: "base", unit: "ta" },
+    { term: "공유 권한", en: "sharing permission", like: "열쇠 복사본의 종류", body: "클라우드 파일을 뷰어·댓글·편집자 중 무엇으로, 누구에게 열어 줄지 정하는 설정이에요.", why: "'링크가 있는 모든 사용자'로 열어 두면 커넥터와 동료 공유에서 사고가 나요.", stage: "base", unit: "ta" },
+    { term: "스캔 PDF · OCR", like: "코팅한 종이 vs 사진", body: "글자가 든 PDF와 달리 스캔본은 사진이라, 글자 인식(OCR)을 거쳐야 AI가 읽어요.", why: "OCR은 틀릴 수 있어요. 표·숫자가 많은 스캔본은 원본과 꼭 대조해요.", stage: "base", unit: "ta" },
+    { term: "ZIP · 압축 해제", like: "진공 압축팩", body: "여러 파일을 하나로 묶은 파일이에요. 열기 전에 압축을 풀어야 해요.", why: "스킬과 템플릿이 zip으로 와요. 맥과 윈도우 사이에서는 한글 파일명이 깨질 수 있어요.", stage: "base", unit: "ta" },
+    { term: "HWP · HWPX", like: "한국 전용 서류 양식", body: "한컴오피스 한글 파일 형식이에요. HWPX는 새 형식이라 AI가 더 잘 읽어요.", why: "AI마다 지원이 달라요. 안 열리면 PDF나 DOCX로 바꿔서 올려요. 공문서는 HWPX로 바뀌는 중이에요.", stage: "base", unit: "ta" },
+    { term: "CSV · XLSX", like: "글자만 적은 표 vs 엑셀 통합 문서", body: "CSV는 쉼표로 칸을 나눈 글자 표이고, XLSX는 수식·서식·여러 시트가 든 엑셀 파일이에요.", why: "AI 분석에는 CSV가 가장 정확해요. 한글이 깨지면 UTF-8 CSV로 다시 저장해요.", stage: "base", unit: "ta" },
+    { term: "YAML", like: "들여쓰기가 문법인 설정표", body: "이름: 값 모양으로 설정을 적는 형식이에요. SKILL.md 맨 위 --- 사이 머리말이 YAML이에요.", why: "띄어쓰기 하나만 틀려도 고장 나요. 스킬의 name·description이 여기 들어가요.", stage: "base", unit: "ta" },
+    { term: "VS Code", like: "만능 작업실", body: "마이크로소프트가 만든 무료 코드 에디터예요. Cursor·Windsurf·Antigravity는 모두 VS Code를 고쳐 만들었어요.", why: "VS Code 첫날 개념만 익히면 AI 에디터 네 개에 다 통해요.", stage: "base", unit: "tb" },
+    { term: "에디터 · IDE", en: "editor · integrated development environment", like: "작업실 · 공구가 다 갖춰진 작업실", body: "에디터는 글자 파일을 고치는 프로그램이고, IDE는 거기에 실행·검사·터미널까지 한곳에 모은 프로그램이에요. 요즘은 둘의 경계가 거의 없어요.", why: "코딩 에이전트가 일하는 곳이에요.", stage: "base", unit: "tb" },
+    { term: "확장 프로그램", en: "extension", like: "공구 추가 장착", body: "에디터나 브라우저에 기능을 더하는 작은 프로그램이에요.", why: "편하지만 내 권한으로 동작해요. 게시자와 설치 수를 확인하고 설치해요.", stage: "base", unit: "tb" },
+    { term: "워크스페이스 신뢰", en: "workspace trust", like: "낯선 택배는 열기 전에 확인", body: "폴더를 열 때 '이 폴더 작성자를 신뢰하나요?'를 묻는 기능이에요. 신뢰하지 않으면 제한 모드로 열려요.", why: "남이 준 프로젝트가 자동으로 실행되는 걸 막아요.", stage: "base", unit: "tb" },
+    { term: "통합 터미널", en: "integrated terminal", like: "작업실 안 인터폰", body: "에디터 안에 붙어 있는 터미널이에요. 보기 › 터미널로 열어요.", why: "열린 폴더에서 바로 명령을 실행해서, 엉뚱한 곳에서 실행하는 실수를 줄여요.", stage: "base", unit: "tb" },
+    { term: "PATH", like: "컴퓨터의 전화번호부", body: "명령을 쳤을 때 컴퓨터가 그 프로그램을 찾아보는 위치 목록이에요.", why: "'command not found'는 대부분 PATH 문제예요. 새 터미널을 여는 게 첫 처방이에요.", stage: "base", unit: "tb" },
+    { term: "단축키", en: "shortcut", like: "엘리베이터 층 버튼", body: "복사(Ctrl/Cmd+C), 붙여넣기(+V), 되돌리기(+Z), 저장(+S), 화면 캡처(윈도우 Win+Shift+S, 맥 Cmd+Shift+4)처럼 키 조합으로 하는 동작이에요.", why: "AI와 일할 때 가장 많이 하는 동작이 복사·붙여넣기·캡처예요.", stage: "base", unit: "ta" }
   ],
 
   // 스킬: 카테고리별. stars = 초급 추천도(3이 가장 먼저), src = GitHub 저장소, pop = GitHub 별 수(2026년 10월 기준),
   // install = Claude Code 설치 명령(각 저장소 README 기준), ba = 전·후 예시
   skillStarter: ["Superpowers", "frontend-design", "Karpathy guidelines"],
   skillCats: [
-    { id: "korean", title: "한국어 글쓰기", desc: "AI가 쓴 티가 나는 한국어를 사람이 쓴 글처럼 다듬어요. 혼자 만든 서비스의 소개글, 공지, 보고서를 내기 전에 가장 먼저 쓰게 되는 스킬이에요.", items: [
-      {"name": "한국어 윤문 · im-not-ai", "by": "epoko77-ai", "src": "epoko77-ai/im-not-ai", "pop": "★ 6.3k", "what": "번역투, 기계적인 나열, AI 상투어, 과한 피동 같은 'AI 티' 패턴 70여 개를 찾아 그 부분만 고쳐요. 사실·숫자·인용은 그대로 둬요.", "when": "AI로 쓴 보고서·공지·블로그 글을 내보내기 직전", "stars": 3, "install": "/plugin marketplace add epoko77-ai/im-not-ai\n/plugin install humanize-korean@im-not-ai", "ba": {"before": "본 서비스는 회의 내용을 효율적으로 관리할 수 있도록 다양한 기능을 제공함으로써, 사용자의 업무 생산성 향상에 기여하는 혁신적인 솔루션이라고 할 수 있습니다.", "after": "이 서비스는 회의 내용을 쉽게 정리하도록 도와줘요. 정리하는 시간이 줄어서 일이 빨라져요."}},
-      {"name": "달레의 korean-skills", "by": "Dale Seo (달레)", "src": "DaleSeo/korean-skills", "pop": "★ 240", "what": "윤문(humanizer), 맞춤법·띄어쓰기 검사(grammar-checker), 문체·용어 통일(style-guide)을 따로 또는 함께 설치해요. 왜 고쳤는지도 알려줘요.", "when": "맞춤법이 걱정될 때, 여러 사람이 쓴 문서의 말투를 맞출 때", "stars": 3, "install": "npx skills add daleseo/korean-skills", "ba": {"before": "회의가 끝난후 할일을 정리 하는데 시간이 너무 오래 걸립니다.", "after": "회의가 끝난 후 할 일을 정리하는 데 시간이 너무 오래 걸립니다."}},
-      {"name": "humanizer", "by": "blader", "src": "blader/humanizer", "pop": "★ 62k", "what": "위키백과의 'AI가 쓴 글의 특징' 목록을 바탕으로 영어 글의 AI 티를 지워요. 한국어 윤문 스킬들의 원조예요.", "when": "영어 이메일이나 서비스 소개글을 쓸 때", "stars": 2, "install": "/plugin marketplace add blader/humanizer\n/plugin install humanizer@humanizer", "ba": {"before": "In today's fast-paced world, our innovative tool seamlessly empowers teams to unlock their full potential.", "after": "Our tool helps teams finish their work faster."}}
+    { id: "korean", track: "content", title: "한국어 글쓰기", desc: "AI가 쓴 티가 나는 한국어를 사람이 쓴 글처럼 다듬어요. 혼자 만든 서비스의 소개글, 공지, 보고서를 내기 전에 가장 먼저 쓰게 되는 스킬이에요.", items: [
+      {"name": "한국어 윤문 · im-not-ai", "by": "epoko77-ai", "src": "epoko77-ai/im-not-ai", "pop": "★ 6.4k", "what": "번역투, 기계적인 나열, AI 상투어, 과한 피동 같은 'AI 티' 패턴 70여 개를 찾아 그 부분만 고쳐요. 사실·숫자·인용은 그대로 둬요.", "when": "AI로 쓴 보고서·공지·블로그 글을 내보내기 직전", "stars": 3, "install": "/plugin marketplace add epoko77-ai/im-not-ai\n/plugin install humanize-korean@im-not-ai", "ba": {"before": "본 서비스는 회의 내용을 효율적으로 관리할 수 있도록 다양한 기능을 제공함으로써, 사용자의 업무 생산성 향상에 기여하는 혁신적인 솔루션이라고 할 수 있습니다.", "after": "이 서비스는 회의 내용을 쉽게 정리하도록 도와줘요. 정리하는 시간이 줄어서 일이 빨라져요."}},
+      {"name": "달레의 korean-skills", "by": "Dale Seo (달레)", "src": "DaleSeo/korean-skills", "pop": "★ 249", "what": "윤문(humanizer), 맞춤법·띄어쓰기 검사(grammar-checker), 문체·용어 통일(style-guide)을 따로 또는 함께 설치해요. 왜 고쳤는지도 알려줘요.", "when": "맞춤법이 걱정될 때, 여러 사람이 쓴 문서의 말투를 맞출 때", "stars": 3, "install": "npx skills add daleseo/korean-skills", "ba": {"before": "회의가 끝난후 할일을 정리 하는데 시간이 너무 오래 걸립니다.", "after": "회의가 끝난 후 할 일을 정리하는 데 시간이 너무 오래 걸립니다."}},
+      {"name": "humanizer", "by": "blader", "src": "blader/humanizer", "pop": "★ 64.6k", "what": "위키백과의 'AI가 쓴 글의 특징' 목록을 바탕으로 영어 글의 AI 티를 지워요. 한국어 윤문 스킬들의 원조예요.", "when": "영어 이메일이나 서비스 소개글을 쓸 때", "stars": 2, "install": "/plugin marketplace add blader/humanizer\n/plugin install humanizer@humanizer", "note": "Claude Code 2.1.142 이상에서 플러그인으로 설치돼요. 낮은 버전이면 npx skills add blader/humanizer", "ba": {"before": "In today's fast-paced world, our innovative tool seamlessly empowers teams to unlock their full potential.", "after": "Our tool helps teams finish their work faster."}}
     ] },
-    { id: "plan", title: "생각·기획", desc: "만들기 전에 무엇을 왜 만드는지 먼저 정리하게 해요.", items: [
-      {"name": "Superpowers", "by": "obra", "src": "obra/superpowers", "pop": "★ 308k", "what": "바로 만들지 않고 질문을 하나씩 던져 설계를 확정한 뒤(brainstorming), 일을 2~5분 단위 계획으로 쪼개요(writing-plans).", "when": "아이디어가 흐릿할 때, 큰 기능을 시작할 때", "stars": 3, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
-      {"name": "gstack · /office-hours", "by": "Garry Tan", "src": "garrytan/gstack", "pop": "★ 138k", "what": "스타트업 멘토처럼 '누가, 왜 쓰나요?'를 캐물어 아이디어를 검증해요. /plan-ceo-review로 범위도 점검해요.", "when": "만들 가치가 있는지 확인하고 싶을 때", "stars": 2, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup", "note": "Git과 Bun이 필요해요. 터미널에서 실행해요."}
+    { id: "plan", track: "plan", title: "생각·기획", desc: "만들기 전에 무엇을 왜 만드는지 먼저 정리하게 해요.", items: [
+      {"name": "Superpowers", "by": "obra", "src": "obra/superpowers", "pop": "★ 312k", "what": "바로 만들지 않고 질문을 하나씩 던져 설계를 확정한 뒤(brainstorming), 일을 2~5분 단위 계획으로 쪼개요(writing-plans).", "when": "아이디어가 흐릿할 때, 큰 기능을 시작할 때", "stars": 3, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
+      {"name": "gstack · /office-hours", "by": "Garry Tan", "src": "garrytan/gstack", "pop": "★ 139k", "what": "스타트업 멘토처럼 '누가, 왜 쓰나요?'를 캐물어 아이디어를 검증해요. /plan-ceo-review로 범위도 점검해요.", "when": "만들 가치가 있는지 확인하고 싶을 때", "stars": 2, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup", "note": "Git과 Bun이 필요해요. 터미널에서 실행해요."},
+      {"name": "product-management 플러그인", "by": "Anthropic", "src": "anthropics/knowledge-work-plugins", "pop": "★ 34.7k", "lv": "click", "what": "스펙 작성, 로드맵, 사용자 리서치 종합, 경쟁사 추적, 브레인스토밍을 도와줘요.", "when": "기획서와 로드맵을 정리할 때", "stars": 3, "install": "/plugin marketplace add anthropics/knowledge-work-plugins\n/plugin install product-management@knowledge-work-plugins"},
+      {"name": "PM Skills", "by": "phuryn", "src": "phuryn/pm-skills", "pop": "★ 27.7k", "lv": "line", "what": "가정 검증, 고객 인터뷰, PRD 쓰기(/write-prd), OKR, 시장조사 등 기획 스킬 69개와 워크플로 42개예요.", "when": "아이디어를 검증하고 PRD로 정리할 때", "stars": 2, "install": "/plugin marketplace add phuryn/pm-skills\n/plugin install pm-execution@pm-skills", "note": "필요한 묶음만 골라 설치해요. 한꺼번에 다 깔면 AI가 헷갈려요."},
+      {"name": "interview-me · idea-refine", "by": "Addy Osmani", "src": "addyosmani/agent-skills", "pop": "★ 113k", "lv": "line", "what": "AI가 나에게 질문을 던져 흐릿한 아이디어를 스펙으로 다듬어요.", "when": "'뭘 만들고 싶은지'가 아직 흐릴 때", "stars": 2, "install": "npx skills add addyosmani/agent-skills --skill interview-me\nnpx skills add addyosmani/agent-skills --skill idea-refine"}
     ] },
-    { id: "design", title: "디자인·UI", desc: "AI가 만든 티가 나는 뻔한 화면을 피하게 해요.", items: [
+    { id: "design", track: "build", title: "디자인·UI", desc: "AI가 만든 티가 나는 뻔한 화면을 피하게 해요.", items: [
       {"name": "frontend-design", "by": "Anthropic 공식", "src": "anthropics/skills", "pop": "★ 185k", "what": "글꼴·색·여백을 의도적으로 고르게 해서, 템플릿 같은 화면을 피하게 해줘요.", "when": "첫 화면을 만들 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
-      {"name": "ui-ux-pro-max", "by": "nextlevelbuilder", "src": "nextlevelbuilder/ui-ux-pro-max-skill", "pop": "★ 142k", "what": "스타일, 색 팔레트, 글꼴 조합, 차트 유형 데이터베이스에서 업종에 맞는 디자인 시스템을 골라줘요. 접근성 점검표도 있어요.", "when": "어떤 색과 글꼴을 써야 할지 감이 안 올 때", "stars": 2, "install": "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill\n/plugin install ui-ux-pro-max@ui-ux-pro-max-skill"},
+      {"name": "ui-ux-pro-max", "by": "nextlevelbuilder", "src": "nextlevelbuilder/ui-ux-pro-max-skill", "pop": "★ 145k", "what": "스타일, 색 팔레트, 글꼴 조합, 차트 유형 데이터베이스에서 업종에 맞는 디자인 시스템을 골라줘요. 접근성 점검표도 있어요.", "when": "어떤 색과 글꼴을 써야 할지 감이 안 올 때", "stars": 2, "install": "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill\n/plugin install ui-ux-pro-max@ui-ux-pro-max-skill", "note": "명령 한 줄로 설치하려면 npx ui-ux-pro-max-cli init --ai claude. 예전 이름 uipro-cli는 더 이상 갱신되지 않아요"},
       {"name": "Taste Skill", "by": "Leonxlnx", "src": "Leonxlnx/taste-skill", "what": "디자인의 다양성·움직임·밀도를 다이얼처럼 숫자로 조절해요.", "when": "같은 느낌의 화면이 반복될 때", "stars": 2, "install": "npx skills add Leonxlnx/taste-skill"},
       {"name": "web-design-guidelines", "by": "Vercel", "src": "vercel-labs/agent-skills", "pop": "★ 33k", "what": "접근성·반응형·폼 같은 웹 화면의 기본 규칙으로 내 화면을 점검해요.", "when": "다 만들고 나서 점검할 때", "stars": 2, "install": "npx skills add vercel-labs/agent-skills --skill web-design-guidelines"},
       {"name": "theme-factory · canvas-design", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "색·글꼴 테마 세트를 만들거나(theme-factory), 포스터 같은 시각물을 만들어요(canvas-design).", "when": "브랜드 느낌을 정하거나 홍보 이미지가 필요할 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
     ] },
-    { id: "build", title: "만들기 습관", desc: "에이전트가 엉뚱한 곳을 고치거나 일을 키우지 않게 해요.", items: [
-      {"name": "Karpathy guidelines", "by": "forrestchang", "src": "forrestchang/andrej-karpathy-skills", "pop": "★ 226k", "what": "먼저 생각하기 · 단순하게 · 필요한 곳만 고치기 · 성공 기준 정하기. 네 줄짜리 원칙이에요.", "when": "항상. 가장 먼저 깔아둘 기본기", "stars": 3, "install": "/plugin marketplace add forrestchang/andrej-karpathy-skills\n/plugin install andrej-karpathy-skills@karpathy-skills"},
+    { id: "build", track: "build", title: "만들기 습관", desc: "에이전트가 엉뚱한 곳을 고치거나 일을 키우지 않게 해요.", items: [
+      {"name": "Karpathy guidelines", "by": "forrestchang", "src": "forrestchang/andrej-karpathy-skills", "pop": "★ 229k", "what": "먼저 생각하기 · 단순하게 · 필요한 곳만 고치기 · 성공 기준 정하기. 네 줄짜리 원칙이에요.", "when": "항상. 가장 먼저 깔아둘 기본기", "stars": 3, "install": "/plugin marketplace add forrestchang/andrej-karpathy-skills\n/plugin install andrej-karpathy-skills@karpathy-skills", "note": "GitHub에서는 저장소가 multica-ai 계정 아래로 표시되지만, 설치 명령은 그대로 써요."},
       {"name": "Superpowers · test-driven-development", "by": "obra", "src": "obra/superpowers", "what": "고치기 전에 '성공하면 이렇게 동작해야 한다'는 확인 장치(테스트)부터 만들게 해요.", "when": "같은 버그가 자꾸 다시 생길 때", "stars": 1, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
-      {"name": "caveman", "by": "Julius Brussee", "src": "JuliusBrussee/caveman", "pop": "★ 116k", "what": "AI가 군더더기 없이 짧게 말하게 해서 토큰(사용량)을 아껴요. 저장소 소개는 65% 절약을 내세우지만, 본문의 측정값은 작업에 따라 33~54% 정도예요.", "when": "긴 작업에서 사용량 한도에 자주 걸릴 때", "stars": 1, "install": "/plugin marketplace add JuliusBrussee/caveman\n/plugin install caveman@caveman", "note": "설명이 짧아져서 처음 배우는 단계에서는 오히려 불편할 수 있어요."},
+      {"name": "caveman", "by": "Julius Brussee", "src": "JuliusBrussee/caveman", "pop": "★ 117k", "what": "AI가 군더더기 없이 짧게 말하게 해서 토큰(사용량)을 아껴요. 저장소 소개는 65% 절약을 내세우지만, 본문의 측정값은 작업에 따라 33~54% 정도예요.", "when": "긴 작업에서 사용량 한도에 자주 걸릴 때", "stars": 1, "install": "/plugin marketplace add JuliusBrussee/caveman\n/plugin install caveman@caveman", "note": "설명이 짧아져서 처음 배우는 단계에서는 오히려 불편할 수 있어요. 홍보 문구는 토큰 65% 절감이지만, 저장소의 실측은 세션 입력 토큰 33.2% 감소예요. 사용 통계 수집이 기본으로 켜져 있으니 README에서 끄는 법을 확인해요."},
       {"name": "react-best-practices", "by": "Vercel", "src": "vercel-labs/agent-skills", "what": "React·Next.js 코드를 느려지지 않게 짜는 규칙 모음이에요.", "when": "에이전트가 React로 만들 때", "stars": 1, "install": "npx skills add vercel-labs/agent-skills --skill react-best-practices"},
       {"name": "Supabase agent skills", "by": "Supabase 공식", "src": "supabase/agent-skills", "pop": "★ 2.9k", "what": "데이터베이스를 만들 때 보안 규칙(RLS)과 설계 실수를 피하게 해요.", "when": "로그인·저장 기능에 Supabase를 쓸 때", "stars": 1, "install": "/plugin marketplace add supabase/agent-skills\n/plugin install supabase@supabase-agent-skills"},
-      {"name": "GSD Core", "by": "open-gsd", "src": "open-gsd/gsd-core", "pop": "★ 11k", "what": "긴 작업에서 품질이 떨어지는 문제를 막는 단계별 실행 시스템이에요. 중급용. 예전 get-shit-done 저장소가 이곳으로 옮겨졌어요.", "when": "작업이 길어져 에이전트가 앞의 내용을 잊을 때", "stars": 1, "install": "npx @opengsd/gsd-core@latest"}
+      {"name": "GSD Core", "by": "open-gsd", "src": "open-gsd/gsd-core", "pop": "★ 11.2k", "what": "긴 작업에서 품질이 떨어지는 문제를 막는 단계별 실행 시스템이에요. 중급용. 예전 get-shit-done 저장소가 이곳으로 옮겨졌어요.", "when": "작업이 길어져 에이전트가 앞의 내용을 잊을 때", "stars": 1, "install": "npx @opengsd/gsd-core@latest"}
     ] },
-    { id: "check", title: "검수·고치기", desc: "'다 됐어요'라는 말을 그대로 믿지 않게 해요.", items: [
+    { id: "check", track: "build", title: "검수·고치기", desc: "'다 됐어요'라는 말을 그대로 믿지 않게 해요.", items: [
       {"name": "Superpowers · systematic-debugging", "by": "obra", "src": "obra/superpowers", "what": "추측으로 고치지 않고, 원인을 좁혀 가며 찾게 해요. verification-before-completion은 '확인 없이 완료 금지'예요.", "when": "같은 수정을 두 번 실패했을 때", "stars": 2, "install": "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace"},
       {"name": "gstack · /qa · /review", "by": "Garry Tan", "src": "garrytan/gstack", "what": "/qa는 실제 브라우저로 화면을 눌러보며 버그를 찾고, /review는 코드를 출시 전에 검토해요.", "when": "공개하기 직전", "stars": 2, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup", "note": "Git과 Bun이 필요해요."},
-      {"name": "webapp-testing", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "브라우저 자동화(Playwright)로 내 웹앱을 직접 열어보고 스크린샷으로 확인해요.", "when": "눌러봐야 아는 버그를 찾을 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
+      {"name": "webapp-testing", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "브라우저 자동화(Playwright)로 내 웹앱을 직접 열어보고 스크린샷으로 확인해요.", "when": "눌러봐야 아는 버그를 찾을 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
+      {"name": "security-guidance · code-review", "by": "Anthropic", "src": "anthropics/claude-plugins-official", "pop": "★ 46k", "lv": "line", "what": "공개 전에 보안 실수를 짚어 주고, 바뀐 코드를 리뷰해요.", "when": "배포하기 전 마지막 점검", "stars": 2, "install": "/plugin install security-guidance@claude-plugins-official\n/plugin install code-review@claude-plugins-official"}
     ] },
-    { id: "docs", title: "문서·발표", desc: "결과물을 파일로 받아요.", items: [
+    { id: "docs", track: "work", title: "문서·발표", desc: "결과물을 파일로 받아요.", items: [
       {"name": "docx · pptx · xlsx · pdf", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "워드 문서, 발표 자료, 엑셀 표, PDF를 실제 파일로 만들어줘요.", "when": "기획서·발표 자료가 필요할 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install document-skills@anthropic-agent-skills", "note": "Claude 앱 유료 요금제에는 기본으로 들어 있어요."},
       {"name": "doc-coauthoring", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "긴 문서를 질문 → 구조 → 초안 → 다듬기 순서로 같이 써요.", "when": "서비스 소개서·제안서를 쓸 때", "stars": 2, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
       {"name": "internal-comms · brand-guidelines", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "공지·업데이트 글의 형식을 잡거나, 정해 둔 브랜드 규칙대로 쓰게 해요.", "when": "팀에 공유하는 글을 자주 쓸 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
     ] },
-    { id: "marketing", title: "마케팅·콘텐츠", desc: "광고 문구, SEO, 이메일, 가격 정하기처럼 알리고 파는 일을 도와줘요.", items: [
-      {"name": "marketingskills", "by": "Corey Haines", "src": "coreyhaines31/marketingskills", "pop": "★ 57k", "what": "카피라이팅, SEO, 광고, 이메일, 가격 정하기, 출시 계획 등 마케팅 스킬 49개 묶음이에요. 필요한 것만 골라 설치해요.", "when": "랜딩 문구, 광고 시안, 출시 계획이 필요할 때", "stars": 2, "install": "npx skills add coreyhaines31/marketingskills --skill copywriting", "note": "영어 기반이라 결과를 한국어 윤문 스킬로 한 번 더 다듬으면 좋아요."}
+    { id: "work", track: "work", title: "업무 연결·자동화", desc: "메일·드라이브·캘린더를 AI와 잇고, 반복 업무를 자동으로 돌려요. 클릭으로 연결하는 커넥터부터 시작해요.", items: [
+      {"name": "Google Drive · Gmail · Calendar 커넥터", "by": "Anthropic", "src": "", "pop": "", "lv": "click", "what": "드라이브 파일 찾기, 메일 요약과 답장 초안, 일정 확인을 대화창에서 바로 해요.", "when": "메일·문서를 복사해서 붙여넣는 일이 잦을 때", "stars": 3, "install": "claude.ai › 설정 › 커넥터에서 Google Drive, Gmail, Google Calendar를 골라 연결해요.", "note": "연결한 만큼 AI가 볼 수 있어요. 회사 계정은 회사 규칙부터 확인하고, 해제하는 곳을 알아 두세요."},
+      {"name": "Notion · Slack 커넥터", "by": "Anthropic", "src": "", "pop": "", "lv": "click", "what": "노션 페이지 읽고 쓰기, 슬랙 채널 요약과 메시지 초안을 만들어요.", "when": "회의록·업무 문서가 노션과 슬랙에 흩어져 있을 때", "stars": 3, "install": "claude.ai › 설정 › 커넥터에서 Notion, Slack을 골라 연결해요.", "note": "슬랙은 쓰기 권한이 있어요. 보내기 전에 꼭 내가 확인해요."},
+      {"name": "Microsoft 365 커넥터", "by": "Anthropic", "src": "", "pop": "", "lv": "click", "what": "아웃룩 메일, 원드라이브·셰어포인트 문서, 팀즈 내용을 찾아 요약해요.", "when": "회사가 마이크로소프트 365를 쓸 때", "stars": 2, "install": "claude.ai › 설정 › 커넥터에서 Microsoft 365를 골라 연결해요.", "note": "회사 관리자가 허용해야 연결되는 경우가 많아요."},
+      {"name": "productivity 플러그인", "by": "Anthropic", "src": "anthropics/knowledge-work-plugins", "pop": "★ 34.7k", "lv": "click", "what": "할 일·캘린더·하루 업무 흐름과 개인 맥락을 관리하는 직무용 묶음이에요.", "when": "매일 아침 할 일 정리와 일정 확인을 맡기고 싶을 때", "stars": 3, "install": "/plugin marketplace add anthropics/knowledge-work-plugins\n/plugin install productivity@knowledge-work-plugins", "note": "Cowork에서는 claude.com/plugins에서 클릭으로 설치해요."},
+      {"name": "enterprise-search 플러그인", "by": "Anthropic", "src": "anthropics/knowledge-work-plugins", "pop": "★ 34.7k", "lv": "click", "what": "메일·채팅·문서·위키를 한 번에 검색해요.", "when": "'그 얘기 어디서 했더라?'를 자주 찾을 때", "stars": 2, "install": "/plugin marketplace add anthropics/knowledge-work-plugins\n/plugin install enterprise-search@knowledge-work-plugins", "note": "연결된 커넥터 범위 안에서만 찾아요."},
+      {"name": "kordoc (HWP 읽기)", "by": "chrisryugj", "src": "chrisryugj/kordoc", "pop": "★ 2.9k", "lv": "line", "what": "HWP·HWPX·PDF·엑셀·워드를 마크다운으로 바꿔 AI가 읽게 하고, 마크다운으로 HWPX 문서도 만들어요.", "when": "한글 공문서·보고서를 AI로 요약하거나 고칠 때", "stars": 3, "install": "/plugin marketplace add chrisryugj/kordoc\n/plugin install kordoc@kordoc", "note": "MCP로 등록하려면 터미널에서 npx -y kordoc setup."},
+      {"name": "n8n-mcp", "by": "czlonkowski", "src": "czlonkowski/n8n-mcp", "pop": "★ 23.2k", "lv": "key", "what": "AI가 n8n 노드 약 3,400개의 문서를 보고 자동화 흐름을 짜도록 도와줘요.", "when": "n8n으로 앱 사이 자동화를 만들 때", "stars": 1, "install": "# 호스팅판(무료 하루 100회) 또는 npx·Docker로 실행\n# 자세한 설정: github.com/czlonkowski/n8n-mcp", "note": "README 경고: 운영 중인 워크플로를 AI로 직접 고치지 말고, 복사본에서 시험해요."},
+      {"name": "Google Workspace MCP", "by": "taylorwilsdon", "src": "taylorwilsdon/google_workspace_mcp", "pop": "★ 3.5k", "lv": "key", "what": "Gmail·드라이브·문서·시트·슬라이드·설문 등에 걸친 도구 120개 이상을 AI에 붙여요.", "when": "커넥터보다 더 많은 구글 기능을 자동화하고 싶을 때", "stars": 1, "install": "uvx workspace-mcp", "note": "Google Cloud에서 OAuth 설정이 필요해요. 메일·문서 쓰기 권한이 넓으니 범위를 최소로 잡아요."}
     ] },
-    { id: "kwork", title: "한국 업무·생활", desc: "한국에서 일하고 사는 데 필요한 공식 정보를 AI가 직접 찾아보게 해요. Node.js 18 이상이 필요해요.", items: [
-      {"name": "k-skill · 업무", "by": "NomaDamas", "src": "NomaDamas/k-skill", "pop": "★ 8.2k", "what": "법령·판례 검색, DART 전자공시, 사업자등록 상태, 나라장터, 국가통계(KOSIS), 한글(HWP) 문서 읽기·편집, 맞춤법 검사, NEIS 바이트 글자 수까지 있어요.", "when": "보고서에 공식 자료를 붙이거나 한글 파일을 다뤄야 할 때", "stars": 2, "install": "/plugin marketplace add NomaDamas/k-skill\n/plugin install k-skill@k-skill"},
-      {"name": "k-skill · 생활", "by": "NomaDamas", "src": "NomaDamas/k-skill", "what": "KTX 시간표, 지하철·버스 길찾기, 아파트 실거래가, 공휴일·절기, 날씨·미세먼지를 조회해요. 125개 중 필요한 것만 골라 설치할 수 있어요.", "when": "일정·이동·집 알아보기를 AI에게 맡기고 싶을 때", "stars": 1, "install": "npx --yes skills add NomaDamas/k-skill --skill railway-timetable -g"}
+    { id: "marketing", track: "content", title: "마케팅·콘텐츠", desc: "광고 문구, SEO, 이메일, 가격 정하기처럼 알리고 파는 일을 도와줘요.", items: [
+      {"name": "marketingskills", "by": "Corey Haines", "src": "coreyhaines31/marketingskills", "pop": "★ 58.4k", "what": "카피라이팅, SEO, 광고, 이메일, 가격 정하기, 출시 계획 등 마케팅 스킬 49개 묶음이에요. 필요한 것만 골라 설치해요.", "when": "랜딩 문구, 광고 시안, 출시 계획이 필요할 때", "stars": 2, "install": "npx skills add coreyhaines31/marketingskills --skill copywriting", "note": "영어 기반이라 결과를 한국어 윤문 스킬로 한 번 더 다듬으면 좋아요."},
+      {"name": "marketing 플러그인 (brand-voice 포함)", "by": "Anthropic", "src": "anthropics/knowledge-work-plugins", "pop": "★ 34.7k", "lv": "click", "what": "콘텐츠 초안, 캠페인 브리프, 경쟁사 비교, 브랜드 보이스 적용, 채널 성과 보고를 도와줘요.", "when": "캠페인을 기획하고 같은 목소리로 여러 글을 낼 때", "stars": 3, "install": "/plugin marketplace add anthropics/knowledge-work-plugins\n/plugin install marketing@knowledge-work-plugins"},
+      {"name": "Canva 커넥터", "by": "Canva", "src": "", "pop": "", "lv": "click", "what": "대화하면서 Canva 디자인을 만들고 고치고 내보내요.", "when": "카드뉴스·썸네일·포스터를 빠르게 만들 때", "stars": 3, "install": "claude.ai › 설정 › 커넥터에서 Canva를 골라 연결해요.", "note": "브랜드 키트는 Canva 유료 요금제 기능이에요."},
+      {"name": "Claude SEO", "by": "AgriciDaniel", "src": "AgriciDaniel/claude-seo", "pop": "★ 26.4k", "lv": "key", "what": "검색 노출(SEO), 신뢰도(E-E-A-T), AI 검색 노출(GEO)을 점검해요.", "when": "블로그·쇼핑몰의 검색 노출을 점검할 때", "stars": 1, "install": "/plugin marketplace add AgriciDaniel/claude-seo\n/plugin install claude-seo@agricidaniel-claude-seo\n/seo setup", "note": "Python 3.11 이상이 필요해요. 전체 점검은 사용량을 많이 써요."},
+      {"name": "Remotion skills", "by": "Remotion", "src": "remotion-dev/skills", "pop": "", "lv": "key", "what": "코드로 영상을 만들고 고치는 방법을 AI에게 알려줘요.", "when": "같은 틀의 영상을 여러 개 찍어낼 때", "stars": 1, "install": "npx skills add remotion-dev/skills", "note": "회사에서 상업적으로 쓰면 Remotion 라이선스를 확인해요."}
     ] },
-    { id: "ship", title: "공개·출시", desc: "남이 써볼 수 있는 상태로 내보내요.", items: [
+    { id: "study", track: "study", title: "공부·리서치", desc: "AI를 답지가 아니라 과외 선생님으로 쓰고, 논문과 노트를 검증된 출처로 정리해요.", items: [
+      {"name": "socratic-method-skill", "by": "malkreide", "src": "malkreide/socratic-method-skill", "pop": "", "lv": "click", "what": "정답 대신 질문으로 이끄는 소크라테스식 과외 선생님이에요.", "when": "답을 외우지 않고 스스로 이해하고 싶을 때", "stars": 3, "install": "저장소에서 SKILL.md를 받아 claude.ai › 설정 › 기능 › 스킬에 올려요.", "note": "커뮤니티 프로젝트예요. 올리기 전에 SKILL.md를 한 번 읽어 보세요."},
+      {"name": "learning-output-style", "by": "Anthropic", "src": "anthropics/claude-plugins-official", "pop": "★ 46k", "lv": "line", "what": "Claude Code가 설명을 곁들이고, 중요한 부분은 내가 직접 짜 보게 하는 학습 모드예요.", "when": "코딩 에이전트를 쓰면서 원리도 배우고 싶을 때", "stars": 2, "install": "/plugin install learning-output-style@claude-plugins-official"},
+      {"name": "obsidian-skills", "by": "kepano (Obsidian CEO)", "src": "kepano/obsidian-skills", "pop": "★ 50.7k", "lv": "line", "what": "옵시디언 노트·캔버스를 다루고, 웹페이지를 깔끔한 마크다운으로 정리해요.", "when": "공부 노트를 옵시디언에 쌓을 때", "stars": 2, "install": "/plugin marketplace add kepano/obsidian-skills\n/plugin install obsidian@obsidian-skills"},
+      {"name": "Zotero MCP", "by": "54yyyu", "src": "54yyyu/zotero-mcp", "pop": "★ 5.7k", "lv": "key", "what": "내 Zotero 서재를 검색하고 PDF·주석을 읽고, DOI로 논문을 추가해요.", "when": "논문을 Zotero로 관리할 때", "stars": 1, "install": "uv tool install zotero-mcp-server\nzotero-mcp setup", "note": "Python 3.10 이상, Zotero 7 이상이 필요해요."},
+      {"name": "paper-search-mcp", "by": "openags", "src": "openags/paper-search-mcp", "pop": "★ 3.0k", "lv": "key", "what": "arXiv·PubMed·Semantic Scholar·Crossref 등 20개 이상 출처에서 논문을 찾아요.", "when": "주제별로 논문을 넓게 찾을 때", "stars": 1, "install": "uv tool install paper-search-mcp"},
+      {"name": "arxiv-mcp-server", "by": "blazickjp", "src": "blazickjp/arxiv-mcp-server", "pop": "★ 3.3k", "lv": "key", "what": "arXiv 논문을 섹션별로 읽고 BibTeX로 내보내요.", "when": "arXiv 논문을 깊이 읽을 때", "stars": 1, "install": "uv tool install arxiv-mcp-server", "note": "같은 이름의 무관한 npm 패키지가 있어요. npm·npx로 설치하지 마세요."},
+      {"name": "Scientific Agent Skills", "by": "K-Dense AI", "src": "K-Dense-AI/scientific-agent-skills", "pop": "★ 56k", "lv": "key", "what": "문헌 리뷰, 인용 관리, 피어 리뷰 등 과학 연구 스킬 177개예요.", "when": "연구 논문을 쓰거나 리뷰할 때", "stars": 1, "install": "gh skill install K-Dense-AI/scientific-agent-skills paper-lookup", "note": "필요한 스킬만 골라 설치해요."}
+    ] },
+    { id: "kwork", track: "korea", title: "한국 업무·생활", desc: "한국에서 일하고 사는 데 필요한 공식 정보를 AI가 직접 찾아보게 해요. Node.js 18 이상이 필요해요.", items: [
+      {"name": "k-skill · 업무", "by": "NomaDamas", "src": "NomaDamas/k-skill", "pop": "★ 8.3k", "what": "법령·판례 검색, DART 전자공시, 사업자등록 상태, 나라장터, 국가통계(KOSIS), 한글(HWP) 문서 읽기·편집, 맞춤법 검사, NEIS 바이트 글자 수까지 있어요.", "when": "보고서에 공식 자료를 붙이거나 한글 파일을 다뤄야 할 때", "stars": 2, "install": "/plugin marketplace add NomaDamas/k-skill\n/plugin install k-skill@k-skill"},
+      {"name": "k-skill · 생활", "by": "NomaDamas", "src": "NomaDamas/k-skill", "what": "KTX 시간표, 지하철·버스 길찾기, 아파트 실거래가, 공휴일·절기, 날씨·미세먼지를 조회해요. 125개 중 필요한 것만 골라 설치할 수 있어요.", "when": "일정·이동·집 알아보기를 AI에게 맡기고 싶을 때", "stars": 1, "install": "npx --yes skills add NomaDamas/k-skill --skill railway-timetable -g"},
+      {"name": "korean-law-mcp (법령 검색)", "by": "chrisryugj", "src": "chrisryugj/korean-law-mcp", "pop": "★ 2.8k", "lv": "line", "what": "국가법령정보 API로 법령을 찾고, AI가 인용한 조문이 맞는지 검증해요.", "when": "계약·업무 규정을 법령과 대조할 때", "stars": 2, "install": "/plugin marketplace add chrisryugj/korean-law-mcp\n/plugin install korean-law@korean-law-marketplace", "note": "claude.ai에서는 커스텀 커넥터 주소로도 추가할 수 있어요. 법령 정보 API 키(무료, 승인 필요)가 필요해요."},
+      {"name": "naver-search-mcp", "by": "isnow890", "src": "isnow890/naver-search-mcp", "pop": "★ 87", "lv": "key", "what": "네이버 웹·뉴스·블로그·카페·쇼핑·데이터랩 트렌드를 AI가 검색해요.", "when": "한국 검색 결과와 트렌드가 필요할 때", "stars": 1, "install": "npx -y @isnow890/naver-search-mcp", "note": "네이버 개발자센터 키는 2026-07-31부터 새로 발급되지 않아요. NAVER API HUB(NCP) 키를 받아야 해요."}
+    ] },
+    { id: "ship", track: "build", title: "공개·출시", desc: "남이 써볼 수 있는 상태로 내보내요.", items: [
       {"name": "gstack · /ship", "by": "Garry Tan", "src": "garrytan/gstack", "what": "테스트 → 검토 → 커밋 → 푸시 → PR까지 출시 절차를 한 번에 밟아요.", "when": "GitHub와 배포를 연결한 뒤", "stars": 1, "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup"},
-      {"name": "/security-review", "by": "Claude Code 내장", "what": "올리기 전에 비밀 키 노출, 위험한 코드 같은 보안 문제를 훑어봐요. 설치 없이 바로 써요.", "when": "처음 공개하기 직전", "stars": 2, "install": "/security-review"}
+      {"name": "/security-review", "by": "Claude Code 내장", "what": "올리기 전에 비밀 키 노출, 위험한 코드 같은 보안 문제를 훑어봐요. 설치 없이 바로 써요.", "when": "처음 공개하기 직전", "stars": 2, "install": "/security-review"},
+      {"name": "Supabase · Vercel 커넥터", "by": "Supabase · Vercel", "src": "", "pop": "", "lv": "click", "what": "데이터베이스·로그인 관리와 배포 상태 확인을 대화창에서 해요.", "when": "유닛 06+·07에서 저장과 배포를 다룰 때", "stars": 2, "install": "claude.ai › 설정 › 커넥터에서 Supabase, Vercel을 골라 연결해요.", "note": "원격으로 DB를 바꾸면 실제 서비스에 바로 적용돼요."},
+      {"name": "Context7", "by": "Upstash", "src": "upstash/context7", "pop": "★ 64.2k", "lv": "key", "what": "라이브러리의 최신 공식 문서를 에이전트에게 넣어 줘서, 옛날 방식으로 코드를 짜는 실수를 줄여요.", "when": "AI가 낡은 사용법을 자꾸 쓸 때", "stars": 2, "install": "npx ctx7 setup --claude", "note": "Node 22.13 이상이 필요해요. 무료 API 키를 넣으면 한도가 늘어요."},
+      {"name": "Playwright MCP", "by": "Microsoft", "src": "microsoft/playwright-mcp", "pop": "★ 39.2k", "lv": "key", "what": "AI가 브라우저를 직접 열어 내 서비스를 눌러 보고 확인해요.", "when": "화면이 제대로 작동하는지 자동으로 확인할 때", "stars": 2, "install": "claude mcp add playwright npx @playwright/mcp@latest"}
     ] },
-    { id: "extend", title: "나만의 확장", desc: "반복하는 일을 내 스킬·연결로 만들어요.", items: [
+    { id: "extend", track: "build", title: "나만의 확장", desc: "반복하는 일을 내 스킬·연결로 만들어요.", items: [
       {"name": "skill-creator", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "나만의 스킬을 만들고, 잘 작동하는지 시험하고 다듬도록 도와줘요.", "when": "유닛 08에서 레시피를 스킬로 만들 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
       {"name": "mcp-builder", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "내가 쓰는 서비스를 AI에 연결하는 MCP 서버를 만들도록 안내해요. 중급용.", "when": "AI가 내 데이터에 직접 접근해야 할 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"},
       {"name": "web-artifacts-builder", "by": "Anthropic 공식", "src": "anthropics/skills", "what": "Claude 안에서 여러 화면이 있는 작은 웹앱(아티팩트)을 만들어요.", "when": "설치 없이 Claude 안에서 바로 돌아가는 도구가 필요할 때", "stars": 1, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills"}
     ] }
   ],
   // 스킬 찾기 도우미: 목표별 추천(picks는 위 스킬 이름과 똑같아야 해요)과 도구별 설치 안내
-  skillFinder: {"goals": [{"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·콘텐츠", "picks": ["marketingskills", "한국어 윤문 · im-not-ai", "ui-ux-pro-max"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
+  skillFinder: {"goals": [{"id": "auto", "label": "업무 연결·자동화", "picks": ["Google Drive · Gmail · Calendar 커넥터", "productivity 플러그인", "kordoc (HWP 읽기)"]}, {"id": "idea", "label": "아이디어·기획", "picks": ["product-management 플러그인", "Superpowers", "PM Skills"]}, {"id": "study", "label": "공부·리서치", "picks": ["socratic-method-skill", "learning-output-style", "obsidian-skills"]}, {"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·콘텐츠", "picks": ["marketingskills", "한국어 윤문 · im-not-ai", "ui-ux-pro-max"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
   skillInstall: [
     { where: "Claude 앱 (웹·데스크톱)", how: "설정 › 기능(Capabilities)에서 기본 스킬을 켜고, 받은 스킬 폴더를 zip으로 올려요.", cmd: "" },
     { where: "Claude Code (터미널)", how: "플러그인 마켓에서 설치하거나, 스킬 폴더를 ~/.claude/skills 아래에 넣어요.", cmd: "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace" },
@@ -827,6 +1058,20 @@ window.COURSE = {
   },
 
   // 한 장 치트시트: 프롬프트 패턴과 화면 문구 사전
+  // 치트시트: 마크다운 한 장. 실제로 쓰는 아홉 가지만
+  mdCheat: [
+    { md: "# 큰 제목\n## 작은 제목", show: "제목", use: "# 뒤에 꼭 한 칸 띄워요. #이 많을수록 작은 제목이에요." },
+    { md: "**굵게**", show: "굵은 글씨", use: "꼭 봐야 할 말에만 써요." },
+    { md: "- 사과\n- 배", show: "글머리 목록", use: "- 뒤에 한 칸. 순서가 없는 항목이에요." },
+    { md: "1. 먼저\n2. 다음", show: "번호 목록", use: "순서가 있는 단계에 써요." },
+    { md: "- [ ] 할 일\n- [x] 한 일", show: "체크박스", use: "노션·GitHub에서 누르는 체크박스가 돼요." },
+    { md: "`npm install`", show: "글 속 코드", use: "명령어·파일 이름을 감쌀 때 써요(백틱 `)." },
+    { md: "```\n에러 메시지 원문\n```", show: "코드 블록", use: "에러·JSON을 AI에게 줄 때 꼭 감싸요. 줄바꿈과 공백이 그대로 전달돼요." },
+    { md: "| 이름 | 마감 |\n| --- | --- |\n| 지훈 | 금 |", show: "표", use: "두 번째 줄의 --- 가 표를 만들어요." },
+    { md: "---\nname: weekly-report\ndescription: 언제 쓰는지\n---", show: "머리말(YAML)", use: "SKILL.md 맨 위에 써요. name은 영어 소문자·숫자·하이픈만." }
+  ],
+  mdWhere: { yes: "노션 · GitHub · ChatGPT · Claude · 옵시디언 · VS Code 미리보기", no: "카카오톡 · 한글(HWP) · 메모장 · 대부분의 메일 본문" },
+
   patterns: [
     { name: "TCREI로 시작", say: "[무엇을] 해줘. 나는 [누구]고, [왜] 필요해. [예시·자료]를 참고해.", why: "맥락이 없으면 세상 모든 사람에게 할 법한 평균적인 답이 와요." },
     { name: "모자란 건 먼저 묻게", say: "바로 답하지 말고, 더 좋은 답에 필요한 질문을 하나씩 먼저 해줘.", why: "내가 빠뜨린 맥락을 AI가 찾아줘요." },

@@ -216,6 +216,23 @@ a { color: inherit; }
 .course-head h2 { font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 830; line-height: 1.08; letter-spacing: -0.05em; }
 .course-sub { color: var(--ink-2); max-width: 32ch; }
 .units { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--line); }
+.stage-line { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 8px 20px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.stage-line .mono { font-size: 0.8rem; font-weight: 600; color: var(--accent); letter-spacing: 0.04em; padding-top: 6px; }
+.stage-line h3 { font-size: clamp(1.3rem, 2.4vw, 1.8rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; }
+.stage-line h3 .bonus { font-style: normal; font-size: 0.5em; font-weight: 800; vertical-align: 0.35em; padding: 3px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); letter-spacing: 0; }
+.stage-line p { color: var(--ink-2); font-size: 0.98rem; margin-top: 6px; }
+.stage-line .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.stage-line .chips a { font-size: 0.82rem; font-weight: 650; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); text-decoration: none; }
+.stage-line .chips a:hover { border-color: var(--ink); color: var(--ink); }
+@media (max-width: 640px) { .stage-line { grid-template-columns: 1fr; } .stage-line .mono { padding-top: 0; } }
+.tracks-teaser { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.tracks-teaser a { display: grid; gap: 6px; height: 100%; padding: 18px 16px; border-radius: 16px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: var(--ink); transition: border-color 0.2s, transform 0.2s; }
+.tracks-teaser a:hover { border-color: var(--ink); transform: translateY(-2px); }
+.tracks-teaser b { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+.tracks-teaser span { font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+.tracks-teaser i { font-style: normal; font-size: 0.7rem; color: var(--accent); margin-top: auto; }
+@media (max-width: 900px) { .tracks-teaser { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .tracks-teaser { grid-template-columns: 1fr; } }
 .course-demo { display: grid; gap: 6px; margin-top: 40px; padding: 26px 28px; border-radius: 20px; background: var(--ink); color: var(--bg); text-decoration: none; transition: transform 0.2s; }
 .course-demo:hover { transform: translateY(-3px); }
 .course-demo .mono { font-size: 0.74rem; letter-spacing: 0.08em; color: var(--accent); }

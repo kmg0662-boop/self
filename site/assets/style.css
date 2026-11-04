@@ -812,3 +812,123 @@ details.stuck p { padding: 0 4px 18px; color: var(--ink-2); }
 .gl-more { justify-self: start; margin-top: 2px; border: 0; background: none; padding: 4px 0; font: inherit; font-size: 0.82rem; font-weight: 750; color: var(--muted); cursor: pointer; }
 .gl-more:hover { color: var(--ink); }
 @media print { .gl { text-decoration: none; } .gl-hint, .gl-pop { display: none !important; } }
+
+/* ---------- 목적별 트랙 ---------- */
+.nav-track { color: var(--accent-text); font-weight: 700; }
+.track-pick-card { display: grid; gap: 12px; border-color: var(--ink); }
+.track-pick-card h2 { font-size: 1.35rem; font-weight: 820; }
+.track-picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.track-pick { position: relative; display: grid; gap: 4px; text-align: left; padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; min-height: 88px; align-content: start; }
+.track-pick:hover { border-color: var(--ink); }
+.track-pick b { font-size: 1rem; font-weight: 800; }
+.track-pick small { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+.track-pick i { position: absolute; top: 10px; right: 10px; font-style: normal; font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: var(--sunken); color: var(--muted); }
+.track-pick[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.track-pick[aria-pressed="true"] small { color: #c9c7c1; }
+.track-preview { display: grid; gap: 10px; padding: 16px 18px; border-radius: var(--r); background: var(--sunken); }
+.track-preview > p:nth-child(2) { font-size: 0.95rem; color: var(--ink-2); }
+.track-preview b { font-size: 0.82rem; color: var(--accent-text); margin-left: 4px; }
+.tp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.tp-list li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 10px 12px; border-radius: var(--r-sm); background: var(--surface); border: 1px solid var(--line); }
+.tp-list .no { font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--accent-text); }
+.tp-list b { display: block; font-weight: 750; font-size: 0.95rem; margin: 0; color: var(--ink); }
+.tp-list a { text-decoration: none; color: inherit; }
+.tp-list a:hover b { color: var(--accent-text); }
+.tp-list small { display: block; font-size: 0.82rem; color: var(--muted); }
+.tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.track { display: grid; gap: 12px; align-content: start; scroll-margin-top: 88px; }
+.track.on { border-color: var(--ink); box-shadow: var(--shadow-2); }
+.track-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.track-top b { font-size: 1.2rem; font-weight: 820; margin-right: 4px; }
+.track .btn { justify-self: start; }
+.tbadge.ok { background: var(--ok-soft); color: var(--ok); }
+.ladder-steps.few { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ladder-steps li.soon b { color: var(--muted); }
+@media (max-width: 760px) { .tracks { grid-template-columns: 1fr; } }
+
+/* 스킬: 설치 난이도 */
+.lv { display: inline-flex; align-items: center; font-size: 0.68rem; font-weight: 800; padding: 1px 8px; border-radius: 99px; margin-left: 6px; vertical-align: 2px; white-space: nowrap; letter-spacing: 0; }
+.lv-click { background: var(--ok-soft); color: var(--ok); }
+.lv-line { background: var(--accent-soft); color: var(--accent-text); }
+.lv-key { background: var(--ink); color: var(--bg); }
+.lv-guide { display: grid; gap: 8px; padding: 16px 18px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
+.lv-guide ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.92rem; }
+.lv-guide .lv { margin: 0 8px 0 0; min-width: 3.4rem; justify-content: center; }
+.inst-how { font-size: 0.9rem; color: var(--ink-2); padding: 10px 12px; border-radius: var(--r-sm); background: var(--sunken); }
+
+/* 치트시트: 마크다운 한 장 */
+.md-tbl pre { margin: 0; font-family: var(--mono); font-size: 0.82rem; white-space: pre-wrap; color: var(--ink); }
+.md-tbl tbody th { white-space: normal; }
+.md-where { display: grid; gap: 4px; padding: 12px 16px; border-radius: var(--r-sm); background: var(--sunken); font-size: 0.92rem; }
+.md-where b { font-size: 0.8rem; color: var(--accent-text); margin-right: 6px; }
+@media (max-width: 600px) {
+  .md-tbl { min-width: 0; }
+  .md-tbl thead { display: none; }
+  .md-tbl tr { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .md-tbl tr:last-child { border-bottom: 0; }
+  .md-tbl td, .md-tbl tbody th { border: 0; padding: 2px 14px; }
+}
+
+/* ---------- 학습 트리: 접고 펼치는 목차 ---------- */
+button.nav-stage { width: 100%; border: 0; background: none; font: inherit; font-size: 0.78rem; font-weight: 750; color: var(--ink-2); text-align: left; cursor: pointer; padding: 10px 10px 8px; border-radius: var(--r-sm); justify-content: flex-start; gap: 8px; min-height: 40px; align-items: center; }
+button.nav-stage:hover { background: var(--sunken); color: var(--ink); }
+button.nav-stage[aria-expanded="true"] { color: var(--ink); }
+button.nav-stage .nav-count { margin-left: auto; color: var(--muted); }
+.nav-chev { width: 12px; font-size: 0.7rem; color: var(--muted); }
+.nav-tree-title { padding-top: 14px; }
+.nav-sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); padding: 6px 10px 2px 30px; }
+.nav-lib { color: var(--muted); }
+
+/* 자료실 */
+.lib-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.lib-card { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; padding: 16px 18px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: border-color 0.2s, transform 0.2s; }
+.lib-card:hover { border-color: var(--ink); transform: translateY(-1px); }
+.lib-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--sunken); font-weight: 800; color: var(--accent-text); }
+.lib-card b { display: block; font-weight: 800; }
+.lib-card small { display: block; font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+@media (max-width: 640px) { .lib-grid { grid-template-columns: 1fr; } }
+
+/* 홈: 접히는 코스 지도, 내 기록 */
+details.stage-block > summary { list-style: none; cursor: pointer; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); }
+details.stage-block > summary::-webkit-details-marker { display: none; }
+details.stage-block > summary:hover { border-color: var(--ink); }
+details.stage-block[open] > summary { border-color: transparent; background: transparent; padding-left: 0; padding-right: 0; }
+details.stage-block > summary .state::after { content: " ▸"; }
+details.stage-block[open] > summary .state::after { content: " ▾"; }
+.stage-block + .stage-block { margin-top: 6px; }
+.my-record { border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface); }
+.my-record > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 18px 22px; }
+.my-record > summary::-webkit-details-marker { display: none; }
+.my-record > summary b { font-size: 1.15rem; font-weight: 800; }
+.my-record > summary b::after { content: " ▸"; color: var(--muted); font-size: 0.9rem; }
+.my-record[open] > summary b::after { content: " ▾"; }
+.my-record > summary span { color: var(--muted); font-size: 0.9rem; }
+.my-record[open] { display: grid; gap: 16px; padding-bottom: 16px; }
+.my-record > .card { margin: 0 16px; }
+
+/* ---------- 처음 한 번: 시작 화면 ---------- */
+body.focus .app { grid-template-columns: 1fr; }
+body.focus .side, body.focus .scrim { display: none; }
+body.focus .menu-btn, body.focus .top-progress { visibility: hidden; }
+.page.ob { max-width: 620px; gap: 22px; padding-top: clamp(8px, 4vw, 40px); }
+.ob h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); font-weight: 840; letter-spacing: -0.04em; line-height: 1.2; }
+.ob-step { font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--accent-text); }
+.ob-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ob-opts.two { grid-template-columns: 1fr 1fr; }
+.ob-opt { display: grid; gap: 4px; align-content: start; text-align: left; min-height: 92px; padding: 18px 20px; border-radius: var(--r-lg); border: 1.5px solid var(--line-2); background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; box-shadow: var(--shadow-1); transition: border-color 0.15s, transform 0.15s; }
+.ob-opt:hover, .ob-opt:focus-visible { border-color: var(--ink); transform: translateY(-2px); }
+.ob-opt b { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+.ob-opt small { font-size: 0.88rem; color: var(--muted); }
+.ob-opt.soft { background: transparent; border-style: dashed; box-shadow: none; }
+.ob-go { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 16px; text-align: left; padding: 24px 26px; border: 0; border-radius: var(--r-lg); background: var(--ink); color: var(--bg); font: inherit; cursor: pointer; box-shadow: var(--shadow-2); }
+.ob-go small { grid-column: 1; font-size: 0.82rem; opacity: 0.7; font-weight: 650; }
+.ob-go b { grid-column: 1; font-size: 1.35rem; font-weight: 820; letter-spacing: -0.03em; }
+.ob-go span { grid-column: 2; grid-row: 1 / span 2; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-size: 1.3rem; font-weight: 800; }
+.ob-go:hover span { transform: translateX(3px); }
+.ob-road { font-size: 1rem; color: var(--ink-2); line-height: 1.7; }
+.ob-alt { font-size: 0.92rem; }
+.ob-alt a { font-weight: 700; color: var(--accent-text); }
+.ob-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 6px; }
+.ob-link { border: 0; background: none; font: inherit; font-size: 0.9rem; font-weight: 650; color: var(--muted); cursor: pointer; padding: 8px 0; min-height: 40px; }
+.ob-link:hover { color: var(--ink); }
+@media (max-width: 520px) { .ob-opts { grid-template-columns: 1fr; } .ob-opt { min-height: 0; padding: 16px 18px; } }

@@ -14,13 +14,18 @@
   if (list && C) {
     var byId = {};
     C.units.forEach(function (u) { byId[u.id] = u; });
+    // 단계 한 줄씩: 이름, 한 줄 설명, 유닛 이름 칩
     list.innerHTML = C.stages.map(function (s) {
-      return '<li class="stage-row"><span class="mono">STEP ' + s.no + '</span><b>' + esc(s.name) + "</b><span>" + esc(s.title) + (s.bonus ? " · 보너스" : "") + "</span></li>" +
-        s.units.map(function (id) {
-          var u = byId[id];
-          return '<li><a class="unit" href="study.html#' + u.id + '"><span class="no">' + u.no + "</span><h3>" + esc(u.title) + (u.optional ? ' <i class="bonus">보너스</i>' : "") + '</h3><span class="min">' + u.minutes + "분</span><p>" + esc(u.lead.split(". ")[0].replace(/\.$/, "")) + ". <b>→ " + esc(u.outcome) + "</b></p></a></li>";
-        }).join("");
+      var tag = s.no === 1 ? "모든 트랙 공통" : s.no === 2 ? "서비스 만들기 트랙" : s.bonus ? "보너스" : "";
+      return '<li class="stage-line"><span class="mono">STEP ' + s.no + "</span><div><h3>" + esc(s.name) + " · " + esc(s.title) + (tag ? ' <i class="bonus">' + tag + "</i>" : "") + "</h3><p>" + esc(s.sub) + '</p><p class="chips">' +
+        s.units.map(function (id) { var u = byId[id]; return '<a href="study.html#' + u.id + '">' + (u.kit ? "공구함 " : "") + esc(u.no) + " " + esc(u.title) + "</a>"; }).join("") + "</p></div></li>";
     }).join("");
+    var tl = $("#tracks");
+    if (tl && C.tracks) {
+      tl.innerHTML = C.tracks.map(function (t) {
+        return '<li><a href="study.html#tracks"><b>' + esc(t.name) + "</b><span>" + esc(t.goal) + '</span><i class="mono">' + (t.soon ? "준비 중" : "지금 열림") + "</i></a></li>";
+      }).join("");
+    }
   }
 
   // 이어서 하기: 이 기기에 진도가 있으면 버튼을 바꿈
