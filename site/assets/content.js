@@ -907,7 +907,15 @@ window.COURSE = {
       {"name": "marketing 플러그인 (brand-voice 포함)", "by": "Anthropic", "src": "anthropics/knowledge-work-plugins", "pop": "★ 34.7k", "lv": "click", "what": "콘텐츠 초안, 캠페인 브리프, 경쟁사 비교, 브랜드 보이스 적용, 채널 성과 보고를 도와줘요.", "when": "캠페인을 기획하고 같은 목소리로 여러 글을 낼 때", "stars": 3, "install": "/plugin marketplace add anthropics/knowledge-work-plugins\n/plugin install marketing@knowledge-work-plugins"},
       {"name": "Canva 커넥터", "by": "Canva", "src": "", "pop": "", "lv": "click", "what": "대화하면서 Canva 디자인을 만들고 고치고 내보내요.", "when": "카드뉴스·썸네일·포스터를 빠르게 만들 때", "stars": 3, "install": "claude.ai › 설정 › 커넥터에서 Canva를 골라 연결해요.", "note": "브랜드 키트는 Canva 유료 요금제 기능이에요."},
       {"name": "Claude SEO", "by": "AgriciDaniel", "src": "AgriciDaniel/claude-seo", "pop": "★ 26.4k", "lv": "key", "what": "검색 노출(SEO), 신뢰도(E-E-A-T), AI 검색 노출(GEO)을 점검해요.", "when": "블로그·쇼핑몰의 검색 노출을 점검할 때", "stars": 1, "install": "/plugin marketplace add AgriciDaniel/claude-seo\n/plugin install claude-seo@agricidaniel-claude-seo\n/seo setup", "note": "Python 3.11 이상이 필요해요. 전체 점검은 사용량을 많이 써요."},
-      {"name": "Remotion skills", "by": "Remotion", "src": "remotion-dev/skills", "pop": "", "lv": "key", "what": "코드로 영상을 만들고 고치는 방법을 AI에게 알려줘요.", "when": "같은 틀의 영상을 여러 개 찍어낼 때", "stars": 1, "install": "npx skills add remotion-dev/skills", "note": "회사에서 상업적으로 쓰면 Remotion 라이선스를 확인해요."}
+      {"name": "fire-your-seo-agency", "by": "leopard627", "src": "leopard627/fire-your-seo-agency", "pop": "★ 997", "what": "내 사이트를 검색 로봇처럼 읽고 다섯 갈래(SEO · AI 답변 노출 AEO · 생성형 검색 GEO · LLM 노출 LLMO · 네이버)로 점수를 매긴 뒤, 사이트맵·메타 태그·구조화 데이터·llms.txt·네이버 서치어드바이저 등록까지 고칠 것을 알려줘요. 설명서가 한국어예요.", "when": "만든 서비스가 구글·네이버·AI 검색에 잘 안 잡힐 때", "stars": 2, "install": "/plugin marketplace add leopard627/fire-your-seo-agency\n/plugin install fire-your-seo-agency@fire-your-seo-agency", "note": "쓰는 법: /fire-your-seo-agency audit my site. 성과 숫자(30일 노출 154만)는 만든 사람의 사례예요. 고칠 것은 운영 중인 사이트에 바로 넣지 말고 먼저 읽어 봐요. Codex는 저장소를 .agents/skills 아래에 받아 넣어요."}
+    ] },
+    { id: "motion", track: "content", title: "영상·애니메이션·3D", desc: "편집 프로그램을 몰라도, 말로 시키면 AI가 코드를 써서 영상·설명 애니메이션·3D 장면을 만들어요. 대부분 코딩 에이전트(Claude Code · Codex)가 필요하고, 내 컴퓨터에 Node.js나 FFmpeg를 깔아야 해요. 처음이라면 설치가 가장 쉬운 algorithmic-art부터 해 봐요.", items: [
+      {"name": "algorithmic-art", "by": "Anthropic", "src": "anthropics/skills", "pop": "★ 188.6k", "what": "p5.js로 흐르는 선·입자 같은 움직이는 배경 아트를 그려요. 결과는 슬라이더로 모양을 바꿀 수 있는 HTML 파일 하나예요.", "when": "발표 배경, 포스터, 웹사이트 첫 화면에 쓸 움직이는 그림이 필요할 때", "stars": 3, "install": "/plugin marketplace add anthropics/skills\n/plugin install example-skills@anthropic-agent-skills", "note": "Claude 앱 유료 요금제에는 이미 들어 있는 예시 스킬이라, 설정 › 기능 › 스킬에서 켜기만 하면 돼요. 설치할 것도 열쇠도 없어요.", "ba": {"before": "움직이는 배경 하나 만들어줘", "after": "algorithmic-art 스킬로 바다 물결 같은 흐름장을 만들어줘. 색은 남색·하늘색, 속도는 느리게"}},
+      {"name": "HyperFrames", "by": "HeyGen", "src": "heygen-com/hyperframes", "pop": "★ 80.5k", "what": "HTML로 장면을 짜면 그대로 MP4 영상으로 뽑아요. 에이전트가 쓰도록 만든 도구라, 말로 '15초 소개 영상'을 시키면 장면 짜기부터 렌더링까지 해요.", "when": "서비스 소개·홍보 영상, 짧은 인트로를 만들 때", "stars": 2, "install": "/plugin marketplace add heygen-com/hyperframes\n/plugin install hyperframes@hyperframes", "note": "Node.js 22 이상과 FFmpeg가 필요해요. API 키는 필요 없어요. Codex 등은 npx skills add heygen-com/hyperframes. 라이선스 Apache-2.0."},
+      {"name": "brag", "by": "latent-spaces", "src": "latent-spaces/brag", "pop": "★ 20.7k", "what": "\"만들었으면 자랑하자.\" /brag 한 번이면 방금 만든 프로젝트를 읽고, 음악과 움직임이 든 짧은 출시 영상과 SNS 소개 문구를 만들어요. 내부에서 HyperFrames로 렌더링해요.", "when": "유닛 07에서 서비스를 공개하고, 지인에게 보낼 소개 영상이 필요할 때", "stars": 2, "install": "/plugin marketplace add latent-spaces/brag\n/plugin install brag@brag", "note": "Node.js 22 이상, FFmpeg, HyperFrames가 필요해요(npx hyperframes doctor로 확인). --tone으로 분위기, --voice로 내레이션을 더해요. Codex는 codex plugin marketplace add latent-spaces/brag. 설치가 부담되면 letsbrag.app에서 링크만 넣어도 20초 영상이 나와요."},
+      {"name": "Remotion skills", "by": "Remotion", "src": "remotion-dev/skills", "pop": "★ 6.5k", "lv": "key", "what": "React 코드로 영상을 만드는 Remotion을 AI가 제대로 쓰게 하는 사용 설명서예요. 자막·차트·전환 효과가 든 영상을 틀로 만들어 여러 개 찍어내요.", "when": "같은 틀의 영상(주간 리포트, 숫자 카드뉴스 영상)을 여러 개 만들 때", "stars": 1, "install": "npx skills add remotion-dev/skills", "note": "개인, 직원 3명 이하 회사, 비영리 단체는 상업용 영상도 무료예요. 그보다 큰 회사는 유료 회사 라이선스가 필요해요(Remotion 5.0에서 조건이 바뀔 예정)."},
+      {"name": "MCP for Blender", "by": "ahujasid", "src": "ahujasid/blender-mcp", "pop": "★ 33.5k", "lv": "key", "what": "Claude가 무료 3D 프로그램 Blender를 직접 움직여요. '책상 위에 노트북과 커피잔을 놓고 아침 햇살 조명'처럼 말하면 물체를 놓고 재질·조명을 잡아요.", "when": "제품 목업, 3D 썸네일, 공간 스케치가 필요할 때", "stars": 1, "install": "# 맥·리눅스 (윈도우는 install.ps1)\ncurl -LsSf https://www.mcp-for-blender.com/install.sh | sh\n# Blender에서: N 키 › MCP for Blender 탭 › Start MCP Server", "note": "Blender 3.0 이상, Python 3.10 이상이 필요해요. AI가 Blender 안에서 임의의 코드를 실행할 수 있어서, 작업 파일을 먼저 저장하고 BLENDER_MCP_SAFE_MODE=1로 위험한 동작을 막아요. 기본으로 익명 사용 통계를 보내요(DISABLE_TELEMETRY=true로 끔). Blender 재단의 공식 도구는 아니에요."},
+      {"name": "Manim Skill", "by": "Yusuke710", "src": "Yusuke710/manim-skill", "pop": "★ 197", "lv": "key", "what": "3Blue1Brown 같은 수학·개념 설명 애니메이션을 만들어요. 내레이션 대본 → 음성 → 장면 코드 → 렌더링 → 소리 합치기까지 하고, 자막도 맞춰 넣어요.", "when": "개념 설명 영상, 강의 자료, 공부 트랙의 '친구에게 설명하기' 영상을 만들 때", "stars": 1, "install": "git clone https://github.com/Yusuke710/manim-skill\ncd manim-skill && uv sync\nln -s \"$PWD/skills/manim-skill\" ~/.claude/skills/manim-skill", "note": "Python(uv), Cairo, FFmpeg, LaTeX가 필요해요. 설명서는 맥 기준이고 LaTeX 설치가 무거워서, 이 목록에서 설치가 가장 어려워요. 내레이션 음성(Kokoro)은 내 컴퓨터에서 돌아 API 키가 필요 없어요. Codex는 ~/.codex/skills에 연결해요."}
     ] },
     { id: "study", track: "study", title: "공부·리서치", desc: "AI를 답지가 아니라 과외 선생님으로 쓰고, 논문과 노트를 검증된 출처로 정리해요.", items: [
       {"name": "socratic-method-skill", "by": "malkreide", "src": "malkreide/socratic-method-skill", "pop": "", "lv": "click", "what": "정답 대신 질문으로 이끄는 소크라테스식 과외 선생님이에요.", "when": "답을 외우지 않고 스스로 이해하고 싶을 때", "stars": 3, "install": "저장소에서 SKILL.md를 받아 claude.ai › 설정 › 기능 › 스킬에 올려요.", "note": "커뮤니티 프로젝트예요. 올리기 전에 SKILL.md를 한 번 읽어 보세요."},
@@ -938,12 +946,87 @@ window.COURSE = {
     ] }
   ],
   // 스킬 찾기 도우미: 목표별 추천(picks는 위 스킬 이름과 똑같아야 해요)과 도구별 설치 안내
-  skillFinder: {"goals": [{"id": "auto", "label": "업무 연결·자동화", "picks": ["Google Drive · Gmail · Calendar 커넥터", "productivity 플러그인", "kordoc (HWP 읽기)"]}, {"id": "idea", "label": "아이디어·기획", "picks": ["product-management 플러그인", "Superpowers", "PM Skills"]}, {"id": "study", "label": "공부·리서치", "picks": ["socratic-method-skill", "learning-output-style", "obsidian-skills"]}, {"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·콘텐츠", "picks": ["marketingskills", "한국어 윤문 · im-not-ai", "ui-ux-pro-max"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "agent", "label": "Codex · Antigravity 등", "how": "스킬 폴더(SKILL.md가 든 폴더)를 GitHub에서 받아 프로젝트의 .agents/skills 아래에 넣어요. 에이전트에게 '이 저장소의 스킬을 .agents/skills에 설치해줘'라고 부탁해도 돼요. /plugin으로 시작하는 명령과 claude.ai 커넥터는 Claude 전용이라 쓸 수 없어요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
-  skillInstall: [
-    { where: "Claude 앱 (웹·데스크톱)", how: "설정 › 기능(Capabilities)에서 기본 스킬을 켜고, 받은 스킬 폴더를 zip으로 올려요.", cmd: "" },
-    { where: "Claude Code (터미널)", how: "플러그인 마켓에서 설치하거나, 스킬 폴더를 ~/.claude/skills 아래에 넣어요.", cmd: "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace" },
-    { where: "여러 에이전트 공통", how: "npx로 설치 도구를 빌려 실행해요. 저장소 주소(owner/repo)만 바꾸면 돼요.", cmd: "npx skills add supabase/agent-skills" },
-    { where: "웹앱 빌더 (Lovable 등)", how: "스킬을 설치할 수 없어요. 아래 '작업 원칙'을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.", cmd: "" }
+  skillFinder: {"goals": [{"id": "auto", "label": "업무 연결·자동화", "picks": ["Google Drive · Gmail · Calendar 커넥터", "productivity 플러그인", "kordoc (HWP 읽기)"]}, {"id": "idea", "label": "아이디어·기획", "picks": ["product-management 플러그인", "Superpowers", "PM Skills"]}, {"id": "study", "label": "공부·리서치", "picks": ["socratic-method-skill", "learning-output-style", "obsidian-skills"]}, {"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·검색 노출", "picks": ["marketingskills", "fire-your-seo-agency", "한국어 윤문 · im-not-ai"]}, {"id": "video", "label": "영상·애니메이션·3D", "picks": ["algorithmic-art", "HyperFrames", "brag"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "agent", "label": "Codex · Antigravity 등", "how": "스킬 폴더(SKILL.md가 든 폴더)를 GitHub에서 받아 프로젝트의 .agents/skills 아래에 넣어요. 에이전트에게 '이 저장소의 스킬을 .agents/skills에 설치해줘'라고 부탁해도 돼요. /plugin으로 시작하는 명령과 claude.ai 커넥터는 Claude 전용이라 쓸 수 없어요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
+  // 미디어 도구 지도: AI에게 코드로 시키는 영상·3D·소리 도구 21개를 묶음별로 풀어요.
+  // 대부분 스킬이 아니라 부품(라이브러리·프로그램)이라, 코딩 에이전트에게 "○○로 만들어줘"라고 시켜요.
+  mediaMap: [
+    { g: "웹 화면을 움직이기", like: "종이 인형에 실 달기", tools: [
+      { n: "Anime.js", d: "글자·도형을 튀기고 흐르게 하는 웹 애니메이션 부품" },
+      { n: "Motion", d: "버튼·카드가 손에 붙듯 부드럽게 튕기는 애니메이션 (React·JS)" },
+      { n: "Lottie", d: "After Effects로 만든 애니메이션을 웹·앱에서 가볍게 재생" }
+    ] },
+    { g: "코드로 영상 만들기", like: "대본을 쓰면 촬영까지 되는 스튜디오", tools: [
+      { n: "Remotion", d: "React 코드로 장면을 짜서 자막·차트·전환 효과가 든 MP4를 만들어요" },
+      { n: "HyperFrames", d: "HTML로 장면을 짜면 그대로 MP4로 뽑아요" },
+      { n: "Manim", d: "수학 그래프와 설명 애니메이션. 3Blue1Brown 영상이 이걸로 만들어져요" },
+      { n: "Skills", d: "위 도구들을 Claude가 제대로 쓰게 하는 사용 설명서(SKILL.md)" }
+    ] },
+    { g: "영상 다듬기", like: "편집실의 가위와 녹화 버튼", tools: [
+      { n: "LosslessCut", d: "다시 인코딩하지 않아 화질 손실 없이 앞뒤를 잘라요 (무료 앱)" },
+      { n: "FFmpeg", d: "형식 바꾸기·합치기·압축·자막 넣기를 다 하는 명령줄 만능 도구" },
+      { n: "OBS", d: "화면 녹화와 방송 (무료 앱)" }
+    ] },
+    { g: "3D와 물리", like: "말로 짓는 미니어처 세트장", tools: [
+      { n: "Blender", d: "무료 3D 제작 프로그램. MCP로 연결하면 말로 장면을 만들어요" },
+      { n: "Three.js", d: "브라우저 안에서 돌아가는 3D" },
+      { n: "postprocessing", d: "빛 번짐(블룸)·흐림 같은 후처리 효과 (Three.js용)" },
+      { n: "Pathtracer", d: "빛을 하나하나 계산해 사진 같은 조명을 만들어요 (three-gpu-pathtracer)" },
+      { n: "Jolt", d: "물체가 부딪히고 떨어지는 물리 계산 (Jolt Physics)" },
+      { n: "quarks", d: "불꽃·연기·마법 같은 입자 효과 (three.quarks)" },
+      { n: "Tweakpane", d: "색·크기·속도를 슬라이더로 바로 조절하는 작은 조종판" }
+    ] },
+    { g: "이미지 만들기", like: "레고처럼 끼우는 그림 공장", tools: [
+      { n: "ComfyUI", d: "블록(노드)을 이어 이미지·영상 생성 과정을 짜요. 내 컴퓨터 그래픽카드로 돌려요" }
+    ] },
+    { g: "소리", like: "성우·속기사·지휘자", tools: [
+      { n: "CosyVoice", d: "글을 목소리로 읽어 주는 음성 합성. 목소리 복제도 돼요" },
+      { n: "WhisperX", d: "말을 글로 받아 적고, 단어마다 몇 초에 나왔는지까지 찍어요 (자막용)" },
+      { n: "librosa", d: "음악의 박자·템포를 재는 파이썬 부품 (박자에 맞춘 편집용)" }
+    ] }
+  ],
+  mediaNote: "이 도구들은 대부분 스킬이 아니라 부품(라이브러리·프로그램)이에요. 코딩 에이전트에게 '○○로 만들어줘'라고 하면 에이전트가 설치하고 코드를 써요. 대화형 AI 앱만 쓴다면 Claude 아티팩트에서 Anime.js·Three.js 정도는 바로 볼 수 있어요. 남의 목소리·얼굴·음악은 본인 동의와 저작권을 먼저 확인해요.",
+
+  // 쉽게 설치하기: 내 도구 탭마다 스킬·플러그인을 단계별로
+  installGuide: [
+    { id: "app", label: "Claude 앱", sub: "웹 · 데스크톱",
+      skill: [
+        { t: "GitHub 저장소 페이지에서 초록색 Code 버튼 › Download ZIP을 눌러 받아요." },
+        { t: "압축을 풀고, SKILL.md가 들어 있는 폴더 하나만 골라 다시 zip으로 묶어요. 저장소 전체가 아니라 그 폴더 하나예요." },
+        { t: "claude.ai › 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx·pptx 등)은 이미 들어 있으니 켜기만 하면 돼요." },
+        { t: "새 대화에서 '○○ 스킬로 …해줘'라고 불러 봐요." }
+      ],
+      plugin: [
+        { t: "Claude 데스크톱 앱(Cowork)의 플러그인 메뉴에서 공식 플러그인을 찾아 눌러 켜요. 메뉴 이름은 바뀔 수 있어요." },
+        { t: "켜면 그 안의 스킬과 연결이 함께 생겨요. 연결(메일·드라이브 등)은 따로 승인 창이 떠요. 필요한 것만 허락해요." }
+      ],
+      check: "새 대화에서 '지금 쓸 수 있는 스킬 목록 보여줘'라고 물어요.",
+      remove: "설정 › 기능 › 스킬에서 끄거나 지워요." },
+    { id: "code", label: "Claude Code", sub: "터미널 · 데스크톱 앱 · VS Code",
+      skill: [
+        { t: "가장 쉬운 길: 스킬 설치 도구에 저장소 주소(owner/repo)만 넘겨요. 어떤 에이전트에 넣을지 물으면 Claude Code를 골라요.", cmd: "npx skills add owner/repo" },
+        { t: "손으로 넣어도 돼요. SKILL.md가 든 폴더를 이 프로젝트의 .claude/skills/ 아래에 넣으면 그 폴더에서만, 홈 폴더의 ~/.claude/skills/ 아래에 넣으면 모든 프로젝트에서 써요." }
+      ],
+      plugin: [
+        { t: "플러그인은 두 줄이에요. ① 마켓(목록)을 등록하고 ② 그 마켓에서 설치해요. Claude Code 안에서 입력해요.", cmd: "/plugin marketplace add owner/repo\n/plugin install 플러그인이름@마켓이름" },
+        { t: "이름을 모르겠으면 /plugin만 입력해요. 목록 화면에서 골라 설치할 수 있어요.", cmd: "/plugin" }
+      ],
+      check: "/ 를 입력하면 쓸 수 있는 명령과 스킬이 떠요. '어떤 스킬이 있어?'라고 물어도 돼요.",
+      remove: "/plugin에서 지우거나, 넣었던 스킬 폴더를 지워요." },
+    { id: "agent", label: "Codex · Antigravity", sub: "다른 코딩 에이전트",
+      skill: [
+        { t: "같은 설치 도구가 여러 에이전트를 지원해요. 어떤 에이전트에 넣을지 물으면 내 도구를 골라요.", cmd: "npx skills add owner/repo" },
+        { t: "손으로 넣으려면 SKILL.md가 든 폴더를 프로젝트의 .agents/skills/ 아래에 넣어요. Codex와 Antigravity가 같은 위치를 읽어요." }
+      ],
+      plugin: [
+        { t: "/plugin 명령과 claude.ai 커넥터는 Claude 전용이에요. 플러그인 안의 스킬 폴더만 골라 위 방법으로 넣으면 대부분 그대로 써요." }
+      ],
+      check: "Codex는 /skills, Antigravity는 대화에서 '쓸 수 있는 스킬 보여줘'라고 물어요.",
+      remove: "넣었던 스킬 폴더를 지워요." },
+    { id: "builder", label: "웹앱 빌더", sub: "Lovable 등",
+      skill: [
+        { t: "웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침(Knowledge)에 붙여넣으면 비슷한 효과가 나요." }
+      ],
+      plugin: [], check: "", remove: "" }
   ],
 
   // 개발 도구 지도: 에이전트가 쓰는 말을 알아듣기 위한 최소한
