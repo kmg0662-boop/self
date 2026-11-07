@@ -993,3 +993,9 @@ body.focus .menu-btn, body.focus .top-progress { visibility: hidden; }
   .vg-tbl td { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 8px; padding: 2px 0; border: 0; }
   .vg-tbl td::before { content: attr(data-col); font-size: 0.8rem; font-weight: 750; color: var(--muted); }
 }
+/* 스킬 카드: 설명 · 특징 · 차별점 */
+.skill .what b, .skill .feat > b, .skill .vs b { display: inline-block; font-size: 0.75rem; font-weight: 800; color: var(--muted); margin-right: 6px; letter-spacing: 0.02em; }
+.skill .feat { display: grid; gap: 4px; }
+.skill .feat ul { margin: 0; padding-left: 1.1em; display: grid; gap: 2px; font-size: 0.92rem; line-height: 1.55; color: var(--ink-2); }
+.skill .vs { font-size: 0.92rem; line-height: 1.6; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--bg); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.skill .vs b { color: var(--accent-text); }
