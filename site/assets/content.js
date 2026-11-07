@@ -17,22 +17,23 @@ window.COURSE = {
       why: "목적지 없이 출발한 여행은 쉽게 끝나요. '무엇을 만들고 싶은지' 한 줄과 '언제 공부할지'를 정해두면, 의지가 약한 날에도 다시 돌아올 길이 생겨요.",
       concepts: [
         { term: "독학 3원칙", like: "등산할 때 한 번에 정상을 보지 않고 다음 이정표만 보는 것", body: "작게(한 번에 유닛 하나), 자주(일주일에 세 번 30분), 기록하며(막힌 것과 푼 방법을 한 줄씩). 이 세 가지만 지키면 끝까지 갈 확률이 크게 올라가요." },
-        { term: "두 종류의 AI 도구", like: "상담원과 비서", body: "대화형 AI(ChatGPT, Claude, Gemini)는 생각을 정리해주는 상담원이고, 웹앱 빌더(Lovable 등)나 코딩 에이전트는 직접 만들어주는 비서예요. 이 코스는 둘을 번갈아 써요." },
+        { term: "세 종류의 AI 도구", like: "상담원 · 인테리어 업체 · 내 집에 온 목수", body: "대화형 AI(ChatGPT, Claude, Gemini)는 생각을 정리해주는 상담원이에요. 웹앱 빌더(Lovable 등)는 화면에서 말로 주문하면 지어주는 인테리어 업체이고, 코딩 에이전트(Claude Code, Codex, Antigravity 등)는 내 컴퓨터 폴더에 들어와 직접 일하는 목수예요. 이 코스는 대화형 AI로 생각하고, 웹앱 빌더나 코딩 에이전트 중 하나로 만들어요. 이미 코딩 에이전트를 쓴다면 화면 위 '내 도구'를 바꿔 두세요. 그 도구 기준으로 따라하기가 바뀌어요." },
         { term: "코스의 다섯 계단", fig: "stairs", like: "등산로 이정표", body: "대화 → 만들기 → 쌓기까지가 기본 코스이고, 맡기기·자동화는 보너스예요. 계단을 하나 오를 때마다 쓰는 도구가 바뀌고, 새로 알아야 할 말이 생겨요. 지금 어디쯤인지는 '내 학습' 화면 맨 위에서 언제든 볼 수 있어요." }
       ],
       steps: [
         { text: "이 코스를 마치면 무엇이 남는지 먼저 봐요. 민규가 코스를 따라가며 만든 서비스를 직접 써볼 수 있어요. 버전을 바꿔 보면 유닛마다 어떻게 자랐는지도 보여요.", link: "demo.html", linkText: "민규의 서비스 써보기" },
         { text: "AI를 이미 써봤다면 3분 진단부터 해요. 이미 아는 유닛은 건너뛰고, 내게 필요한 유닛만 남겨줘요.", link: "#placement", linkText: "시작점 진단하기" },
         { text: "대화형 AI 하나(ChatGPT, Claude, Gemini 중)에 가입해요. 무료로 시작해도 충분해요." },
-        { text: "웹앱 빌더 하나(Lovable 등)에 가입해요. 유닛 5부터 써요." },
+        { who: "noagent", text: "웹앱 빌더 하나(Lovable 등)에 가입해요. 유닛 05부터 써요." },
+        { who: "agent", text: "만들기는 지금 쓰는 코딩 에이전트로 해요. 웹앱 빌더 가입은 건너뛰어도 돼요. 대신 유닛 05~07의 따라하기가 내 도구 기준으로 바뀌어요." },
         { text: "(선택) GitHub 계정도 만들어 두세요. 유닛 7에서 배포할 때, 유닛 8에서 스킬을 받을 때 만나요.", link: "#devkit", linkText: "GitHub가 뭔지 먼저 보기" },
         { text: "일상에서 '이거 왜 이렇게 불편하지?' 싶었던 순간을 3개 적어요. 작고 사소할수록 좋아요." },
         { text: "'내 학습' 화면 맨 아래 '내 기록'을 열고 목표 카드를 채워요. 만들고 싶은 것 한 줄과 공부할 요일을 적어요.", link: "#home", linkText: "내 학습으로" }
       ],
-      mission: ["대화형 AI 계정 만들기", "웹앱 빌더 계정 만들기", "불편했던 순간 3개 메모하기", "목표 카드 채우기"],
+      mission: ["대화형 AI 계정 만들기", "만들 도구 준비하기 (웹앱 빌더 계정, 또는 지금 쓰는 코딩 에이전트)", "불편했던 순간 3개 메모하기", "목표 카드 채우기"],
       quiz: [
         { q: "독학을 끝까지 가게 만드는 데 가장 도움이 되는 습관은?", options: ["주말에 몰아서 5시간", "일주일에 세 번, 30분씩", "기분 좋을 때만"], answer: 1, explain: "짧게 자주 해야 리듬이 생기고, 리듬이 의지를 대신해줘요." },
-        { q: "이 코스에서 대화형 AI와 웹앱 빌더를 쓰는 방법으로 맞는 것은?", options: ["대화형 AI로 생각을 정리하고, 웹앱 빌더로 직접 만들며 번갈아 쓴다", "둘 중 하나만 골라 끝까지 쓴다", "웹앱 빌더가 항상 낫기 때문에 대화형 AI는 쓰지 않는다"], answer: 0, explain: "상담원과 비서처럼 역할이 달라요. 생각은 대화형 AI와, 만들기는 빌더와 해요." },
+        { q: "이 코스에서 대화형 AI와 만드는 도구(웹앱 빌더·코딩 에이전트)를 쓰는 방법으로 맞는 것은?", options: ["대화형 AI로 생각을 정리하고, 만드는 도구로 직접 만들며 번갈아 쓴다", "하나만 골라 생각도 만들기도 끝까지 그것으로만 한다", "만드는 도구가 항상 낫기 때문에 대화형 AI는 쓰지 않는다"], answer: 0, explain: "상담원과 목수처럼 역할이 달라요. 생각은 대화형 AI와, 만들기는 웹앱 빌더나 코딩 에이전트와 해요." },
         { q: "만들 것을 고를 때 가장 좋은 출발점은?", options: ["세상 모든 사람의 큰 문제", "언젠가 해보고 싶은 거창한 아이디어", "내가 일주일에 몇 번씩 겪는 작고 구체적인 불편함"], answer: 2, explain: "자주 겪는 작은 불편함이어야 직접 시험해 보고, 계속 고칠 이유가 생겨요." }
       ],
       case: {
@@ -181,8 +182,8 @@ window.COURSE = {
       place: "내 컴퓨터(파일 탐색기·Finder) + 대화형 AI",
       why: "초보자가 처음 올리는 질문은 대부분 프롬프트가 아니라 '파일이 안 열려요', '별표가 잔뜩 보여요', 'Plus를 결제했는데 API는 왜 안 돼요?'예요. 이 빈틈은 AI가 아니라 내 컴퓨터와 AI 사이에 있어요. 한 번만 정리해 두면 어떤 트랙을 가든 덜 막혀요.",
       concepts: [
-        { term: "확장자와 파일 형식", like: "택배 상자의 품목 라벨", body: "이름 끝의 .pdf, .md, .csv가 파일 종류를 알려줘요. AI에 올릴 수 있는지, 어떤 앱으로 열지가 여기서 정해져요. 윈도우는 기본으로 확장자를 숨겨서 CLAUDE.md가 CLAUDE.md.txt가 되는 사고가 자주 나요. AI에게 줄 때는 TXT·MD·CSV처럼 글자로 된 파일이 가장 쉽고, 스캔한 PDF·사진·HWP 순으로 어려워져요." },
-        { term: "마크다운", like: "원고 교정 부호", body: "# 제목, **굵게**, - 목록처럼 기호로 모양을 표시하는 약속이에요. AI 답변, CLAUDE.md, SKILL.md가 모두 이 형식이에요. 노션·GitHub·ChatGPT 화면은 기호를 모양으로 바꿔 보여주지만(렌더링), 카톡·한글·메모장은 기호를 그대로 보여줘요. 그래서 별표가 보이면 AI가 고장 난 게 아니라, 받는 앱이 마크다운을 못 읽는 거예요." },
+        { term: "확장자와 파일 형식", like: "택배 상자의 품목 라벨", body: "이름 끝의 .pdf, .md, .csv가 파일 종류를 알려줘요. AI에 올릴 수 있는지, 어떤 앱으로 열지가 여기서 정해져요. 윈도우는 기본으로 확장자를 숨겨서 할일.md가 할일.md.txt가 되는 사고가 자주 나요. AI에게 줄 때는 TXT·MD·CSV처럼 글자로 된 파일이 가장 쉽고, 스캔한 PDF·사진·HWP 순으로 어려워져요." },
+        { term: "마크다운", like: "원고 교정 부호", body: "# 제목, **굵게**, - 목록처럼 기호로 모양을 표시하는 약속이에요. AI 답변, 노션 문서, 스킬 설명서(SKILL.md)가 모두 이 형식이에요. 노션·GitHub·ChatGPT 화면은 기호를 모양으로 바꿔 보여주지만(렌더링), 카톡·한글·메모장은 기호를 그대로 보여줘요. 그래서 별표가 보이면 AI가 고장 난 게 아니라, 받는 앱이 마크다운을 못 읽는 거예요." },
         { term: "구독 · API 키 · 커넥터", like: "월회원권 · 쓴 만큼 내는 사물함 열쇠 · 열쇠 맡기기", body: "ChatGPT Plus 같은 구독은 채팅 화면을 쓰는 월정액이고, API 키는 프로그램이 AI를 부를 때 쓰는 종량제 열쇠라 요금이 따로예요. 파일 업로드는 복사본을 한 번 건네는 것이고, 커넥터는 드라이브·메일과 계속 연결해 두는 거예요. 연결한 만큼 AI가 볼 수 있으니 필요한 것만 연결해요." }
       ],
       steps: [
@@ -190,7 +191,8 @@ window.COURSE = {
         { text: "AI에게 표 하나를 마크다운으로 만들어 달라고 한 뒤, 카톡(또는 메모장)과 노션에 각각 붙여넣어 비교해요. 그다음 '서식 없이 붙여넣기'(윈도우 Ctrl+Shift+V)로 다시 붙여 봐요.", prompt: "아래 내용을 마크다운 표로 만들어줘. 제목은 # 하나로, 중요한 말은 **굵게** 해줘.\n\n[이번 주 할 일 3개와 마감일]" },
         { text: "메모장에서 '할 일.md' 파일을 직접 만들어요. 제목(#), 목록(-), 체크박스(- [ ]) 세 가지만 써 봐요. 치트시트의 마크다운 한 장을 옆에 띄워 두세요.", link: "#cheats", linkText: "마크다운 한 장 보기" },
         { text: "내 AI 계정 지도를 적어요. 쓰는 서비스, 요금제, API 키가 있는지, 연결한 서비스와 해제하는 곳까지요.", prompt: "# 내 AI 계정 지도\n| 서비스 | 요금제 | API 키 | 연결한 것 | 해제하는 곳 |\n| --- | --- | --- | --- | --- |\n| ChatGPT | 무료 | 없음 | 없음 | 설정 › 앱 |" },
-        { text: "에러가 나면 캡처 대신 글자를 그대로 복사해 AI에 붙여넣는 연습을 해요. 터미널에서 Ctrl+C는 복사가 아니라 '실행 중단'이라는 것도 기억해요." }
+        { text: "에러가 나면 캡처 대신 글자를 그대로 복사해 AI에 붙여넣는 연습을 해요. 글자로 주면 AI가 정확히 읽고, 나도 검색할 수 있어요." },
+        { who: "agent", text: "터미널에서 Ctrl+C는 복사가 아니라 '실행 중단'이에요. 터미널 글자를 복사할 때는 마우스로 고른 뒤 Ctrl+Shift+C(맥은 Cmd+C)를 써요." }
       ],
       mission: ["파일 확장명 보기 켜기", "마크다운 표를 두 앱에 붙여 비교하기", "'할 일.md' 직접 만들기", "내 AI 계정 지도 1장 쓰기"],
       quiz: [
@@ -260,6 +262,7 @@ window.COURSE = {
       lead: "이제 직접 만들 차례예요. 정확히는, 만드는 일을 맡기고 나는 지시하고 검수하는 사람이 되는 차례예요.",
       outcome: "내 서비스의 첫 화면 (미리보기)",
       place: "웹앱 빌더 (Lovable · Google AI Studio Build 등) 또는 Claude 아티팩트",
+      agent: { place: "내 코딩 에이전트 (Claude Code · Codex · Antigravity 등) + 새 작업 폴더" },
       why: "에이전트는 손이 아주 빠른 신입 비서예요. 큰 일을 한 번에 맡기면 엉뚱한 방향으로 열심히 달려요. 작게 맡기고, 눈으로 확인하고, 잘 되면 저장하는 리듬이 혼자서도 무너지지 않게 해줘요.",
       concepts: [
         { term: "에이전트", fig: "agentLoop", like: "손발이 있는 비서", body: "LLM(두뇌)에 도구(손발: 파일, 실행, 배포)와 반복(계획 → 실행 → 확인 → 수정)이 붙은 AI예요. 말로 알려주는 데서 끝나지 않고 직접 해와요." },
@@ -268,13 +271,15 @@ window.COURSE = {
         { term: "바이브 코딩과 플랜 먼저", like: "말로 짓는 집, 그래도 설계도는 먼저", body: "코드를 직접 쓰지 않고 말로 지시해 AI가 만들게 하는 방식을 바이브 코딩이라고 해요(2025년 안드레이 카파시가 처음 쓴 말). 시제품을 만들기엔 훌륭하지만, 이 말을 만든 사람도 '주말용 실험'에 어울린다고 했어요. 그래서 습관이 중요해요. 설명서 먼저, 플랜 모드로 계획을 확인한 다음 만들기, 수정 요청은 묶어서 보내기. 크레딧도 덜 새요." }
       ],
       steps: [
-        { text: "어디서 만들지 골라요. 링크로 공유할 서비스라면 웹앱 빌더(Lovable, Google AI Studio Build 등), 나 혼자 쓸 작은 도구라면 대화형 AI의 아티팩트(Claude)·캔버스(ChatGPT·Gemini)로도 충분해요. 아티팩트는 설치도 크레딧도 없이 대화창 옆에서 바로 작동하는 화면을 만들어 줘요." },
+        { who: "agent", text: "새 작업 폴더(예: my-service)를 만들고, 내 코딩 에이전트에서 그 폴더를 열어요. 에이전트는 연 폴더 안만 보고 고쳐요. 도구마다 명령 이름이 다르니 '같은 일, 다른 이름' 표를 옆에 띄워 두세요.", link: "#devkit", linkText: "도구별 같은 일, 다른 이름" },
+        { who: "noagent", text: "어디서 만들지 골라요. 링크로 공유할 서비스라면 웹앱 빌더(Lovable, Google AI Studio Build 등), 나 혼자 쓸 작은 도구라면 대화형 AI의 아티팩트(Claude)·캔버스(ChatGPT·Gemini)로도 충분해요. 아티팩트는 설치도 크레딧도 없이 대화창 옆에서 바로 작동하는 화면을 만들어 줘요." },
         { text: "플랜 모드(계획 모드)가 있다면 먼저 켜고, 만들 화면과 기능을 글로 받아 확인해요. 없으면 '만들기 전에 계획부터 보여줘'라고 요청해요.", prompt: "아래 서비스 설명서로 무엇을 만들지 계획만 먼저 보여줘. 화면 목록, 각 화면의 기능, 만들지 않을 것을 나눠서. 내가 OK하면 그때 첫 화면부터 만들어줘.\n\n[서비스 설명서 붙여넣기]" },
         { text: "계획이 맞으면 서비스 설명서를 바탕으로 요청해요. 요청은 '첫 화면만'.", prompt: "아래 서비스 설명서를 바탕으로 첫 화면만 만들어줘. 기능 연결은 다음에 할게. 모바일에서 먼저 보기 좋게 만들어줘.\n\n[서비스 설명서 붙여넣기]" },
         { text: "미리보기에서 화면을 직접 눌러봐요. 설명서와 다른 점을 하나 찾아요." },
         { text: "다른 점을 '증상'으로 말해요.", prompt: "[어디]를 봤을 때 [기대한 모습]이었으면 하는데, 지금은 [실제 모습]이야. 이 부분만 고쳐주고 나머지는 건드리지 마." },
-        { text: "마음에 들면 버전을 저장해요(메뉴 이름은 도구마다 달라요: 체크포인트, 버전, 히스토리 등)." },
-        { text: "Claude Code 같은 코딩 에이전트로 넘어가면 '이 명령을 실행해도 될까요?'라는 질문을 받아요. 허락하기 전에 허락 가이드로 확인하는 습관을 들여요.", link: "#devkit", linkText: "개발 도구 지도 · 허락 가이드" }
+        { who: "agent", text: "마음에 들면 '지금 상태를 Git에 커밋해줘'라고 해요. 커밋이 게임 세이브예요. 폴더에 Git이 없다면 '이 폴더를 Git으로 관리하게 해줘'부터 부탁해요." },
+        { who: "noagent", text: "마음에 들면 버전을 저장해요(메뉴 이름은 도구마다 달라요: 체크포인트, 버전, 히스토리 등)." },
+        { who: "agent", text: "에이전트가 '이 명령을 실행해도 될까요?'라고 물으면, 허락하기 전에 허락 가이드로 무슨 명령인지 읽어요. 처음에는 매번 묻는 모드로 두세요.", link: "#devkit", linkText: "개발 도구 지도 · 허락 가이드" }
       ],
       mission: ["설명서로 첫 화면 만들기", "증상으로 수정 요청 1번 하기", "버전 저장 1번 하기"],
       quiz: [
@@ -295,7 +300,8 @@ window.COURSE = {
       ],
       stuck: [
         { symptom: "고쳤더니 다른 곳이 망가졌어요", fix: "'○○만 수정하고 나머지는 건드리지 마'라고 범위를 정해주세요. 이미 망가졌다면 저장한 버전으로 되돌리세요." },
-        { symptom: "크레딧이 너무 빨리 줄어요", fix: "생각은 대화형 AI에서 무료로 정리하고, 빌더에는 짧고 구체적인 요청만 보내세요." }
+        { who: "agent", symptom: "사용 한도가 금방 차요", fix: "다른 일로 넘어갈 때마다 새 대화로 시작하고(Claude Code·Codex는 /clear), 큰 일은 계획을 먼저 받아 확인한 뒤 맡기세요. 생각 정리는 대화형 AI에서 해도 돼요." },
+        { who: "noagent", symptom: "크레딧이 너무 빨리 줄어요", fix: "생각은 대화형 AI에서 무료로 정리하고, 빌더에는 짧고 구체적인 요청만 보내세요." }
       ]
     },
     {
@@ -304,6 +310,7 @@ window.COURSE = {
       lead: "만드는 시간보다 고치는 시간이 더 길어요. 그건 실패가 아니라 원래 그런 거예요.",
       outcome: "핵심기능 1개가 실제로 작동",
       place: "웹앱 빌더 또는 아티팩트",
+      agent: { place: "내 코딩 에이전트 + 브라우저 미리보기(localhost)" },
       why: "혼자 공부하다 그만두는 순간은 대부분 '에러가 났는데 뭔지 모르겠을 때'예요. 에러를 읽는 대신 옮기는 법, 같은 길을 맴돌 때 빠져나오는 법을 알면 막힘이 무섭지 않아요.",
       concepts: [
         { term: "에러 메시지", like: "자동차 계기판 경고등", body: "뜻을 몰라도 괜찮아요. 그대로 복사해서 AI에게 보여주면 원인을 찾아줘요. 스크린샷도 좋아요." },
@@ -311,10 +318,12 @@ window.COURSE = {
         { term: "맴돌기 탈출", like: "막다른 골목에서 온 길로 돌아가기", body: "같은 수정을 두 번 실패하면 멈추세요. 되돌리고, 요청을 반으로 쪼개고, 새 대화에서 설명서부터 다시 시작하는 게 가장 빨라요." }
       ],
       steps: [
+        { who: "agent", text: "만든 화면을 내 브라우저로 열어요. '실행해서 브라우저로 볼 수 있게 해주고 주소를 알려줘'라고 하면 localhost로 시작하는 주소를 줘요. 내 컴퓨터에서만 열리는 리허설 무대예요." },
         { text: "핵심기능을 연결해요.", prompt: "서비스 설명서의 핵심기능을 연결해줘: 사용자가 [입력]하면 [결과]가 보이게. 끝나면 내가 무엇을 눌러서 확인하면 되는지 알려줘." },
         { text: "에러가 나면 그대로 옮겨요.", prompt: "[어디]에서 [무엇]을 했더니 아래 에러가 났어. 원인을 초등학생도 알게 먼저 설명하고, 그다음 고쳐줘.\n\n[에러 메시지 붙여넣기]" },
         { text: "데이터가 새로고침하면 사라지나요? 필요하면 저장 기능을 요청해요.", prompt: "새로고침해도 입력한 내용이 남도록 저장 기능을 추가해줘. 가장 단순한 방법으로." },
-        { text: "일부러 한 번 되돌려 봐요. 작은 수정을 하나 요청한 뒤, 저장해 둔 버전으로 돌아가요. 되돌릴 수 있다는 걸 몸으로 알면 겁 없이 실험할 수 있어요. 유닛 09의 Git 커밋도 같은 생각의 강력한 버전이에요." },
+        { who: "agent", text: "일부러 한 번 되돌려 봐요. 작은 수정을 시킨 뒤 '마지막 커밋으로 되돌려줘'라고 하거나, 도구의 되돌리기(Claude Code는 Esc 두 번, 다른 도구는 표 참고)를 써요. 되돌릴 수 있다는 걸 몸으로 알면 겁 없이 실험할 수 있어요.", link: "#devkit", linkText: "도구별 되돌리기" },
+        { who: "noagent", text: "일부러 한 번 되돌려 봐요. 작은 수정을 하나 요청한 뒤, 저장해 둔 버전으로 돌아가요. 되돌릴 수 있다는 걸 몸으로 알면 겁 없이 실험할 수 있어요." },
         { text: "작동하면 버전을 저장하고, 막힌 것과 푼 방법을 한 줄 기록해요. 기록이 남는 앱이 필요하다면 다음 유닛 06+에서 저장과 로그인을 붙여요.", link: "#udb", linkText: "유닛 06+ 저장과 로그인" }
       ],
       mission: ["핵심기능 연결하기", "에러를 1번 이상 AI에게 설명받기(안 났다면 통과)", "일부러 한 번 되돌려 보기", "작동하는 버전 저장하기", "막힘 기록 한 줄 남기기"],
@@ -337,7 +346,8 @@ window.COURSE = {
       stuck: [
         { symptom: "미리보기는 되는데 공유 링크에선 안 돼요", fix: "다시 배포한 뒤 시크릿 창에서 열어보세요. 리허설(미리보기)과 본공연(배포본)은 다를 수 있어요." },
         { symptom: "휴대폰에서 화면이 깨져요", fix: "'모바일 화면에 맞게 반응형으로 바꿔줘'와 함께 휴대폰 스크린샷을 보내세요." },
-        { symptom: "API 키를 넣으라고 해요", fix: "키는 비밀번호예요. 화면이나 대화에 직접 붙여넣지 말고, 도구의 '환경변수/Secrets' 메뉴를 쓰세요. 잘 모르겠으면 키가 필요 없는 방법을 요청하세요." }
+        { who: "agent", symptom: "API 키를 넣으라고 해요", fix: "키는 비밀번호예요. 대화창에 붙여넣지 말고, 폴더의 .env 파일에 내가 직접 적어요. 그리고 '.env가 .gitignore에 들어 있는지 확인해줘'라고 해서 GitHub에 올라가지 않게 해요." },
+        { who: "noagent", symptom: "API 키를 넣으라고 해요", fix: "키는 비밀번호예요. 화면이나 대화에 직접 붙여넣지 말고, 도구의 '환경변수/Secrets' 메뉴를 쓰세요. 잘 모르겠으면 키가 필요 없는 방법을 요청하세요." }
       ]
     },
     {
@@ -346,6 +356,7 @@ window.COURSE = {
       lead: "새로고침하면 내가 쓴 게 사라지는 앱은 다시 쓰고 싶지 않아요. 이제 앱에 장부를 붙일 차례예요.",
       outcome: "입력이 저장되고, 로그인한 사람만 자기 기록을 보는 앱",
       place: "웹앱 빌더의 데이터베이스 연결 (Lovable + Supabase, Google AI Studio Build 내장 DB 등)",
+      agent: { place: "내 코딩 에이전트 + Supabase (연결은 에이전트에게 부탁해요)" },
       why: "지금까지 만든 화면은 메모지처럼 새로고침하면 사라져요. 매주 쓰는 서비스가 되려면 기록이 남아야 하고, 기록이 남으면 '누가 무엇을 볼 수 있나'가 중요해져요. 비개발자 후기에서 가장 많이 막히는 곳도 여기예요. 그래서 작게, 표 하나부터 시작해요.",
       concepts: [
         { term: "테이블과 CRUD", like: "엑셀 시트 한 장과 넣기·읽기·고치기·지우기", body: "데이터베이스는 표(테이블)가 여러 장 든 장부예요. 줄 하나가 기록 하나, 칸 하나가 항목 하나예요. 앱이 하는 일은 결국 넣기(Create), 읽기(Read), 고치기(Update), 지우기(Delete) 네 가지라서 CRUD라고 불러요. 처음엔 테이블 하나, 칸 서너 개면 충분해요." },
@@ -353,11 +364,13 @@ window.COURSE = {
         { term: "개인정보 최소 수집", like: "필요한 짐만 싸기", body: "받을수록 지킬 것도 많아져요. 이름·전화번호·생년월일이 정말 필요한지 먼저 물어보세요. 필요 없는 칸을 만들지 않는 게 가장 좋은 보안이에요." }
       ],
       steps: [
-        { text: "무엇을 저장할지 표로 먼저 설계해요. 설계는 무료 대화형 AI에서 끝내야 빌더 크레딧이 덜 새요.", prompt: "내 서비스에서 저장해야 할 데이터를 테이블로 설계해줘. 테이블은 1개만, 칸은 5개 이하로. 각 칸의 이름(영문), 뜻, 예시 값을 표로 보여주고, 개인정보에 해당하는 칸은 따로 표시해줘. 꼭 필요하지 않은 칸은 빼자고 제안해줘.\n\n[서비스 설명서 붙여넣기]" },
-        { text: "빌더에서 데이터베이스를 연결해요. Lovable은 Supabase 연결, Google AI Studio Build는 내장 DB 켜기처럼 메뉴 이름은 도구마다 달라요." },
+        { who: "agent", text: "무엇을 저장할지 표로 먼저 설계해요. 계획(플랜) 모드에서 설계만 받아 확인한 뒤에 만들게 해요.", prompt: "내 서비스에서 저장해야 할 데이터를 테이블로 설계해줘. 테이블은 1개만, 칸은 5개 이하로. 아직 만들지 말고 설계만 보여줘." },
+        { who: "noagent", text: "무엇을 저장할지 표로 먼저 설계해요. 설계는 무료 대화형 AI에서 끝내야 빌더 크레딧이 덜 새요.", prompt: "내 서비스에서 저장해야 할 데이터를 테이블로 설계해줘. 테이블은 1개만, 칸은 5개 이하로. 각 칸의 이름(영문), 뜻, 예시 값을 표로 보여주고, 개인정보에 해당하는 칸은 따로 표시해줘. 꼭 필요하지 않은 칸은 빼자고 제안해줘.\n\n[서비스 설명서 붙여넣기]" },
+        { who: "agent", text: "supabase.com에서 무료 프로젝트를 만들고, 프로젝트 주소(URL)와 공개용 키(anon·publishable)를 폴더의 .env 파일에 내가 직접 적어요. 그다음 '.env의 값으로 Supabase에 연결해줘'라고 부탁해요. service_role(비밀) 키는 화면 코드에 절대 넣지 않아요." },
+        { who: "noagent", text: "빌더에서 데이터베이스를 연결해요. Lovable은 Supabase 연결, Google AI Studio Build는 내장 DB 켜기처럼 메뉴 이름은 도구마다 달라요." },
         { text: "저장 기능만 먼저 요청하고, 새로고침해도 남는지 확인해요. 잘 되면 버전을 저장해요." },
         { text: "로그인을 붙이고, 권한 규칙을 꼭 함께 요청해요.", prompt: "로그인 기능을 추가해줘. 로그인한 사람은 자기가 만든 기록만 보고 고칠 수 있어야 해. 다른 사람의 기록은 목록에도 나오면 안 돼. 어떻게 막았는지 쉬운 말로 설명해줘." },
-        { text: "계정 두 개로 직접 시험해요. A로 쓴 기록이 B에게 보이면 실패예요. 보이면 그 증상을 그대로 빌더에게 말해요." }
+        { text: "계정 두 개로 직접 시험해요. A로 쓴 기록이 B에게 보이면 실패예요. 보이면 그 증상을 그대로 AI에게 말해요." }
       ],
       mission: ["저장할 데이터 표 설계하기(칸 5개 이하)", "저장 후 새로고침해도 남는지 확인하기", "로그인을 붙이고 권한 규칙 요청하기", "계정 두 개로 서로의 기록이 안 보이는지 시험하기"],
       quiz: [
@@ -377,9 +390,9 @@ window.COURSE = {
         "로그인 없이도 되는 서비스라면, 굳이 로그인을 붙여야 할까요? 왜일까요?"
       ],
       stuck: [
-        { symptom: "데이터베이스 연결에서 계속 에러가 나요", fix: "에러 문구를 그대로 빌더에게 주고, 한 번에 테이블 하나만 만들게 해요. 두 번 실패하면 저장한 버전으로 되돌리고 저장 기능만 다시 요청해요." },
+        { symptom: "데이터베이스 연결에서 계속 에러가 나요", fix: "에러 문구를 그대로 AI에게 주고, 한 번에 테이블 하나만 만들게 해요. 두 번 실패하면 저장한 버전으로 되돌리고 저장 기능만 다시 요청해요." },
         { symptom: "CSV 업로드가 자꾸 실패해요", fix: "첫 줄(칸 이름)이 테이블 칸 이름과 똑같은지, 파일이 UTF-8로 저장됐는지 확인해요. 열 개수를 줄인 작은 파일로 먼저 시험해요." },
-        { symptom: "크레딧이 금방 닳아요", fix: "테이블 설계는 무료 대화형 AI에서 끝내고, 빌더에는 확정된 설계만 붙여넣어요." }
+        { who: "noagent", symptom: "크레딧이 금방 닳아요", fix: "테이블 설계는 무료 대화형 AI에서 끝내고, 빌더에는 확정된 설계만 붙여넣어요." }
       ]
     },
     {
@@ -388,6 +401,7 @@ window.COURSE = {
       lead: "내 화면에서만 작동하는 서비스는 아직 서비스가 아니에요. 링크를 보내고, 남이 써보는 순간 진짜가 돼요.",
       outcome: "공유 링크 + 피드백 3개 + 고친 것 1개",
       place: "웹앱 빌더의 게시 버튼 또는 Vercel",
+      agent: { place: "GitHub 저장소 + Vercel" },
       why: "혼자 만들면 내 눈에만 익숙해져요. 처음 보는 사람이 어디서 멈칫하는지 보는 것만큼 빠른 개선 방법은 없어요. 그리고 '누군가 써봤다'는 경험이 독학을 끝까지 밀어주는 가장 큰 힘이에요.",
       concepts: [
         { term: "배포", fig: "deployFlow", like: "가게 문을 여는 것", body: "배포(Publish/Deploy) 버튼을 누르면 누구나 열 수 있는 주소(URL)가 생겨요. 휴대폰에서 직접 열어보는 것까지가 배포예요." },
@@ -395,7 +409,8 @@ window.COURSE = {
       ],
       steps: [
         { text: "공개하기 전에 안전 체크리스트를 통과해요. 하나라도 '모름'이면 AI에게 확인을 부탁하고, 고친 뒤에 공개해요.", prompt: "공개 전 안전 체크리스트\n- [ ] API 키·비밀번호가 화면이나 코드에 보이지 않는다 (.env나 빌더의 비밀값 설정에 있다)\n- [ ] 로그인한 사람은 자기 기록만 본다 (계정 두 개로 시험했다)\n- [ ] 받는 개인정보는 꼭 필요한 것뿐이다\n- [ ] 사용량·크레딧·요금 한도를 알고 있다\n- [ ] 에러가 나면 어디서 확인하는지 안다\n\n위 체크리스트로 내 서비스를 점검해줘. 내가 확인할 수 없는 항목은 확인하는 방법을 알려줘." },
-        { text: "배포하고, 링크를 내 휴대폰에서 열어봐요. 코딩 에이전트로 만들었다면 GitHub에 푸시 → Vercel 연결 순서예요.", link: "#devkit", linkText: "GitHub·Vercel 용어 보기" },
+        { who: "noagent", text: "빌더의 게시(Publish) 버튼으로 배포하고, 링크를 내 휴대폰에서 열어봐요." },
+        { who: "agent", text: "GitHub에 새 저장소를 만들어 푸시해 달라고 하고, vercel.com에서 그 저장소를 가져와(Import) 배포해요. .env의 값은 Vercel의 환경변수(Environment Variables)에 따로 넣어요. 링크를 내 휴대폰에서 열어봐요.", link: "#devkit", linkText: "GitHub·Vercel 용어 보기" },
         { text: "지인 3명에게 링크와 질문 3개를 보내요.", prompt: "안녕! 내가 혼자 AI로 만든 서비스야. 설명 없이 한 번 써봐줘 🙏\n[링크]\n\n1) 무엇을 하는 서비스 같아?\n2) 어디서 멈칫했어?\n3) 또 쓰고 싶어? 왜?" },
         { text: "피드백을 정리해요.", prompt: "아래 피드백을 공통 문제 / 개별 의견 / 지금 바로 고칠 것 1개로 나누고, 고칠 것은 Before → After 표로 만들어줘.\n\n[피드백 붙여넣기]" },
         { text: "가장 중요한 하나를 고치고 다시 배포해요." }
@@ -432,13 +447,15 @@ window.COURSE = {
         { term: "스킬", like: "레시피 카드 / 장착하는 장비", body: "지시문(SKILL.md)과 참고 자료를 묶어 AI에 저장해 두는 것이에요. Claude의 Skills·Projects, ChatGPT의 GPTs·Projects, Gemini의 Gems가 모두 같은 생각이에요." },
         { term: "좋은 스킬의 6칸", like: "신입에게 주는 업무 매뉴얼", body: "역할 · 언제 쓰나 · 순서 · 출력 형식 · 금지 · 좋은 예시 1개. 특히 '금지'와 '예시'가 있어야 AI가 안정적으로 일해요." },
         { term: "위임 매트릭스", like: "이삿짐 분류", body: "일주일 동안 한 일을 '자주 반복하나'와 '판단이 많이 필요한가'로 나눠요. 자주 반복하고 판단이 적은 일부터 스킬로 바꿔요." },
+        { term: "플러그인", like: "선물 세트", body: "스킬 여러 개, 연결(커넥터·MCP), 자동 규칙을 한 번에 설치하는 묶음이에요. 예를 들어 '마케팅 플러그인'을 켜면 글쓰기 스킬과 분석 연결이 함께 들어와요. Claude 앱(Cowork)에서는 설정에서 눌러 켜요. 편한 대신 안에 무엇이 들었는지 안 보이기 쉬워서, 공식·유명 출처부터 써요." },
         { term: "스킬 · 지침 · 연결의 차이", like: "레시피 카드 · 주방 규칙 · 식재료 배달", body: "프로젝트 지침(맞춤 설정)은 매번 먼저 읽는 규칙이에요. 스킬은 평소엔 제목과 설명만 보이다가 필요할 때 펼쳐 읽는 레시피 카드라서, 많이 저장해도 책상을 덜 차지해요. MCP·커넥터는 노션·드라이브 같은 바깥 서비스와 잇는 배달 통로예요. MCP가 재료를 가져오면, 스킬이 그 재료로 요리하는 법을 알려줘요." }
       ],
       steps: [
         { text: "이 코스에서 두 번 이상 쓴 프롬프트를 하나 골라요." },
         { text: "6칸 레시피로 다시 써요.", prompt: "1. 역할: 너는 [○○]를 돕는 [△△]야\n2. 언제 쓰나: 사용자가 [□□]를 주면\n3. 순서: 1) … 2) … 3) …\n4. 출력 형식: [표 / 3줄 / 템플릿]\n5. 금지: 추측한 숫자 금지, 모르면 '확인 필요'라고 표시\n6. 좋은 예시: [예시 1개]" },
         { text: "쓰는 도구의 스킬·프로젝트·GPTs·Gems에 저장하고, 새 대화에서 한 번 써봐요. Claude 스킬은 폴더 하나예요. 그 안의 SKILL.md 맨 위에 이름과 '언제 쓰는지' 설명을 적고, 아래에 6칸 레시피를 넣어요. AI는 이 설명 한 줄을 보고 언제 스킬을 꺼낼지 정해요.", prompt: "---\nname: weekly-report\ndescription: 이번 주 회의 메모를 팀장 보고용 주간 보고 표로 정리한다. 사용자가 '주간 보고'를 요청하거나 회의 메모 여러 개를 줄 때 쓴다.\n---\n\n# 주간 보고 정리\n(여기에 6칸 레시피)" },
-        { text: "SKILL.md가 든 폴더를 zip으로 묶어 claude.ai › 설정 › 기능 › 스킬에 올리면, 터미널 없이도 내 스킬을 불러 쓸 수 있어요. 같은 파일은 유닛 09에서 .claude/skills 폴더에 넣어 다시 만나요." },
+        { who: "noagent", text: "SKILL.md가 든 폴더를 zip으로 묶어 claude.ai › 설정 › 기능 › 스킬에 올리면, 앱에서 내 스킬을 불러 쓸 수 있어요." },
+        { who: "agent", text: "코딩 에이전트에서는 스킬 폴더를 프로젝트의 스킬 폴더에 넣어요. Claude Code는 .claude/skills, Codex와 Antigravity는 .agents/skills예요. 모든 프로젝트에서 쓰려면 내 홈 폴더 쪽 위치에 넣어요(표 참고).", link: "#devkit", linkText: "도구별 스킬 폴더" },
         { text: "도구 › 스킬 가이드에서 인기 스킬을 살펴보고 하나를 장착해봐요. 설치 전에는 다섯 가지를 확인해요. 관리가 끝난(archived) 저장소가 아닌가, SKILL.md를 직접 읽었나, 권한과 키를 최소로 줬나, 사용 통계 수집을 껐나, 정말 필요한 것만 설치했나. 별 수는 인기의 증거이지 안전의 증거가 아니에요.", link: "#skills", linkText: "스킬 가이드 열기" },
         { text: "스킬로 만들 후보가 떠오르지 않으면 직무별 레시피에서 내 직무의 프롬프트를 골라 그대로 써보세요. 세 번 쓰게 되면 그게 스킬 후보예요.", link: "#recipes", linkText: "직무별 레시피 열기" }
       ],
@@ -508,31 +525,33 @@ window.COURSE = {
       ]
     },
     {
-      id: "u8", no: "09", minutes: 60, level: "보너스", optional: true,
-      title: "코딩 에이전트로 졸업하기",
+      id: "u8", no: "09", minutes: 60, level: "보너스", optional: true, coreFor: "agent",
+      title: "코딩 에이전트로 일하기",
       lead: "웹앱 빌더로 첫 서비스를 만들었다면, 이제 내 컴퓨터에서 직접 일하는 코딩 에이전트로 한 단계 올라갈 차례예요.",
       outcome: "내 컴퓨터의 프로젝트 폴더 + CLAUDE.md + GitHub 저장소",
       place: "내 컴퓨터의 터미널 + Claude Code",
+      agent: { level: "하네스", lead: "이미 코딩 에이전트로 만들고 있다면, 이 유닛은 '하네스'를 다지는 시간이에요. 규칙 파일, 계획 모드, 허락, 되돌리기, 대화 정리를 내 도구에서 손에 익혀요.", outcome: "규칙 파일(CLAUDE.md · AGENTS.md) + 커밋 기록 + GitHub 저장소", place: "내 코딩 에이전트 + 작업 폴더 + GitHub" },
       why: "웹앱 빌더는 빠르지만 크레딧과 기능에 한계가 있어요. 코딩 에이전트는 내 컴퓨터의 파일을 직접 다루고, GitHub와 Vercel로 이어져 오래 쓸 서비스를 자유롭게 키울 수 있어요. 대신 에이전트가 하려는 일을 읽고 허락할 줄 알아야 해요.",
       concepts: [
         { term: "하네스", fig: "harness", like: "컨설턴트를 둘러싼 사무실", body: "모델(Claude, GPT)은 방 안에서 쪽지만 주고받는 똑똑한 컨설턴트예요. 하네스는 그를 둘러싼 사무실이에요. 책상과 전화(도구), '이 서랍 열어도 되나요?' 묻는 안내데스크(권한), 아침마다 놓이는 인수인계 바인더(CLAUDE.md), 꽉 찬 책상을 정리하는 비서(컴팩션). 'Claude Code가 하네스이고, Claude는 그 안의 모델'이에요. AI가 매번 확실히 하게 만드는 답은 더 좋은 문장보다 사무실 설정인 경우가 많아요." },
         { term: "안전 운전 3종 세트", like: "운전 연수의 브레이크·내비·후진 기어", body: "① 권한 모드: 어디까지 묻지 않고 할지 정해요. Shift+Tab으로 바꿔요. v2.1.283부터는 대화형 세션이 자동(auto) 모드로 시작하는데, 공식 문서도 auto가 안전을 보장하지 않는다고 밝혀요. 처음엔 Shift+Tab으로 매번 묻는 기본 모드로 바꿔 두세요. ② 플랜 모드: 파일을 고치기 전에 조사하고 계획만 보여줘요. ③ 되돌리기: Esc를 두 번 누르거나 /rewind로 이전 상태로 돌아가요. 단, 명령이 지운 파일은 못 돌아올 수 있어서 Git 커밋이 함께 필요해요." },
         { term: "웹앱 빌더 vs 코딩 에이전트", like: "밀키트와 내 부엌", body: "웹앱 빌더는 재료와 조리법이 준비된 밀키트예요. 코딩 에이전트는 내 부엌에서 요리사를 부리는 것이에요. 더 자유롭지만 부엌(내 컴퓨터, 터미널)을 알아야 해요." },
-        { term: "CLAUDE.md", like: "출근한 요리사에게 주는 주방 규칙", body: "프로젝트 폴더에 두는 설명서예요. Claude Code는 일을 시작할 때마다 이 파일을 먼저 읽어요. 유닛 04의 서비스 설명서와 작업 원칙을 여기에 옮겨요. 200줄 이하로 짧게 유지하세요. 길수록 덜 따라요. 대화로만 한 지시는 긴 대화를 요약(컴팩션)할 때 빠질 수 있지만, 파일에 적은 규칙은 남아요. Codex·Cursor 같은 다른 도구는 같은 역할의 AGENTS.md를 읽어요." },
+        { term: "규칙 파일 (CLAUDE.md · AGENTS.md)", like: "출근한 요리사에게 주는 주방 규칙", body: "프로젝트 폴더에 두는 설명서예요. 에이전트는 일을 시작할 때마다 이 파일을 먼저 읽어요. Claude Code는 CLAUDE.md, Codex·Antigravity·Cursor는 AGENTS.md를 읽어요. 유닛 04의 서비스 설명서와 작업 원칙을 여기에 옮겨요. 200줄 이하로 짧게 유지하세요. 길수록 덜 따라요. 대화로만 한 지시는 긴 대화를 요약(컴팩션)할 때 빠질 수 있지만, 파일에 적은 규칙은 남아요." },
         { term: "Git 세이브와 자동 배포", fig: "deployFlow", like: "게임 세이브와 자동 오픈", body: "작은 단위로 커밋해 두면 언제든 되돌릴 수 있어요. GitHub에 푸시하면 연결된 Vercel이 새 버전을 자동으로 올려요." }
       ],
       steps: [
-        { text: "VS Code와 터미널이 처음이라면 공구함 B부터 해요. 폴더를 어디서 여느냐가 곧 AI에게 무엇을 보여주느냐예요.", link: "#tb", linkText: "공구함 B 에디터와 터미널 첫날" },
-        { text: "터미널을 열고 Node.js가 있는지 확인해요. 버전이 나오지 않으면 nodejs.org에서 LTS 버전을 설치해요.", prompt: "node -v" },
-        { text: "Claude Code를 설치해요. 설치 방법은 바뀔 수 있으니 공식 문서도 함께 확인해요.", prompt: "npm install -g @anthropic-ai/claude-code", link: "#devkit", linkText: "npm이 낯설다면 개발 도구 지도" },
-        { text: "새 폴더를 만들고 그 안에서 claude를 실행해요. 처음에는 로그인 안내가 나와요.", prompt: "mkdir my-service\ncd my-service\nclaude" },
-        { text: "/init 으로 CLAUDE.md를 만들고, 서비스 설명서와 작업 원칙을 붙여넣어요.", link: "#brief", linkText: "서비스 설명서 작성기 열기" },
-        { text: "Shift+Tab을 눌러 플랜 모드로 바꾸고 '첫 화면만 만들어줘'라고 요청해요. 계획을 읽고 OK하면 그때 파일을 만들기 시작해요. 화면 아래에 지금 모드가 표시돼요." },
+        { who: "noagent", text: "VS Code와 터미널이 처음이라면 공구함 B부터 해요. 폴더를 어디서 여느냐가 곧 AI에게 무엇을 보여주느냐예요.", link: "#tb", linkText: "공구함 B 에디터와 터미널 첫날" },
+        { who: "noagent", text: "터미널을 열고 Node.js가 있는지 확인해요. 버전이 나오지 않으면 nodejs.org에서 LTS 버전을 설치해요.", prompt: "node -v" },
+        { who: "noagent", text: "Claude Code를 설치해요. 맥·리눅스는 아래 한 줄, 윈도우는 PowerShell에서 irm https://claude.ai/install.ps1 | iex 예요. 설치 방법은 바뀔 수 있으니 공식 문서도 함께 확인해요. Codex·Antigravity를 쓰고 싶다면 표에서 시작 방법을 봐요.", prompt: "curl -fsSL https://claude.ai/install.sh | bash", link: "#devkit", linkText: "도구별 같은 일, 다른 이름" },
+        { who: "noagent", text: "새 폴더를 만들고 그 안에서 claude를 실행해요. 처음에는 로그인 안내가 나와요.", prompt: "mkdir my-service\ncd my-service\nclaude" },
+        { who: "agent", text: "지금 만들고 있는 서비스 폴더를 내 도구에서 열어요. 규칙 파일이 아직 없다면 이번에 만들어요. Claude Code는 CLAUDE.md, Codex·Antigravity는 AGENTS.md를 읽어요.", link: "#devkit", linkText: "도구별 규칙 파일" },
+        { text: "/init 으로 규칙 파일(Claude Code는 CLAUDE.md, Codex는 AGENTS.md)을 만들고, 서비스 설명서와 작업 원칙을 붙여넣어요. Antigravity는 폴더에 AGENTS.md를 직접 만들어 붙여넣어요.", link: "#brief", linkText: "서비스 설명서 작성기 열기" },
+        { text: "계획(플랜) 모드로 바꿔요. Claude Code·Codex는 Shift+Tab 또는 /plan, Antigravity는 대화를 시작할 때 Planning을 골라요. 그다음 '첫 화면만 만들어줘'(이미 만든 서비스라면 '다음에 고칠 것 하나만 해줘')라고 요청해요. 계획을 읽고 OK하면 그때 파일을 만들기 시작해요. 화면 아래에 지금 모드가 표시돼요." },
         { text: "에이전트가 명령 실행을 허락해 달라고 하면, 허락 가이드로 신호를 읽고 질문 한 줄을 먼저 던져요.", link: "#devkit", linkText: "허락 가이드 열기" },
-        { text: "대화가 길어지면 /context로 책상이 얼마나 찼는지 보고, 다른 일로 넘어갈 때는 /clear로 새로 시작해요. 잘못 고쳤다면 Esc 두 번으로 되돌려요.", prompt: "/context      # 책상(컨텍스트)을 무엇이 차지하고 있지?\n/compact      # 지금까지를 요약해서 공간 만들기\n/clear        # 새 일은 새 책상에서\n/rewind       # 이전 시점으로 되돌리기 (Esc 두 번과 같아요)" },
+        { text: "대화가 길어지면 /context로 책상이 얼마나 찼는지 보고, 다른 일로 넘어갈 때는 /clear로 새로 시작해요. 잘못 고쳤다면 Esc 두 번으로 되돌려요. (Claude Code 기준이에요. Codex는 /new·/compact, Antigravity는 새 대화예요. 되돌리기는 표를 봐요.)", prompt: "/context      # 책상(컨텍스트)을 무엇이 차지하고 있지?\n/compact      # 지금까지를 요약해서 공간 만들기\n/clear        # 새 일은 새 책상에서\n/rewind       # 이전 시점으로 되돌리기 (Esc 두 번과 같아요)" },
         { text: "작동하면 GitHub 저장소를 만들어 푸시해 달라고 요청하고, Vercel에서 그 저장소를 연결해 배포해요." }
       ],
-      mission: ["Claude Code 설치하고 실행하기", "CLAUDE.md에 설명서와 원칙 넣기", "첫 화면을 만들고 커밋 1번 하기", "GitHub에 푸시하고 Vercel로 배포하기"],
+      mission: [{ who: "noagent", t: "Claude Code 설치하고 실행하기" }, { who: "agent", t: "내 도구의 계획 모드·허락 모드·되돌리기를 한 번씩 써보기" }, "규칙 파일(CLAUDE.md · AGENTS.md)에 설명서와 원칙 넣기", "작게 고치고 커밋 1번 하기", "GitHub에 푸시하고 Vercel로 배포하기"],
       quiz: [
         { q: "CLAUDE.md의 역할로 맞는 것은?", options: ["에이전트가 일을 시작할 때마다 먼저 읽는 프로젝트 설명서", "코드를 실행하는 파일", "GitHub 비밀번호를 적어 두는 곳"], answer: 0, explain: "서비스 설명서가 자란 것이에요. 한 번 적어 두면 매번 설명하지 않아도 돼요." },
         { q: "Claude Code가 'git push를 실행할까요?'라고 물어요. 먼저 할 일은?", options: ["바로 허락한다", "무엇을 올리는지, .env가 빠졌는지 묻는다", "거절하고 끈다"], answer: 1, explain: "허락 가이드의 '확인 후' 신호예요. 올릴 내용을 한 줄로 받고 허락해요." },
@@ -550,7 +569,7 @@ window.COURSE = {
         "매번 말로 설명하는 것과 CLAUDE.md에 한 번 적어 두는 것은 무엇이 다를까요?"
       ],
       stuck: [
-        { symptom: "'command not found'가 떠요", fix: "설치가 안 됐거나 터미널을 새로 열어야 하는 경우가 많아요. 터미널을 껐다 켜고 node -v, claude --version 순서로 확인하세요. 그래도 안 되면 에러 문구를 대화형 AI에 그대로 붙여넣어요." },
+        { who: "noagent", symptom: "'command not found'가 떠요", fix: "설치가 안 됐거나 터미널을 새로 열어야 하는 경우가 많아요. 터미널을 껐다 켜고 node -v, claude --version 순서로 확인하세요. 그래도 안 되면 에러 문구를 대화형 AI에 그대로 붙여넣어요." },
         { symptom: "에이전트가 파일을 너무 많이 한꺼번에 바꿔요", fix: "CLAUDE.md에 '내가 말한 부분만 고친다, 바꾸기 전에 계획을 먼저 말한다'를 넣고, 요청을 한 화면·한 기능 단위로 줄여요. 망가졌다면 마지막 커밋으로 되돌려 달라고 하세요." }
       ]
     },
@@ -563,7 +582,7 @@ window.COURSE = {
       why: "매주 같은 때에 같은 일을 시키고 있다면, 그 '시키는 일'도 반복이에요. 자동화는 내가 잊어도 일이 돌아가게 해요. 대신 내가 보지 않는 사이에 일하므로, 무엇을 맡기지 말아야 하는지가 더 중요해져요.",
       concepts: [
         { term: "트리거 → 액션", fig: "triggerAction", like: "도미노", body: "'이 일이 생기면(트리거) 저 일을 해(액션)'. 트리거는 시간(매주 월요일 9시)이나 사건(새 메일 도착, 설문 제출)이에요. 가장 쉬운 시작은 대화형 AI의 예약 작업(ChatGPT 작업(Tasks), Claude·Gemini 예약 작업)이고, 여러 앱을 이으려면 Zapier·Make 같은 워크플로 도구를 써요." },
-        { term: "부탁 vs 강제", like: "'조심해 주세요' 안내문과 출입 금지 차단기", body: "프롬프트, CLAUDE.md, 스킬에 적은 규칙은 AI가 읽고 판단하는 부탁이에요. 대부분 지키지만 100%는 아니에요. 훅(hook)은 정해진 순간(명령 실행 직전, 작업 종료 등)마다 하네스가 무조건 실행하는 강제예요. 꼭 지켜야 하는 규칙은 훅이나 차단 규칙(permissions.deny)으로 걸어요. 줄여서 '프롬프트는 부탁, 훅은 강제'." },
+        { term: "부탁 vs 강제", like: "'조심해 주세요' 안내문과 출입 금지 차단기", body: "프롬프트, 프로젝트 지침, 스킬에 적은 규칙은 AI가 읽고 판단하는 부탁이에요. 대부분 지키지만 100%는 아니에요. 훅(hook)은 정해진 순간(명령 실행 직전, 작업 종료 등)마다 하네스가 무조건 실행하는 강제예요. 꼭 지켜야 하는 규칙은 훅이나 차단 규칙(permissions.deny)으로 걸어요. 줄여서 '프롬프트는 부탁, 훅은 강제'." },
         { term: "맡기지 말 것", like: "자동이체로 걸지 않는 돈", body: "사람에게 바로 나가는 것(고객 메일, 게시, 결제)과 되돌리기 어려운 것(삭제, 덮어쓰기)은 자동화해도 마지막 확인은 사람이 해요. 자동화는 '초안까지', 보내기는 내가. 남의 사이트를 자동으로 긁어오는 크롤링은 이용약관과 robots.txt를 먼저 확인하고, 개인정보는 모으지 않아요." }
       ],
       steps: [
@@ -571,7 +590,7 @@ window.COURSE = {
         { text: "쓰는 대화형 AI의 예약 작업으로 만들어요. ChatGPT는 '작업(Tasks)', Claude와 Gemini는 '예약 작업' 메뉴예요. 요금제마다 만들 수 있는 개수가 달라요. 처음 2~3주는 결과를 나에게만 보내요." },
         { text: "첫 결과를 확인하고, 프롬프트에 '형식'과 '하지 말 것'을 보강해요. 유닛 08에서 만든 스킬이 있다면 그 스킬을 쓰라고 적어요.", link: "#u7", linkText: "유닛 08 반복을 스킬로" },
         { text: "여러 앱을 이어야 하면(예: 설문 제출 → AI 요약 → 메신저 알림) Zapier나 Make의 템플릿에서 시작해요. n8n은 더 자유롭지만 설치와 설정이 필요해서 나중에 해도 돼요." },
-        { text: "코딩 에이전트를 쓴다면, 꼭 지킬 규칙은 CLAUDE.md 대신 설정으로 걸어요. 설정 파일을 직접 쓰기 어렵다면 Claude Code에 부탁해요.", prompt: "이 프로젝트에서 .env 파일은 읽지도 고치지도 못하게 막고 싶어. settings.json에 permissions.deny 규칙으로 추가해줘. 무엇을 바꿨는지 한 줄로 알려주고, 훅이 꼭 필요한 경우가 아니면 훅은 쓰지 마.", link: "#map", linkText: "AI 사용 지도 · 비슷해 보이는 여섯 가지" }
+        { who: "agent", text: "꼭 지킬 규칙은 규칙 파일(CLAUDE.md·AGENTS.md) 대신 설정으로 걸어요. 설정 파일을 직접 쓰기 어렵다면 에이전트에게 부탁해요. 아래 예시는 Claude Code 기준이에요.", prompt: "이 프로젝트에서 .env 파일은 읽지도 고치지도 못하게 막고 싶어. settings.json에 permissions.deny 규칙으로 추가해줘. 무엇을 바꿨는지 한 줄로 알려주고, 훅이 꼭 필요한 경우가 아니면 훅은 쓰지 마.", link: "#map", linkText: "AI 사용 지도 · 비슷해 보이는 여섯 가지" }
       ],
       mission: ["반복하는 일 하나를 트리거 → 액션으로 나눠 적기", "예약 작업 1개 만들고 첫 결과 확인하기", "자동으로 하면 안 되는 것 1줄 적기"],
       quiz: [
@@ -612,6 +631,7 @@ window.COURSE = {
     { id: "s2", no: 2, name: "만들기", title: "말로 서비스 만들기", units: ["u3", "u4", "u5", "udb", "u6"],
       sub: "설명서를 쓰고, 작게 맡기고, 고쳐서 공개해요.",
       tool: "웹앱 빌더 (Lovable · Google AI Studio Build 등) 또는 아티팩트",
+      agent: { tool: "내 코딩 에이전트 (Claude Code · Codex · Antigravity 등) + GitHub · Vercel" },
       unlock: "링크 하나로 남이 써볼 수 있는 내 서비스가 생겨요.",
       must: ["바이브 코딩", "PRD(서비스 설명서)", "MVP", "플랜 모드", "체크포인트", "데이터베이스 · 로그인", "배포 · URL"],
       later: ["React 같은 프레임워크 이름", "데이터베이스·로그인 구조"],
@@ -625,11 +645,12 @@ window.COURSE = {
       later: ["파인튜닝", "임베딩 · 벡터 DB"],
       habits: ["세 번 반복하면 스킬 후보", "스킬엔 '하지 말 것'과 예시", "연결은 필요한 것만"],
       dont: ["출처 모르는 스킬·플러그인 설치", "모든 앱을 한꺼번에 연결"] },
-    { id: "s4", no: 4, name: "맡기기", title: "코딩 에이전트와 하네스", units: ["tb", "u8"], bonus: true,
+    { id: "s4", no: 4, name: "맡기기", title: "코딩 에이전트와 하네스", units: ["tb", "u8"], bonus: true, coreFor: "agent",
       sub: "내 컴퓨터에서 일하는 에이전트를 안전하게 운전해요.",
-      tool: "Claude Code · Codex · Cursor 같은 코딩 에이전트",
+      tool: "Claude Code · Codex · Antigravity 같은 코딩 에이전트",
+      agent: { sub: "이미 쓰는 코딩 에이전트를 규칙 파일·계획·허락·되돌리기까지 제대로 운전해요." },
       unlock: "크레딧 걱정 없이 오래 키울 서비스를 내 폴더와 GitHub에서 다뤄요.",
-      must: ["하네스", "권한 모드", "플랜 모드", "되돌리기 (/rewind)", "CLAUDE.md · AGENTS.md", "/compact · /clear", "프롬프트 인젝션"],
+      must: ["하네스", "권한 모드", "플랜 모드", "되돌리기 (/rewind)", "규칙 파일 (CLAUDE.md · AGENTS.md)", "/compact · /clear", "프롬프트 인젝션"],
       later: ["서브에이전트 직접 만들기", "MCP 서버 직접 추가", "플러그인 만들기"],
       habits: ["처음엔 매번 묻는 모드로", "큰 일은 플랜 모드로 계획부터", "중요한 규칙은 말 말고 파일에"],
       dont: ["읽지 않은 명령 허락하기", "'전부 허용' 모드를 내 컴퓨터에서 쓰기"] },
@@ -665,6 +686,14 @@ window.COURSE = {
 
   // 목적별 트랙: 모두 STEP 1(대화 + 공구함 A)을 함께 듣고, 고른 트랙의 유닛으로 이어가요.
   // stages = 이 트랙이 쓰는 계단(STEP 2~), soon = 아직 준비 중(preview로 유닛 예고만 보여줌)
+  // 내 도구: 시작 화면과 '내 도구 바꾸기'에서 골라요
+  agentTools: [
+    { id: "claude", name: "Claude Code", sub: "Anthropic · 터미널 · 데스크톱 앱 · VS Code" },
+    { id: "codex", name: "Codex", sub: "OpenAI · 터미널 · 데스크톱 앱" },
+    { id: "antigravity", name: "Antigravity", sub: "Google · 앱 · 에디터 · 터미널(agy)" },
+    { id: "other", name: "다른 코딩 에이전트", sub: "Cursor · GitHub Copilot 등" }
+  ],
+
   tracks: [
     { id: "work", short: "업무를 빠르게", ex: "메일·회의록·엑셀·보고서", name: "업무 효율·자동화", who: "문서·메일·회의·엑셀에 하루를 쓰는 직장인", goal: "매주 반복하는 업무를 AI로 줄이고, 초안까지 자동으로 만들어요.", project: "나만의 주간 업무 자동화 패키지 + AI 사용 규칙 1장", why: "한국 직장인이 AI를 가장 많이 쓰는 곳(검색·요약, 문서, 번역)이라 수요가 가장 커요.", soon: true,
       preview: [
@@ -776,13 +805,13 @@ window.COURSE = {
     { term: "하네스", en: "harness", like: "컨설턴트를 둘러싼 사무실", body: "모델(두뇌)을 쓸 만한 에이전트로 만드는 모든 것이에요. 도구, 권한 확인, 규칙 파일, 대화 정리, 반복 루프가 들어 있어요. 'Claude Code가 하네스, Claude가 그 안의 모델'이에요.", why: "AI가 매번 확실히 하게 만드는 답은 더 좋은 문장보다 사무실 설정인 경우가 많아요.", stage: 4, unit: "u8" },
     { term: "코딩 에이전트", en: "coding agent", like: "내 부엌의 요리사", body: "내 컴퓨터 폴더에서 파일을 읽고 고치고 명령을 실행하는 에이전트예요. Claude Code, Codex, GitHub Copilot, Cursor, Antigravity 등이 있어요.", why: "터미널·데스크톱 앱·편집기 등 화면만 다르고 원리는 같아요.", stage: 4, unit: "u8" },
     { term: "권한 모드", en: "permission modes", like: "운전 연수 단계", body: "에이전트가 어디까지 묻지 않고 할지 정하는 설정이에요. Claude Code에는 기본(매번 묻기), 편집 자동 허용, 플랜, 자동(auto), 전부 허용 모드가 있고 Shift+Tab으로 바꿔요.", why: "자동 모드도 안전을 보장하지 않아요. 처음엔 묻는 모드로 시작해요.", stage: 4, unit: "u8" },
-    { term: "CLAUDE.md", like: "기억상실 직원의 인수인계서", body: "Claude Code가 일을 시작할 때마다 먼저 읽는 규칙 파일이에요. /init으로 초안을 만들고, 200줄 이하로 짧게 유지해요.", why: "말로 한 지시는 대화를 요약할 때 빠질 수 있지만, 파일에 적은 규칙은 남아요.", stage: 4, unit: "u8" },
+    { term: "CLAUDE.md", like: "기억상실 직원의 인수인계서", body: "Claude Code가 일을 시작할 때마다 먼저 읽는 규칙 파일이에요. /init으로 초안을 만들고, 200줄 이하로 짧게 유지해요. Codex·Antigravity는 같은 역할의 AGENTS.md를 읽어요.", why: "말로 한 지시는 대화를 요약할 때 빠질 수 있지만, 파일에 적은 규칙은 남아요.", stage: 4, unit: "u8" },
     { term: "AGENTS.md", like: "여러 회사 공용 인수인계서", body: "Codex·Copilot·Cursor 등이 읽는, CLAUDE.md와 같은 역할의 파일이에요. 리눅스 재단 산하 공개 표준이에요. Gemini CLI는 GEMINI.md, Cursor는 .cursor/rules도 써요.", why: "이름만 다를 뿐 같은 개념이에요. 여러 도구를 쓰면 AGENTS.md를 원본으로 두고 CLAUDE.md에 @AGENTS.md 한 줄만 적어요.", stage: 4, unit: "u8" },
     { term: "컴팩션", en: "compaction · /compact", like: "회의록 한 장 요약", body: "책상(컨텍스트)이 꽉 차면 앞 대화를 요약해 공간을 만드는 것이에요. 자동으로도 되고, /compact로 직접 할 수도 있어요.", why: "요약하면서 말로만 한 지시가 빠질 수 있어요. 중요한 규칙은 파일에 적어요.", stage: 4, unit: "u8" },
     { term: "/context · /clear", like: "책상 점검 · 책상 비우기", body: "/context는 무엇이 책상 공간을 차지하는지 보여주고, /clear는 대화를 비우고 새로 시작해요.", why: "일이 바뀔 때 /clear 하면 컨텍스트 로트를 막을 수 있어요.", stage: 4, unit: "u8" },
     { term: "명령 (슬래시 명령)", en: "commands", like: "단축 다이얼", body: "/이름으로 부르는 재사용 지시예요. Claude Code에서는 스킬과 합쳐져서 스킬도 /이름으로 부를 수 있어요. /init, /compact 같은 기본 명령도 있어요.", why: "자주 쓰는 지시를 한 단어로 꺼내요.", stage: 4, unit: "u8" },
     { term: "서브에이전트", en: "subagent", like: "도서관에 심부름 보낸 인턴", body: "자기 책상(컨텍스트)에서 따로 일하고 요약만 돌려주는 보조 AI예요.", why: "곁가지 조사로 내 대화가 어지러워지지 않아요.", stage: 4, unit: "u8" },
-    { term: "플러그인 · 마켓플레이스", en: "plugin · marketplace", like: "선물 세트 · 앱스토어", body: "스킬·훅·서브에이전트·MCP를 한 번에 설치하는 묶음과 그 목록이에요.", why: "설치한 플러그인은 내 권한으로 코드를 실행할 수 있어요. 출처를 꼭 확인해요.", stage: 4, unit: "u8" },
+    { term: "플러그인 · 마켓플레이스", en: "plugin · marketplace", like: "선물 세트 · 앱스토어", body: "스킬 여러 개와 연결(커넥터·MCP), 자동 규칙(훅)을 한 번에 설치하는 묶음과 그 목록이에요. Claude 앱(Cowork)은 설정에서 눌러 켜고, Claude Code는 /plugin 명령으로 설치해요.", why: "한 번에 여러 기능이 생겨 편하지만, 설치한 플러그인은 내 권한으로 움직여요. 공식·유명 출처부터 써요.", stage: 3, unit: "u7" },
     { term: "프롬프트 인젝션", en: "prompt injection", like: "서류에 끼워 넣은 가짜 지시서", body: "파일·웹페이지·도구 결과 속에 숨겨진 악의적인 지시를 AI가 따르게 되는 공격이에요.", why: "모르는 웹페이지나 파일을 읽힐 때, 연결(MCP)을 늘릴 때 위험이 커져요.", stage: 4, unit: "u8" },
     { term: "자동 메모리", en: "auto memory", like: "직원의 개인 수첩", body: "에이전트가 내 교정을 보고 스스로 적어 두는 메모예요.", why: "가끔 열어 틀린 메모를 지워요.", stage: 4, later: true },
     { term: "컨텍스트 엔지니어링", en: "context engineering", like: "회의 자료 큐레이션", body: "책상(컨텍스트)에 무엇을 올리고 뺄지 설계하는 일이에요. '프롬프트 엔지니어링'의 다음 말로 쓰여요.", why: "좋은 문장 한 줄보다 필요한 자료를 제때 올려두는 게 결과를 더 크게 바꿔요.", stage: 4, later: true },
@@ -909,7 +938,7 @@ window.COURSE = {
     ] }
   ],
   // 스킬 찾기 도우미: 목표별 추천(picks는 위 스킬 이름과 똑같아야 해요)과 도구별 설치 안내
-  skillFinder: {"goals": [{"id": "auto", "label": "업무 연결·자동화", "picks": ["Google Drive · Gmail · Calendar 커넥터", "productivity 플러그인", "kordoc (HWP 읽기)"]}, {"id": "idea", "label": "아이디어·기획", "picks": ["product-management 플러그인", "Superpowers", "PM Skills"]}, {"id": "study", "label": "공부·리서치", "picks": ["socratic-method-skill", "learning-output-style", "obsidian-skills"]}, {"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·콘텐츠", "picks": ["marketingskills", "한국어 윤문 · im-not-ai", "ui-ux-pro-max"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
+  skillFinder: {"goals": [{"id": "auto", "label": "업무 연결·자동화", "picks": ["Google Drive · Gmail · Calendar 커넥터", "productivity 플러그인", "kordoc (HWP 읽기)"]}, {"id": "idea", "label": "아이디어·기획", "picks": ["product-management 플러그인", "Superpowers", "PM Skills"]}, {"id": "study", "label": "공부·리서치", "picks": ["socratic-method-skill", "learning-output-style", "obsidian-skills"]}, {"id": "write", "label": "한국어 글 다듬기", "picks": ["한국어 윤문 · im-not-ai", "달레의 korean-skills", "humanizer"]}, {"id": "build", "label": "서비스·화면 만들기", "picks": ["Superpowers", "frontend-design", "Karpathy guidelines"]}, {"id": "check", "label": "버그 고치고 검수", "picks": ["Superpowers · systematic-debugging", "Karpathy guidelines", "webapp-testing"]}, {"id": "docs", "label": "문서·발표·한글(HWP)", "picks": ["docx · pptx · xlsx · pdf", "k-skill · 업무", "달레의 korean-skills"]}, {"id": "mkt", "label": "마케팅·콘텐츠", "picks": ["marketingskills", "한국어 윤문 · im-not-ai", "ui-ux-pro-max"]}, {"id": "korea", "label": "한국 정보 찾기", "picks": ["k-skill · 업무", "k-skill · 생활", "달레의 korean-skills"]}], "tools": [{"id": "app", "label": "Claude 앱", "how": "GitHub 저장소에서 Code › Download ZIP으로 받은 뒤, Claude 앱 설정 › 기능(Capabilities) › 스킬에서 업로드해요. 문서 스킬(docx 등)은 유료 요금제에 이미 들어 있어요. 터미널이 필요한 스킬은 Claude 앱에서 일부만 작동할 수 있어요."}, {"id": "code", "label": "Claude Code", "how": "/로 시작하는 줄은 Claude Code 안에서, npx·git으로 시작하는 줄은 터미널에서 입력해요. 처음 보는 명령이면 개발 도구 지도의 허락 가이드로 먼저 확인하세요."}, {"id": "agent", "label": "Codex · Antigravity 등", "how": "스킬 폴더(SKILL.md가 든 폴더)를 GitHub에서 받아 프로젝트의 .agents/skills 아래에 넣어요. 에이전트에게 '이 저장소의 스킬을 .agents/skills에 설치해줘'라고 부탁해도 돼요. /plugin으로 시작하는 명령과 claude.ai 커넥터는 Claude 전용이라 쓸 수 없어요."}, {"id": "builder", "label": "웹앱 빌더", "how": "Lovable 같은 웹앱 빌더에는 스킬을 설치할 수 없어요. 대신 아래 '작업 원칙'을 프로젝트 지침에 붙여넣고, 글 다듬기는 Claude 앱 같은 대화형 AI에서 따로 해요."}]},
   skillInstall: [
     { where: "Claude 앱 (웹·데스크톱)", how: "설정 › 기능(Capabilities)에서 기본 스킬을 켜고, 받은 스킬 폴더를 zip으로 올려요.", cmd: "" },
     { where: "Claude Code (터미널)", how: "플러그인 마켓에서 설치하거나, 스킬 폴더를 ~/.claude/skills 아래에 넣어요.", cmd: "/plugin marketplace add obra/superpowers-marketplace\n/plugin install superpowers@superpowers-marketplace" },
@@ -1019,10 +1048,25 @@ window.COURSE = {
         { k: "나를 기억하기", v: ["메모리", "메모리", "저장된 정보 · 개인 맥락"] }
       ]
     },
+    // 코딩 에이전트 3종: 같은 일, 다른 이름 (2026년 11월 공식 문서 기준, 메뉴 이름은 버전마다 바뀔 수 있어요)
+    agentSame: {
+      cols: ["claude", "codex", "antigravity"],
+      rows: [
+        { k: "설치·시작", v: ["설치 스크립트 한 줄 → 작업 폴더에서 claude (데스크톱 앱·VS Code 확장도 있어요)", "npm install -g @openai/codex → codex → ChatGPT 계정으로 로그인 (codex app은 데스크톱 앱)", "antigravity.google에서 앱 받기 → 폴더 추가 (터미널판은 agy)"] },
+        { k: "규칙 파일 (인수인계서)", v: ["CLAUDE.md (없으면 AGENTS.md) · /init으로 초안", "AGENTS.md · /init으로 초안", "AGENTS.md · GEMINI.md · .agents/rules 폴더"] },
+        { k: "계획 먼저", v: ["Shift+Tab으로 plan mode · 또는 /plan", "/plan 또는 Shift+Tab", "대화를 시작할 때 Planning 모드 (터미널판은 /plan)"] },
+        { k: "허락 범위", v: ["Shift+Tab으로 모드 바꾸기 · 처음엔 기본(매번 묻기)", "/permissions → Read Only · Auto · Full Access", "설정 › 터미널 명령 자동 실행 → Request Review(매번 묻기)"] },
+        { k: "되돌리기", v: ["Esc 두 번 또는 /rewind (코드·대화 선택)", "Git으로 되돌리기 · 앱은 리뷰 화면에서 파일별로 (Esc 두 번은 대화만)", "터미널판은 /rewind · 앱은 변경 사항 버리기"] },
+        { k: "새로 시작 · 요약", v: ["/clear · /compact", "/new · /compact", "새 대화 (요약은 자동)"] },
+        { k: "스킬 폴더", v: [".claude/skills", ".agents/skills", ".agents/skills"] },
+        { k: "요금", v: ["Pro 이상 유료 요금제부터", "ChatGPT 요금제에 포함 (터미널판은 Plus부터일 수 있어요)", "무료로 시작 (한도가 낮아요)"] }
+      ]
+    },
     // 같은 개념, 다른 이름 (코딩 에이전트). 세부 경로는 버전마다 바뀔 수 있어요
     agentFiles: [
       { tool: "Claude Code", rules: "CLAUDE.md (없으면 AGENTS.md)", skills: ".claude/skills" },
       { tool: "OpenAI Codex", rules: "AGENTS.md", skills: ".agents/skills" },
+      { tool: "Google Antigravity", rules: "AGENTS.md · GEMINI.md · .agents/rules", skills: ".agents/skills" },
       { tool: "GitHub Copilot", rules: "AGENTS.md · .github/copilot-instructions.md", skills: ".github/skills" },
       { tool: "Cursor", rules: ".cursor/rules · AGENTS.md", skills: "규칙 파일로 대신" },
       { tool: "Gemini CLI", rules: "GEMINI.md (설정하면 AGENTS.md)", skills: "SKILL.md 지원" }

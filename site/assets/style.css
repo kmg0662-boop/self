@@ -932,3 +932,31 @@ body.focus .menu-btn, body.focus .top-progress { visibility: hidden; }
 .ob-link { border: 0; background: none; font: inherit; font-size: 0.9rem; font-weight: 650; color: var(--muted); cursor: pointer; padding: 8px 0; min-height: 40px; }
 .ob-link:hover { color: var(--ink); }
 @media (max-width: 520px) { .ob-opts { grid-template-columns: 1fr; } .ob-opt { min-height: 0; padding: 16px 18px; } }
+
+/* 내 도구: 코딩 에이전트를 쓰는지에 따라 유닛 내용이 바뀌어요 */
+.tool-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-size: 0.88rem; color: var(--muted); }
+.tool-line b { color: var(--ink); font-weight: 750; }
+.tool-line a { font-weight: 700; color: var(--accent-text); text-decoration: none; }
+.tool-line a:hover { text-decoration: underline; }
+.my-record > .tool-line { padding: 4px 2px 12px; }
+.ob-group { font-size: 0.82rem; font-weight: 750; color: var(--muted); margin-top: 4px; }
+.ob-opt.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.same-tbl td, .same-tbl th { vertical-align: top; }
+.same-tbl .mine { background: var(--accent-soft); }
+.same-tbl th.mine small { font-size: 0.72rem; font-weight: 750; color: var(--accent-text); }
+@media (max-width: 640px) {
+  .same-tbl { min-width: 0; }
+  .same-tbl thead { display: none; }
+  .same-tbl tr { display: grid; gap: 4px; padding: 12px 10px; border-bottom: 1px solid var(--line); }
+  .same-tbl tbody th { padding: 0 0 2px; border: 0; }
+  .same-tbl td { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 8px; padding: 4px 8px; border: 0; border-radius: 6px; }
+  .same-tbl td::before { content: attr(data-col); font-size: 0.8rem; font-weight: 750; color: var(--muted); }
+}
+.skill-words { display: grid; gap: 12px; padding: 18px 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+.sw-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.sw-row div { display: grid; gap: 4px; align-content: start; }
+.sw-row b { font-size: 1.05rem; font-weight: 800; }
+.sw-row .like { font-size: 0.85rem; color: var(--accent-text); font-weight: 700; }
+.sw-row p { font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; }
+.skill-words .muted a { font-weight: 700; color: var(--accent-text); }
+@media (max-width: 640px) { .sw-row { grid-template-columns: 1fr; } }
