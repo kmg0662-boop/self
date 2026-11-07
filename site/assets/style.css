@@ -981,3 +981,15 @@ body.focus .menu-btn, body.focus .top-progress { visibility: hidden; }
 .mm-head span { font-size: 0.82rem; color: var(--accent-text); font-weight: 700; }
 .mm-group ul { margin: 0; padding-left: 1.05em; display: grid; gap: 5px; font-size: 0.9rem; line-height: 1.55; color: var(--ink-2); }
 .mm-group li b { color: var(--ink); }
+.skill .req { font-size: 0.86rem; color: var(--ink-2); padding: 6px 10px; border-radius: var(--r-sm); background: var(--sunken); }
+.skill .req b { font-size: 0.78rem; color: var(--accent-text); margin-right: 4px; }
+.video-guide { display: grid; gap: 10px; }
+.vg-app { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-text); vertical-align: 1px; }
+@media (max-width: 640px) {
+  .vg-tbl { min-width: 0; }
+  .vg-tbl thead { display: none; }
+  .vg-tbl tr { display: grid; gap: 4px; padding: 12px 10px; border-bottom: 1px solid var(--line); }
+  .vg-tbl tbody th { padding: 0 0 2px; border: 0; }
+  .vg-tbl td { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 8px; padding: 2px 0; border: 0; }
+  .vg-tbl td::before { content: attr(data-col); font-size: 0.8rem; font-weight: 750; color: var(--muted); }
+}

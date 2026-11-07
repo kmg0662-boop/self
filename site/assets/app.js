@@ -716,10 +716,10 @@
   function skillByName(n) { return [].concat.apply([], C.skillCats.map(function (c) { return c.items; })).filter(function (s) { return s.name === n; })[0]; }
   function srcLink(s) { return s.src ? '<a class="src" href="https://github.com/' + esc(s.src) + '" target="_blank" rel="noopener">github.com/' + esc(s.src) + " ↗</a>" : ""; }
   function skillCard(s) {
-    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small>" + (s.pop ? '<span class="pop" title="GitHub 별 수, 2026년 11월 기준">' + esc(s.pop) + "</span>" : "") + '<span class="lv lv-' + (s.lv || "line") + '" title="설치 난이도">' + LV[s.lv || "line"] + "</span></h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" +
+    return '<div class="skill"><h3>' + esc(s.name) + "<small>" + esc(s.by) + "</small>" + (s.pop ? '<span class="pop" title="GitHub 별 수, 2026년 11월 기준">' + esc(s.pop) + "</span>" : "") + '<span class="lv lv-' + (s.lv || "line") + '" title="설치 난이도">' + LV[s.lv || "line"] + "</span></h3>" + stars(s.stars) + "<p>" + esc(s.what) + '</p><p class="when"><b>이럴 때</b> ' + esc(s.when) + "</p>" + (s.req ? '<p class="req"><b>필요한 것</b> ' + esc(s.req) + "</p>" : "") +
       (s.note ? '<p class="snote">' + esc(s.note) + "</p>" : "") +
       (s.ba ? '<div class="ba"><div><span>전</span><p>' + esc(s.ba.before) + '</p></div><div><span>후</span><p>' + esc(s.ba.after) + "</p></div></div>" : "") +
-      '<details class="inst"><summary>' + (s.lv === "click" ? "연결·설치 방법" : "Claude Code 설치 명령") + "</summary>" + installHtml(s) + '<p class="ig-more">Claude 앱이나 Codex·Antigravity라면 <button type="button" data-jump="install">쉽게 설치하기</button>를 봐요.</p></details>' + srcLink(s) + "</div>";
+      '<details class="inst"><summary>' + (s.lv === "click" ? "연결·설치 방법" : "설치 명령") + "</summary>" + installHtml(s) + '<p class="ig-more">Claude 앱이나 Codex·Antigravity라면 <button type="button" data-jump="install">쉽게 설치하기</button>를 봐요.</p></details>' + srcLink(s) + "</div>";
   }
   var finder = { goal: "", tool: "" };
   function finderTool() { return finder.tool || (isAgent() ? (state.agentTool === "claude" ? "code" : "agent") : state.tool === "builder" ? "builder" : state.tool === "chat" ? "app" : ""); }
@@ -752,6 +752,12 @@
     ];
     return '<section class="skill-words"><p class="eyebrow">먼저, 세 단어만</p><div class="sw-row">' + W.map(function (w) { return '<div><b>' + esc(w.b) + '</b><span class="like">= ' + esc(w.like) + "</span><p>" + esc(w.t) + "</p></div>"; }).join("") + '</div><p class="muted">왜 구분하나요? 스킬은 \'일하는 방법\'을, 커넥터는 \'볼 수 있는 자료\'를 늘려요. 플러그인은 둘을 묶어 한 번에 늘리니 편하지만, 안에 무엇이 들었는지 확인하고 켜요. <a href="#u7">유닛 08에서 자세히</a></p></section>';
   }
+  var VIDEO_CATS = ["video", "edit", "motion", "explain3d", "genai"];
+  function videoGuideHtml() {
+    return '<section class="card video-guide"><p class="eyebrow">영상 길잡이 · 무엇을 만들고 싶나요?</p><p class="muted">영상 스킬은 종류가 많아서, 만들고 싶은 것에서 출발해 첫 하나만 골라요. <span class="vg-app">앱</span> 표시는 코딩 에이전트 없이 Claude 앱만으로 되는 길이에요.</p><div class="table-wrap"><table class="tbl vg-tbl"><thead><tr><th>만들고 싶은 것</th><th>첫 추천</th><th>필요한 것</th><th>비용</th></tr></thead><tbody>' +
+      C.videoGuide.map(function (r) { return '<tr><th>' + esc(r.want) + '</th><td data-col="첫 추천"><span><b>' + esc(r.pick) + "</b>" + (r.app ? ' <span class="vg-app">앱</span>' : "") + '</span></td><td data-col="필요한 것">' + esc(r.need) + '</td><td data-col="비용">' + esc(r.cost) + "</td></tr>"; }).join("") +
+      "</tbody></table></div></section>";
+  }
   function mediaMapHtml() {
     return '<div class="media-map" id="media-map"><h3>영상·3D 도구 21개, 한눈에</h3><p class="muted">' + esc(C.mediaNote) + '</p><div class="mm-grid">' + C.mediaMap.map(function (g) {
       return '<div class="mm-group"><p class="mm-head"><b>' + esc(g.g) + '</b><span>= ' + esc(g.like) + "</span></p><ul>" + g.tools.map(function (t) { return "<li><b>" + esc(t.n) + "</b> " + esc(t.d) + "</li>"; }).join("") + "</ul></div>";
@@ -769,7 +775,8 @@
     return '<section class="section install-guide" id="install"><h2>쉽게 설치하기</h2><p class="muted">내가 쓰는 도구를 고르면 그 방법만 보여드려요. owner/repo 자리에는 각 카드의 GitHub 주소(예: anthropics/skills)를 넣어요.</p>' +
       '<div class="filters ig-tabs" role="group" aria-label="쓰는 도구">' + G.map(function (x) { return '<button type="button" class="filter" data-itab="' + x.id + '" aria-pressed="' + (x.id === g.id) + '">' + esc(x.label) + "</button>"; }).join("") + "</div>" +
       '<div class="ig-grid"><div class="card ig-box"><p class="eyebrow">스킬 넣기 · 레시피 카드 한 장</p>' + steps(g.skill) + "</div>" +
-      (g.plugin.length ? '<div class="card ig-box"><p class="eyebrow">플러그인 넣기 · 선물 세트 한 번에</p>' + steps(g.plugin) + "</div>" : "") + "</div>" +
+      (g.plugin.length ? '<div class="card ig-box"><p class="eyebrow">플러그인 넣기 · 선물 세트 한 번에</p>' + steps(g.plugin) + "</div>" : "") +
+      (g.mcp && g.mcp.length ? '<div class="card ig-box"><p class="eyebrow">연결(MCP·커넥터) 넣기 · 열쇠 맡기기</p>' + steps(g.mcp) + '<p class="muted">유료 생성 서비스는 다시 만들 때마다 크레딧이 닳아요. 가장 낮은 화질로 1개만 먼저 시험해요.</p></div>' : "") + "</div>" +
       (g.check ? '<div class="ig-after"><p><b>잘 들어갔나요?</b> ' + esc(g.check) + "</p><p><b>빼고 싶다면</b> " + esc(g.remove) + '</p><p><b>설치 전에 5초만</b> 만든 사람이 분명한지, 최근에도 관리되는지(archived 아님), 별 수, 설명서에 API 키나 결제가 필요한지, 무엇을 할 수 있는 권한인지 확인해요.</p></div>' : "") + "</section>";
   }
   function viewSkills() {
@@ -785,8 +792,9 @@
       '<div class="filters" role="group" aria-label="트랙별"><button type="button" class="filter" data-strack="all" aria-pressed="' + (skillTrack === "all") + '">모든 트랙</button>' + Object.keys(TRACK_LABEL).map(function (k) { return '<button type="button" class="filter" data-strack="' + k + '" aria-pressed="' + (skillTrack === k) + '">' + TRACK_LABEL[k] + "</button>"; }).join("") + "</div>" +
       '<div class="filters" role="group" aria-label="스킬 분류"><button type="button" class="filter" data-scat="all" aria-pressed="' + (skillCat === "all") + '">전체 ' + [].concat.apply([], inTrack.map(function (c) { return c.items; })).length + "</button>" +
       inTrack.map(function (c) { return '<button type="button" class="filter" data-scat="' + c.id + '" aria-pressed="' + (skillCat === c.id) + '">' + esc(c.title) + " " + c.items.length + "</button>"; }).join("") + "</div>" +
+      (cats.some(function (c) { return VIDEO_CATS.indexOf(c.id) !== -1; }) ? videoGuideHtml() : "") +
       cats.map(function (c) {
-        return '<section class="section skill-cat"><h2>' + esc(c.title) + '</h2><p class="muted">' + esc(c.desc) + '</p><div class="skill-table">' + c.items.map(skillCard).join("") + "</div>" + (c.id === "motion" ? mediaMapHtml() : "") + "</section>";
+        return '<section class="section skill-cat"><h2>' + esc(c.title) + '</h2><p class="muted">' + esc(c.desc) + '</p><div class="skill-table">' + c.items.map(skillCard).join("") + "</div>" + (c.id === "video" ? mediaMapHtml() : "") + "</section>";
       }).join("") +
       installGuideHtml() +
       '<section class="section"><h2>스킬을 설치할 수 없는 도구라면</h2><p class="muted">웹앱 빌더(Lovable 등)에는 스킬을 설치할 수 없어요. 대신 아래 원칙을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.</p>' + promptBox(C.builderRules, "프로젝트 지침에 붙여넣기") + "</section>" +
