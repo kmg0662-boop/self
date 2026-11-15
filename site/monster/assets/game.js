@@ -18,7 +18,8 @@
   function freshProfile(name, look) {
     return {
       name: name, look: look, egg: null, xp: 0, memory: [], dex: {}, legends: {}, review: [], phase: 'new',
-      lessons: 0, battles: 0, sinceLesson: 0, friends: 0, seenTricky: false, aha: false, hearts: 3, pos: null, mapTut: false
+      lessons: 0, battles: 0, sinceLesson: 0, friends: 0, seenTricky: false, aha: false, hearts: 3, pos: null, mapTut: false,
+      met: {}, sv: 2
     };
   }
   function loadStore() {
@@ -36,6 +37,18 @@
     return st;
   }
   var store = loadStore();
+  // 생김새가 3가지뿐이던 때의 기록을 18가지 번호로 옮긴다 (동물 0, 곤충 6, 공룡 12)
+  store.profiles.forEach(function (p) {
+    if (p.sv === 2) return;
+    var mapShape = { 0: 0, 1: 6, 2: 12 }, nd = {};
+    Object.keys(p.dex || {}).forEach(function (k) {
+      var d = p.dex[k], sh = mapShape[d.m.shape] != null ? mapShape[d.m.shape] : d.m.shape;
+      d.m.shape = sh; nd[d.m.type + '-' + sh] = d;
+    });
+    p.dex = nd;
+    (p.memory || []).concat(p.review || []).forEach(function (m) { if (mapShape[m.shape] != null) m.shape = mapShape[m.shape]; });
+    p.met = p.met || {}; p.sv = 2;
+  });
   var state = store.profiles[store.cur] || null;
   function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { /* 저장이 막혀도 놀 수는 있음 */ } }
   S.setMuted(store.muted);
@@ -338,10 +351,10 @@
     setScreen('title', sceneSky() +
       '<h1 class="logo"><span>말</span><span>랑</span><span>몬</span><em>선생님</em></h1>' +
       '<p class="tagline">내가 가르치면 점점 똑똑해져요!</p>' +
-      mw(A.wild({ type: 'fire', shape: 2, hue: 14, head: 0, tail: 0, eyes: 0 }), 190, 380, 230) +
+      mw(A.wild({ type: 'fire', shape: 12, hue: 8, head: 0, tail: 0, eyes: 0 }), 190, 380, 230) +
       mw(A.partner(p0 && p0.egg || 'berry', p0 && p0.egg ? form(level(p0.xp)) : 2, { expr: 'happy' }), 500, 340, 280, 'title-me') +
-      mw(A.wild({ type: 'water', shape: 0, hue: 210, head: 1, tail: 1, eyes: 1 }), 850, 390, 220) +
-      mw(A.wild({ type: 'grass', shape: 1, hue: 118, head: 2, tail: 2, eyes: 2 }), 1030, 470, 180) +
+      mw(A.wild({ type: 'water', shape: 4, hue: 210, head: 1, tail: 1, eyes: 1 }), 850, 390, 220) +
+      mw(A.wild({ type: 'grass', shape: 8, hue: 118, head: 2, tail: 2, eyes: 2 }), 1030, 470, 180) +
       '<button class="btn btn-start pulse" id="start">시작!</button>');
     var me = q('.title-me');
     var loop = setInterval(function () { if (!document.body.contains(me)) return clearInterval(loop); hop(me, 40); }, 2600);
@@ -366,7 +379,7 @@
     var cards = '';
     store.profiles.forEach(function (p, i) {
       cards += '<button class="pf-card" data-i="' + i + '" style="animation-delay:' + i * 0.08 + 's"><div class="av">' + A.avatar(p.look) + '</div>' +
-        '<div class="pn">' + esc(p.name) + '</div><div class="pl">' + (p.egg ? 'Lv.' + level(p.xp) + ' · 친구 ' + Object.keys(p.dex).length + '종' : '새 모험') + '</div>' +
+        '<div class="pn">' + esc(p.name) + '</div><div class="pl">' + (p.egg ? 'Lv.' + level(p.xp) + ' · 친구 ' + (Object.keys(p.dex).length + Object.keys(p.legends || {}).length) + '종' : '새 모험') + '</div>' +
         (p.egg ? '<div class="pm mini">' + A.partner(p.egg, form(level(p.xp))) + '</div>' : '') + '</button>';
     });
     var room = MAX_PROFILES - store.profiles.length;
@@ -416,11 +429,12 @@
     function face(patch) { var o = {}; for (var k in lk) o[k] = lk[k]; for (var j in patch) o[j] = patch[j]; return '<div class="av">' + A.avatar(o) + '</div>'; }
     function sw(c) { return '<span style="display:block;width:100%;height:100%;background:' + c + '"></span>'; }
     function rows() {
-      return '<div class="mk-row"><span class="lab">머리</span>' + opts('hair', 4, function (i) { return face({ hair: i, hat: 0 }); }) + '</div>' +
+      return '<div class="mk-row"><span class="lab">머리</span>' + opts('hair', L.HAIR_COUNT, function (i) { return face({ hair: i, hat: 0 }); }) + '</div>' +
         '<div class="mk-row"><span class="lab">머리 색</span>' + opts('hairColor', 3, function (i) { return sw(L.HAIR[i]); }, 'sw') + '</div>' +
         '<div class="mk-row"><span class="lab">피부</span>' + opts('skin', 3, function (i) { return sw(L.SKIN[i]); }, 'sw') + '</div>' +
-        '<div class="mk-row"><span class="lab">옷</span>' + opts('outfit', 6, function (i) { return sw(L.OUTFIT[i]); }, 'sw') + '</div>' +
-        '<div class="mk-row"><span class="lab">모자</span>' + opts('hat', 3, function (i) { return face({ hat: i }); }) + '</div>' +
+        '<div class="mk-row"><span class="lab">옷</span>' + opts('wear', L.WEAR.length, function (i) { return face({ wear: i }); }, 'body') + '</div>' +
+        '<div class="mk-row"><span class="lab">옷 색</span>' + opts('outfit', 6, function (i) { return sw(L.OUTFIT[i]); }, 'sw') + '</div>' +
+        '<div class="mk-row"><span class="lab">모자</span>' + opts('hat', L.HATS.length, function (i) { return face({ hat: i }); }) + '</div>' +
         '<div class="mk-row"><span class="lab">안경</span>' + opts('glasses', 2, function (i) { return face({ glasses: i }); }) + '</div>';
     }
     setScreen('maker', sceneSky() + '<h2 class="big-title" style="top:20px;font-size:60px">내 모습을 꾸며 봐!</h2>' +
@@ -433,7 +447,7 @@
       q('#rows').innerHTML = rows();
       each('.opt', function (b) {
         var k = b.getAttribute('data-k'), v = +b.getAttribute('data-v');
-        if (lk[k] === v) b.classList.add('on');
+        if ((lk[k] || 0) === v) b.classList.add('on');
         b.addEventListener('click', function () { lk[k] = v; save(); S.sfx('pick'); paint(); hop(q('#prev'), 26); });
       });
     }
@@ -658,7 +672,7 @@
   async function firstBattle() {
     state.hearts = maxHearts();
     var bs = battleScreen();
-    var m = B.makeMonster(rnd, { type: 'fire', shape: 2, mode: 'clear' });
+    var m = B.makeMonster(rnd, { type: 'fire', shape: 12, mode: 'clear' });
     await wait(400);
     await bs.spawn(wildSvg(m));
     setFace(bs.me, 'wow');
@@ -697,7 +711,7 @@
   function buildCards(first) {
     var cards = [];
     if (first) {
-      TYPES.forEach(function (t, i) { cards.push({ m: B.makeMonster(rnd, { type: t, shape: i, mode: 'clear' }), labeled: false }); });
+      TYPES.forEach(function (t) { cards.push({ m: B.makeMonster(rnd, { type: t, mode: 'clear' }), labeled: false }); });
       return shuffle(cards);
     }
     // 배틀에서 헷갈렸던 친구를 먼저 가르친다 (틀린 문제 다시 보기)
@@ -1101,12 +1115,51 @@
   /* ================================================================
      7. 우리 동네: 걸어 다니며 야생 말랑몬을 만난다
      ================================================================ */
+  // 이웃이 건네는 말: 놀이 방법과 'AI는 본 만큼만 안다'는 생각을 아이 말로 돌려서 알려 준다
+  var NPC_LINES = {
+    guard: ['안녕! 동네를 돌아다니면 말랑몬 친구들을 만날 수 있단다.', '힘이 다 빠지면 집에서 쉬었다 가렴.'],
+    diver: ['저기 갯바위에 바다의 전설이 잠들어 있단다.', '물 타입 친구를 여섯 종 모으면 깨어난다지.'],
+    fisher: ['물고기도 색만 봐서는 몰라. 지느러미를 봐야지!', '짝꿍도 머리 장식을 잘 보면 안 속을 거야.'],
+    keeper: ['등대는 길을 알려 주지. 노란 화살표도 그렇단다.', '길을 잃으면 화살표를 따라가 보렴.'],
+    farmer: ['저 큰 팽나무에 숲의 장수가 산단다.', '풀 타입 친구를 여섯 종 모아 보렴.'],
+    teacher: ['많이 보여 줄수록 짝꿍이 똑똑해져요.', '틀린 친구를 다시 가르치면 다음엔 맞혀요!'],
+    painter: ['색은 바뀔 수 있어. 하지만 머리 장식은 그대로야!', '전설은 몸 색을 바꿔서 속인대. 조심해!'],
+    granny: ['짝꿍은 네가 보여 준 것만 안단다.', '천천히 하나씩 가르쳐 주렴.'],
+    jogger: ['짝꿍이 틀려도 괜찮아. 가르쳐 주면 되니까!', '나도 처음엔 다 틀렸어. 연습하면 돼!'],
+    shop: ['똑똑함이 100점이면 전설도 문제없지!', '오늘도 탐험 잘하렴!'],
+    courier: ['도감을 다 채우면 대단한 선생님이야!', '말랑몬은 모두 쉰일곱 종이나 된대.'],
+    mom: ['우리 아기도 하나씩 보면서 배운단다. 짝꿍이랑 똑같네!', '많이 본 건 금방 알아보지.'],
+    kid1: ['나도 말랑몬 키워! 넌 몇 종 모았어?', '전설 봤어? 엄청 멋있대!'],
+    kid2: ['머리에 불꽃이 있으면 불 타입이래!', '파란데 불 타입인 친구도 있어. 신기하지?'],
+    kid3: ['공룡 말랑몬이 제일 멋져!', '티라노 친구를 만나면 나한테도 알려 줘!']
+  };
+  var DOCS = { vet: 0, bugdoc: 1, dinodoc: 2 };
+  function npcLine(id, turn) {
+    if (DOCS[id] != null) {
+      var k = DOCS[id], n = kindHas(k), kn = A.KIND[k];
+      if (!n) return [kn + ' 친구는 귀와 꼬리를 잘 보렴. 아직 한 종도 못 찾았구나!', kn + ' 친구는 더듬이나 날개가 있단다. 찾아보렴!', kn + ' 친구는 뿔이나 가시가 있단다. 찾아보렴!'][k];
+      return n >= 18 ? kn + ' 친구를 모두 찾았구나! 정말 대단해!' : kn + ' 친구를 ' + n + '종 찾았구나! 모두 열여덟 종이란다.';
+    }
+    var ls = NPC_LINES[id] || ['안녕!'];
+    return ls[turn % ls.length];
+  }
+
   var mapMem = null;   // 이번에 켠 동안의 동네 상태 (야생 말랑몬 위치)
   var after = null;    // 방금 끝난 배틀 결과 (동네로 돌아와서 알려 줄 것)
   var WILD_COUNT = 7;
 
-  function dexHas(type) { return [0, 1, 2].filter(function (s) { return state.dex[type + '-' + s]; }).length; }
-  function lairState(type) { return state.legends[type] ? 'done' : dexHas(type) >= 3 ? 'awake' : 'locked'; }
+  var SHAPES = A.SHAPES, LEGEND_NEED = 6, TOTAL = SHAPES * 3 + 3;
+  function dexHas(type) { var n = 0; for (var s = 0; s < SHAPES; s++) if (state.dex[type + '-' + s]) n++; return n; }
+  function kindHas(k) { var n = 0; TYPES.forEach(function (t) { for (var s = k * 6; s < k * 6 + 6; s++) if (state.dex[t + '-' + s]) n++; }); return n; }
+  function foundCount() { return Object.keys(state.dex).length + Object.keys(state.legends).length; }
+  function lairState(type) { return state.legends[type] ? 'done' : dexHas(type) >= LEGEND_NEED ? 'awake' : 'locked'; }
+  // 새로 나타날 야생 말랑몬: 아직 못 만난 종이 더 자주 나온다 (도감 채우는 재미)
+  function newWild(mode) {
+    var miss = [];
+    TYPES.forEach(function (t) { for (var s = 0; s < SHAPES; s++) if (!state.dex[t + '-' + s]) miss.push([t, s]); });
+    if (miss.length && rnd() < 0.65) { var c = miss[Math.floor(rnd() * miss.length)]; return B.makeMonster(rnd, { type: c[0], shape: c[1], mode: mode }); }
+    return B.makeMonster(rnd, { mode: mode });
+  }
 
   // 그 자리가 막혔으면 막은 것을 돌려준다 (건물이면 그 네모, 동네 끝이면 true)
   var REACH = 20;
@@ -1130,11 +1183,11 @@
     }));
     // 맨 처음에는 집 가까이에 뚜렷하게 생긴 친구 한 마리 (배운 게 통하는 기쁨 먼저)
     if (state.battles === 0 && !mapMem.wilds.length) {
-      mapMem.wilds.push({ m: B.makeMonster(rnd, { mode: 'clear' }), home: -1, hx: WD.start.x + 250, hy: WD.start.y + 10, x: WD.start.x + 250, y: WD.start.y + 10, tx: null, ty: null, rest: 1 });
+      mapMem.wilds.push({ m: newWild('clear'), home: -1, hx: WD.start.x + 250, hy: WD.start.y + 10, x: WD.start.x + 250, y: WD.start.y + 10, tx: null, ty: null, rest: 1 });
     }
     while (mapMem.wilds.length < WILD_COUNT && free.length) {
       var i = free.pop(), h = WD.wildHomes[i];
-      mapMem.wilds.push({ m: B.makeMonster(rnd, { mode: 'wild' }), home: i, hx: h[0], hy: h[1], x: h[0], y: h[1], tx: null, ty: null, rest: rnd() * 2 });
+      mapMem.wilds.push({ m: newWild('wild'), home: i, hx: h[0], hy: h[1], x: h[0], y: h[1], tx: null, ty: null, rest: rnd() * 2 });
     }
   }
 
@@ -1142,8 +1195,8 @@
     var st = lairState(type), sp = WD.spots.lair[type], own = B.HUE[type].clear, hue = (own[0] + own[1]) / 2;
     var inner;
     if (st === 'locked') {
-      var n = dexHas(type), dots = '';
-      for (var i = 0; i < 3; i++) dots += '<i class="' + (i < n ? 'on' : '') + '"></i>';
+      var n = Math.min(LEGEND_NEED, dexHas(type)), dots = '';
+      for (var i = 0; i < LEGEND_NEED; i++) dots += '<i class="' + (i < n ? 'on' : '') + '"></i>';
       inner = '<div class="q">?</div><div class="prog">' + dots + '</div>';
     } else {
       inner = '<div class="mini" style="width:150px;height:150px">' + A.legend(type, hue) + '</div>';
@@ -1189,7 +1242,38 @@
       world.appendChild(w.el);
     });
 
+    // 동네 이웃 올려놓기
+    var npcs = A.NPCS.map(function (n) {
+      var sp = WD.npcSpots[n.id], grown = n.look.age === 'adult' || n.look.age === 'elder';
+      var node = el('<div class="ent npc' + (grown ? ' grown' : '') + '" style="transform:translate(' + sp[0] + 'px,' + sp[1] + 'px);z-index:' + Math.round(sp[1]) + '">' +
+        (state.met[n.id] ? '' : '<div class="bang">!</div>') + '<div class="flip">' + A.person(n.look) + '</div></div>');
+      world.appendChild(node);
+      return { def: n, x: sp[0], y: sp[1], el: node, inside: Math.hypot(P.x - sp[0], P.y - sp[1]) < 80, turn: 0 };
+    });
+
     function keep() { state.pos = { x: Math.round(P.x), y: Math.round(P.y) }; save(); }
+
+    function meet(n) {
+      var d = n.def, first = !state.met[d.id];
+      n.el.querySelector('.flip').style.transform = 'scaleX(' + (P.x < n.x ? -1 : 1) + ')';
+      n.el.querySelector('.flip').innerHTML = A.person(d.look, { expr: 'happy' });
+      hop(n.el.querySelector('.flip'), 22);
+      S.sfx('pick');
+      var line = npcLine(d.id, n.turn++);
+      if (first) {
+        state.met[d.id] = true; state.xp += 1; save();
+        var bang = n.el.querySelector('.bang'); if (bang) bang.remove();
+        toast('새 이웃! ' + d.name);
+      }
+      if (d.id === 'farmer' && state.hearts < maxH && !n.gave) { // 귤을 하나 얻어먹고 힘이 난다
+        n.gave = true; state.hearts++; save();
+        q('#hearts').innerHTML = heartsHtml(state.hearts, maxH);
+        S.sfx('heart'); line = '귤 하나 먹고 힘내라! (하트가 하나 찼어)';
+      }
+      say('<b>' + d.name + '</b> ' + line, 4200);
+      var t = token;
+      setTimeout(function () { if (t === token && n.el.isConnected) n.el.querySelector('.flip').innerHTML = A.person(d.look); }, 2600);
+    }
 
     /* ---- 조작: 누른 곳으로 걸어간다. 누르고 있으면 손가락을 따라간다 ---- */
     var cam = { x: 0, y: 0 }, held = false, busy = false, moved = 0;
@@ -1245,7 +1329,7 @@
       var st = lairState(z.type), L = A.LEGEND[z.type];
       if (st === 'locked') {
         S.sfx('weak');
-        say(tname(z.type) + ' 친구 <b>3종</b>을 모두 모으면 전설이 깨어난대! (' + dexHas(z.type) + '/3)');
+        say(tname(z.type) + ' 친구를 <b>' + LEGEND_NEED + '종</b> 모으면 전설이 깨어난대! (' + dexHas(z.type) + '/' + LEGEND_NEED + ')');
       } else if (st === 'awake') {
         if (state.hearts <= 0) return;
         busy = true; state.pos = { x: z.s.out[0], y: z.s.out[1] }; save();
@@ -1329,6 +1413,15 @@
         }
       }
 
+      // 이웃 가까이 가면 말을 건넨다
+      if (!busy) {
+        for (var ni = 0; ni < npcs.length; ni++) {
+          var np = npcs[ni], nd = Math.hypot(P.x - np.x, P.y - np.y);
+          if (nd < 70 && !np.inside) { np.inside = true; meet(np); }
+          else if (nd > 110) np.inside = false;
+        }
+      }
+
       // 문과 굴
       if (!busy) {
         for (var z = 0; z < zones.length; z++) {
@@ -1402,44 +1495,52 @@
   /* ================================================================
      8. 도감 + 짝꿍의 기억 주머니 (우리 집)
      ================================================================ */
+  var dexTab = 'fire';
   function dex() {
-    var cells = '', found = 0;
-    TYPES.forEach(function (t) {
-      [0, 1, 2].forEach(function (s) {
-        var d = state.dex[t + '-' + s];
-        if (d) {
-          found++;
-          cells += '<button class="dex-cell t-' + t + '" data-n="' + A.SPECIES[t][s] + '"><span class="ti">' + A.typeIcon(t) + '</span><span class="kind">' + A.KIND[s] + '</span><span class="cnt">×' + d.n + '</span>' + mini(A.wild(d.m)) + '<span class="nm">' + A.SPECIES[t][s] + '</span></button>';
-        } else {
-          var range = B.HUE[t].clear, ti = TYPES.indexOf(t);
-          cells += '<div class="dex-cell unknown"><span class="kind" style="left:14px">' + A.KIND[s] + '</span>' + mini(A.wild({ type: t, shape: s, hue: range[0], head: ti, tail: ti, eyes: 0 }, { silhouette: true })) + '<span class="nm">???</span></div>';
+    var tabs = TYPES.map(function (t) { return { id: t, label: A.typeIcon(t) + T[t].name + ' <small>' + dexHas(t) + '/' + SHAPES + '</small>' }; })
+      .concat([{ id: 'legend', label: '전설 <small>' + Object.keys(state.legends).length + '/3</small>' },
+        { id: 'people', label: '이웃 <small>' + Object.keys(state.met).length + '/' + A.NPCS.length + '</small>' }]);
+    var body = '';
+    if (dexTab === 'legend') {
+      body = '<div class="dx-big">' + TYPES.map(function (t) {
+        var own = B.HUE[t].clear, L = A.LEGEND[t];
+        if (state.legends[t]) return '<button class="dx-cell big legend" data-n="' + L.title + ' ' + L.name + '">' + mini(A.legend(t, (own[0] + own[1]) / 2)) + '<span class="nm">' + L.name + '</span><span class="sub">' + L.title + '</span></button>';
+        return '<div class="dx-cell big unknown">' + mini(A.legend(t, own[0]).replace('mon-legend', 'mon-legend is-shadow')) + '<span class="nm">???</span><span class="sub">' + T[t].name + ' 타입 ' + Math.min(LEGEND_NEED, dexHas(t)) + '/' + LEGEND_NEED + '종</span></div>';
+      }).join('') + '</div>';
+    } else if (dexTab === 'people') {
+      body = '<div class="dx-row">' + A.NPCS.map(function (n) {
+        if (state.met[n.id]) return '<button class="dx-cell ppl" data-n="' + n.name + '"><div class="mini">' + A.person(n.look) + '</div><span class="nm">' + n.name + '</span></button>';
+        return '<div class="dx-cell ppl unknown"><div class="mini shadow">' + A.person(n.look) + '</div><span class="nm">???</span></div>';
+      }).join('') + '</div>';
+    } else {
+      var t = dexTab, ti = TYPES.indexOf(t), range = B.HUE[t].clear;
+      [0, 1, 2].forEach(function (k) {
+        var have = 0, row = '';
+        for (var s = k * 6; s < k * 6 + 6; s++) {
+          var d = state.dex[t + '-' + s];
+          if (d) { have++; row += '<button class="dx-cell t-' + t + '" data-n="' + A.SPECIES[t][s] + '"><span class="cnt">×' + d.n + '</span>' + mini(A.wild({ type: t, shape: s, hue: (range[0] + range[1]) / 2, head: ti, tail: ti, eyes: d.m.eyes })) + '<span class="nm">' + A.SPECIES[t][s] + '</span></button>'; }
+          else row += '<div class="dx-cell unknown">' + mini(A.wild({ type: t, shape: s, hue: range[0], head: ti, tail: ti, eyes: 0 }, { silhouette: true })) + '<span class="nm">???</span></div>';
         }
+        body += '<div class="dx-lab">' + A.KIND[k] + ' ' + have + '/6</div><div class="dx-row">' + row + '</div>';
       });
-    });
-    TYPES.forEach(function (t) {
-      var own = B.HUE[t].clear, L = A.LEGEND[t];
-      if (state.legends[t]) {
-        found++;
-        cells += '<button class="dex-cell legend" data-n="' + L.title + ' ' + L.name + '"><span class="ti">' + A.typeIcon(t) + '</span><span class="kind">전설</span>' + mini(A.legend(t, (own[0] + own[1]) / 2)) + '<span class="nm">' + L.name + '</span></button>';
-      } else {
-        cells += '<div class="dex-cell legend unknown"><span class="kind" style="left:14px">전설</span>' + mini(A.legend(t, own[0]).replace('mon-legend', 'mon-legend is-shadow')) + '<span class="nm">???</span></div>';
-      }
-    });
+    }
     var mem = '';
     TYPES.forEach(function (t) {
       var list = state.memory.filter(function (e) { return e.type === t; });
       mem += '<div class="mem-row t-' + t + '">' + A.typeIcon(t) + '<div class="minis">' +
-        (list.length ? list.slice(-7).map(function (e) { return mini(A.wild(e)); }).join('') : '<span class="mem-empty">아직 못 배웠어</span>') +
+        (list.length ? list.slice(-6).map(function (e) { return mini(A.wild(e)); }).join('') : '<span class="mem-empty">아직 못 배웠어</span>') +
         '</div><span class="n">' + list.length + '</span></div>';
     });
     setScreen('dex', sceneSky() +
-      '<h2 class="dex-title">도감</h2><div class="dex-count">친구 ' + found + ' / 12</div>' +
+      '<h2 class="dex-title">도감</h2><div class="dex-count">친구 ' + foundCount() + ' / ' + TOTAL + '</div>' +
       '<button class="dex-edit" id="edit">내 모습 꾸미기</button>' +
-      '<div class="dex-grid">' + cells + '</div>' +
+      '<div class="dx-tabs">' + tabs.map(function (tb) { return '<button class="dx-tab' + (tb.id === dexTab ? ' on' : '') + '" data-tab="' + tb.id + '">' + tb.label + '</button>'; }).join('') + '</div>' +
+      '<div class="dx-body">' + body + '</div>' +
       '<div class="mem"><h3>짝꿍의 기억 주머니</h3><p>' + me_() + ' 선생님이 보여 준 친구들이에요</p>' + mem + '</div>' +
       '<button class="reset" id="reset">처음부터 다시</button>', { home: true });
-    each('button.dex-cell', function (c) {
-      c.addEventListener('click', function () { S.sfx('pick'); hop(c.querySelector('.mini'), 30); S.say(c.getAttribute('data-n')); });
+    each('.dx-tab', function (b) { b.addEventListener('click', function () { S.sfx('tap'); dexTab = b.getAttribute('data-tab'); go(dex); }); });
+    each('button.dx-cell', function (c) {
+      c.addEventListener('click', function () { S.sfx('pick'); hop(c.querySelector('.mini'), 24); S.say(c.getAttribute('data-n')); });
     });
     q('#edit').addEventListener('click', function () { S.sfx('pop'); go(avatarMaker); });
     q('#reset').addEventListener('click', function () {
@@ -1472,6 +1573,7 @@
     seed: function (name, patch) { createProfile(name); for (var k in patch) state[k] = patch[k]; save(); },
     go: function (name) { go({ title: title, who: profiles, map: map, lesson: lesson, dex: dex, egg: eggScreen, first: firstBattle, maker: avatarMaker, name: nameScreen }[name]); },
     wilds: function () { return mapMem ? mapMem.wilds.map(function (w) { return { x: w.x, y: w.y, type: w.m.type }; }) : []; },
+    dexTab: function (t) { dexTab = t; go(dex); },
     walkTo: function (x, y) { if (walkTo) walkTo(x, y); },
     where: function () { return whereAmI ? whereAmI() : null; },
     fight: function () { var w = mapMem && mapMem.wilds[0]; if (w) go(function () { return battle(w); }); },

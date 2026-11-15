@@ -13,13 +13,17 @@
   };
 
   // 종(타입 × 몸 모양) 이름
-  var SPECIES = {
-    fire: ['화르롱', '불딱지', '불꽃룡'],
-    water: ['퐁퐁이', '물방개몬', '파도룡'],
-    grass: ['새싹이', '풀잎벌', '초록룡']
-  };
-  // 몸 모양 0·1·2 = 동물·곤충·공룡
+  /* 종 = 타입(불·물·풀) × 생김새 18가지 = 54종.
+     생김새 번호(shape) 0~5는 동물, 6~11은 곤충, 12~17은 공룡이에요. */
+  var STEMS = ['곰', '여우', '토끼', '냥이', '거북', '부엉이',
+    '무당벌레', '나비', '사슴벌레', '꿀벌', '잠자리', '사마귀',
+    '티라노', '트리케라', '스테고', '프테라', '브라키오', '안킬로'];
   var KIND = ['동물', '곤충', '공룡'];
+  var SHAPES = STEMS.length;
+  var SPECIES = {};
+  ['fire', 'water', 'grass'].forEach(function (t) {
+    SPECIES[t] = STEMS.map(function (st) { return TYPE[t].name + st; });
+  });
 
   function pal(h) {
     h = ((h % 360) + 360) % 360;
@@ -124,51 +128,149 @@
   var BODY = [
     { d: 'M100 64 C140 64 161 93 161 126 C161 160 137 178 100 178 C63 178 39 160 39 126 C39 93 60 64 100 64 Z', top: 64 },
     { d: 'M100 56 C127 56 148 95 156 128 C163 161 135 178 100 178 C65 178 37 161 44 128 C52 95 73 56 100 56 Z', top: 57 },
-    { d: 'M100 72 C150 67 169 91 167 127 C165 165 141 178 100 178 C59 178 35 165 33 127 C31 91 50 67 100 72 Z', top: 70 }
+    { d: 'M100 72 C150 67 169 91 167 127 C165 165 141 178 100 178 C59 178 35 165 33 127 C31 91 50 67 100 72 Z', top: 70 },
+    { d: 'M100 42 C123 42 139 80 150 124 C158 160 136 178 100 178 C64 178 42 160 50 124 C61 80 77 42 100 42 Z', top: 43 }
   ];
+  var CREAM = '#fff3d6';
+  function both(s) { return s + '<g transform="translate(200 0) scale(-1 1)">' + s + '</g>'; }
+
+  /* 생김새 18가지. 각각 돌려주는 조각:
+     b 몸 모양 번호, fy 얼굴 높이, back 몸 뒤, ears 머리 옆, pre 얼굴 아래(몸 위), extra 얼굴 위, arms 팔을 바꿀 때 */
+  function template(shape, p, o, thin, expr) {
+    var t = { b: 0, fy: 116, back: '', ears: '', pre: '', extra: '', arms: null };
+    var antenna = '<path d="M80 72 C70 54 60 46 50 48 M120 72 C130 54 140 46 150 48" fill="none" stroke="' + p.dark + '" stroke-width="5" stroke-linecap="round"/>' +
+      '<circle cx="49" cy="48" r="7" fill="' + p.shade + '" ' + thin + '/><circle cx="151" cy="48" r="7" fill="' + p.shade + '" ' + thin + '/>';
+    var nose = '<ellipse cx="100" cy="126.5" rx="4.6" ry="3.2" fill="' + INK + '"/>';
+    var whisk = '<path d="M50 124 L36 120 M50 131 L37 134 M150 124 L164 120 M150 131 L163 134" fill="none" ' + thin + ' opacity=".7"/>';
+    var spikes = '<path d="M38 118 L18 110 L36 98 Z M34 142 L15 138 L31 124 Z M162 112 L182 104 L164 94 Z" fill="' + p.shade + '" ' + o + '/>';
+    var horns = both('<path d="M54 94 C42 78 40 62 46 50 C60 56 72 68 78 82 Z" fill="' + CREAM + '" ' + o + '/>');
+    var calm = !expr || expr === 'normal';
+    switch (shape) {
+      case 0: // 곰
+        t.ears = both('<circle cx="60" cy="82" r="15" fill="' + p.body + '" ' + o + '/><circle cx="60" cy="83" r="7" fill="' + p.belly + '"/>');
+        t.pre = '<ellipse cx="100" cy="133" rx="17" ry="12" fill="' + p.belly + '"/>';
+        t.extra = nose;
+        break;
+      case 1: // 여우
+        t.b = 1;
+        t.ears = both('<path d="M64 84 L50 34 L90 64 Z" fill="' + p.body + '" ' + o + '/><path d="M65 72 L57 46 L79 63 Z" fill="' + p.dark + '" opacity=".75"/>');
+        t.back = both('<path d="M50 118 L30 124 L48 136 Z" fill="' + p.belly + '" ' + o + '/>');
+        t.pre = '<path d="M56 126 C70 112 90 122 100 134 C110 122 130 112 144 126 C136 148 118 156 100 156 C82 156 64 148 56 126 Z" fill="' + p.belly + '"/>';
+        t.extra = nose;
+        break;
+      case 2: // 토끼
+        t.ears = both('<path d="M70 84 C54 60 50 20 63 10 C78 12 86 52 85 80 Z" fill="' + p.body + '" ' + o + '/><path d="M70 72 C61 52 60 30 65 21 C73 28 78 52 78 72 Z" fill="#ffb3c7"/>');
+        t.extra = nose + (calm ? '<path d="M95 135 L95 143 L105 143 L105 135 Z" fill="#fff" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><path d="M100 135 L100 143" stroke="' + INK + '" stroke-width="1.6"/>' : '');
+        break;
+      case 3: // 냥이
+        t.b = 2;
+        t.ears = both('<path d="M50 96 L42 54 L82 76 Z" fill="' + p.body + '" ' + o + '/><path d="M54 84 L50 66 L68 77 Z" fill="' + p.belly + '"/>');
+        t.pre = '<path d="M90 82 L92 93 M100 80 L100 92 M110 82 L108 93" stroke="' + p.shade + '" stroke-width="4.5" stroke-linecap="round"/>';
+        t.extra = '<path d="M96 125 L104 125 L100 130 Z" fill="#ff7d9c" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>' + whisk;
+        break;
+      case 4: // 거북
+        t.b = 2;
+        t.back = '<ellipse cx="100" cy="126" rx="80" ry="60" fill="' + p.shade + '" ' + o + '/>' +
+          '<path d="M30 110 L46 118 M24 134 L42 136 M36 158 L50 150 M170 110 L154 118 M176 134 L158 136 M164 158 L150 150 M70 72 L78 84 M130 72 L122 84" stroke="' + p.dark + '" stroke-width="3.5" stroke-linecap="round" opacity=".6"/>';
+        t.pre = '<path d="M100 128 L100 170 M70 148 L130 148" stroke="' + p.shade + '" stroke-width="3.5" stroke-linecap="round" opacity=".55"/>';
+        break;
+      case 5: // 부엉이
+        t.ears = both('<path d="M58 88 L46 50 L80 72 Z" fill="' + p.body + '" ' + o + '/>');
+        t.arms = both('<ellipse cx="36" cy="138" rx="14" ry="26" transform="rotate(14 36 138)" fill="' + p.shade + '" ' + o + '/>');
+        t.pre = '<circle cx="80" cy="118" r="21" fill="' + p.belly + '"/><circle cx="120" cy="118" r="21" fill="' + p.belly + '"/>' +
+          '<path d="M84 152 l6 6 l6 -6 M104 152 l6 6 l6 -6 M94 164 l6 6 l6 -6" fill="none" stroke="' + p.shade + '" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>';
+        t.extra = '<path d="M93 127 L107 127 L100 141 Z" fill="#ffb629" stroke="' + INK + '" stroke-width="2.6" stroke-linejoin="round"/>';
+        break;
+      case 6: // 무당벌레
+        t.ears = antenna;
+        t.pre = '<path d="M42 134 C62 124 138 124 158 134 C158 163 135 178 100 178 C65 178 42 163 42 134 Z" fill="' + p.shade + '" ' + o + '/><path d="M100 128 L100 178" stroke="' + p.dark + '" stroke-width="4"/>' +
+          '<g fill="' + p.dark + '"><circle cx="70" cy="150" r="8"/><circle cx="130" cy="150" r="8"/><circle cx="84" cy="167" r="5.5"/><circle cx="116" cy="167" r="5.5"/></g>';
+        break;
+      case 7: // 나비
+        t.b = 1;
+        t.ears = '<path d="M88 66 C82 44 66 38 60 50 C58 57 65 61 69 56 M112 66 C118 44 134 38 140 50 C142 57 135 61 131 56" fill="none" stroke="' + p.dark + '" stroke-width="4.5" stroke-linecap="round"/>';
+        t.back = both('<g class="bugwing bw-l"><path d="M56 112 C16 62 -8 100 8 134 C18 152 42 148 56 134 Z" fill="' + p.belly + '" ' + o + '/><path d="M58 138 C26 148 20 176 42 180 C56 180 62 160 62 148 Z" fill="' + p.belly + '" ' + o + '/>' +
+          '<circle cx="26" cy="114" r="10" fill="' + p.shade + '"/><circle cx="42" cy="162" r="7" fill="' + p.shade + '"/></g>');
+        break;
+      case 8: // 사슴벌레
+        t.b = 2;
+        t.ears = both('<path d="M72 84 C46 74 36 44 50 20 C54 34 60 42 70 44 C66 36 68 28 73 23 C84 40 88 62 86 82 Z" fill="' + p.dark + '" stroke="' + INK + '" stroke-width="4.5" stroke-linejoin="round"/>');
+        t.pre = '<path d="M60 134 Q100 146 140 134 M100 138 L100 177" fill="none" stroke="' + p.shade + '" stroke-width="4" stroke-linecap="round" opacity=".7"/>';
+        break;
+      case 9: // 꿀벌
+        t.ears = antenna;
+        t.back = '<g class="bugwing bw-l"><ellipse cx="38" cy="96" rx="27" ry="15" transform="rotate(-38 38 96)" fill="#fff" opacity=".85" ' + thin + '/></g><g class="bugwing bw-r"><ellipse cx="162" cy="96" rx="27" ry="15" transform="rotate(38 162 96)" fill="#fff" opacity=".85" ' + thin + '/></g>';
+        t.pre = '<path d="M41 138 C70 147 130 147 159 138 L159 151 C130 160 70 160 41 151 Z M50 164 C76 172 124 172 150 164 C140 174 122 178 100 178 C78 178 60 174 50 164 Z" fill="' + INK + '" opacity=".78"/>';
+        break;
+      case 10: // 잠자리
+        t.b = 1;
+        t.ears = antenna;
+        t.back = both('<g class="bugwing bw-l"><ellipse cx="26" cy="94" rx="46" ry="11" transform="rotate(-16 26 94)" fill="#fff" opacity=".8" ' + thin + '/><ellipse cx="30" cy="124" rx="42" ry="10" transform="rotate(8 30 124)" fill="#fff" opacity=".8" ' + thin + '/></g>');
+        t.pre = '<path d="M72 143 Q100 152 128 143 M70 156 Q100 166 130 156 M76 168 Q100 176 124 168" fill="none" stroke="' + p.shade + '" stroke-width="4" stroke-linecap="round" opacity=".55"/>';
+        break;
+      case 11: // 사마귀
+        t.b = 1;
+        t.ears = '<path d="M88 64 C82 42 70 28 58 24 M112 64 C118 42 130 28 142 24" fill="none" stroke="' + p.dark + '" stroke-width="4.5" stroke-linecap="round"/>';
+        t.back = both('<path d="M50 112 L28 104 L48 94 Z" fill="' + p.body + '" ' + o + '/>');
+        t.arms = both('<path d="M58 156 C42 150 34 132 42 118 L60 94 C68 106 64 120 55 128 C62 136 63 148 58 156 Z" fill="' + p.shade + '" ' + o + '/><path d="M47 118 l6 3 M51 111 l6 3 M55 104 l5 3" stroke="' + p.dark + '" stroke-width="2.6" stroke-linecap="round"/>');
+        break;
+      case 12: // 티라노
+        t.b = 2;
+        t.back = spikes;
+        t.extra = '<path d="M64 102 L92 109 M136 102 L108 109" stroke="' + p.dark + '" stroke-width="6" stroke-linecap="round"/>' +
+          (calm ? '<path d="M76 128 Q100 156 124 128 Z" fill="#8a2f45" stroke="' + INK + '" stroke-width="3" stroke-linejoin="round"/><path d="M79 129 L85 138 L91 130 L97 139 L103 130 L109 139 L115 130 L121 129 Z" fill="#fff" stroke="' + INK + '" stroke-width="1.8" stroke-linejoin="round"/>' : '');
+        break;
+      case 13: // 트리케라
+        t.back = '<path d="M34 112 C20 72 46 42 68 46 C76 28 124 28 132 46 C154 42 180 72 166 112 Z" fill="' + p.shade + '" ' + o + '/>' +
+          '<g fill="' + CREAM + '" stroke="' + p.dark + '" stroke-width="2.6"><circle cx="38" cy="86" r="6"/><circle cx="50" cy="62" r="6"/><circle cx="150" cy="62" r="6"/><circle cx="162" cy="86" r="6"/></g>';
+        t.ears = horns;
+        t.extra = '<path d="M93 127 L100 108 L107 127 Z" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="2.6" stroke-linejoin="round"/>';
+        break;
+      case 14: // 스테고
+        t.b = 2;
+        t.back = '<g fill="' + p.shade + '" ' + o + '><path d="M30 104 L14 82 L44 84 Z"/><path d="M48 80 L42 50 L70 68 Z"/><path d="M152 80 L158 50 L130 68 Z"/><path d="M170 104 L186 82 L156 84 Z"/><path d="M26 134 L4 126 L24 110 Z"/></g>';
+        t.pre = '<circle cx="134" cy="96" r="5.5" fill="' + p.shade + '" opacity=".7"/><circle cx="62" cy="100" r="4.2" fill="' + p.shade + '" opacity=".7"/><circle cx="146" cy="112" r="3.6" fill="' + p.shade + '" opacity=".7"/>';
+        break;
+      case 15: // 프테라
+        t.b = 1;
+        t.back = '<g class="wing wing-l"><path d="M58 122 C30 112 6 86 2 54 C20 64 34 66 44 64 C40 50 42 38 49 30 C64 54 72 88 72 118 Z" fill="' + p.shade + '" ' + o + '/><path d="M56 114 C40 98 26 78 16 62 M64 110 C58 88 54 64 50 44" fill="none" stroke="' + p.dark + '" stroke-width="3" stroke-linecap="round" opacity=".55"/></g>' +
+          '<g class="wing wing-r"><path d="M142 122 C170 112 194 86 198 54 C180 64 166 66 156 64 C160 50 158 38 151 30 C136 54 128 88 128 118 Z" fill="' + p.shade + '" ' + o + '/><path d="M144 114 C160 98 174 78 184 62 M136 110 C142 88 146 64 150 44" fill="none" stroke="' + p.dark + '" stroke-width="3" stroke-linecap="round" opacity=".55"/></g>';
+        t.extra = '<path d="M86 124 L114 124 L100 152 Z" fill="#ffcf5a" stroke="' + INK + '" stroke-width="2.8" stroke-linejoin="round"/><path d="M90 131 L110 131" stroke="' + INK + '" stroke-width="2" opacity=".4"/>';
+        break;
+      case 16: // 브라키오
+        t.b = 3; t.fy = 98;
+        t.ears = both('<circle cx="74" cy="56" r="8" fill="' + p.body + '" ' + o + '/>');
+        t.pre = '<g fill="' + p.shade + '" opacity=".65"><circle cx="72" cy="128" r="6"/><circle cx="132" cy="122" r="5"/><circle cx="124" cy="80" r="4.5"/><circle cx="80" cy="76" r="3.6"/><circle cx="60" cy="150" r="4.5"/><circle cx="142" cy="148" r="5.5"/></g>';
+        break;
+      default: // 안킬로
+        t.b = 2;
+        t.back = '<g fill="' + CREAM + '" ' + o + '><path d="M38 108 L16 100 L36 90 Z"/><path d="M34 130 L12 126 L30 114 Z"/><path d="M36 152 L16 152 L32 138 Z"/><path d="M162 108 L184 100 L164 90 Z"/></g>';
+        t.pre = '<g fill="' + CREAM + '" stroke="' + p.dark + '" stroke-width="2.6"><circle cx="58" cy="98" r="6.5"/><circle cx="76" cy="86" r="6.5"/><circle cx="124" cy="86" r="6.5"/><circle cx="142" cy="98" r="6.5"/><circle cx="100" cy="82" r="5.5"/></g>';
+    }
+    return t;
+  }
 
   function wild(m, opts) {
     opts = opts || {};
-    var p = pal(m.hue), b = BODY[m.shape || 0];
+    var p = pal(m.hue);
     var o = 'stroke="' + p.dark + '" stroke-width="5" stroke-linejoin="round"';
-    var ears = '', back = '', extra = '';
     var thin = 'stroke="' + p.dark + '" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"';
-    if (m.shape === 0) {
-      // 동물: 둥근 귀, 코, 수염
-      ears = '<circle cx="60" cy="82" r="15" fill="' + p.body + '" ' + o + '/><circle cx="140" cy="82" r="15" fill="' + p.body + '" ' + o + '/>' +
-        '<circle cx="60" cy="83" r="7" fill="' + p.belly + '"/><circle cx="140" cy="83" r="7" fill="' + p.belly + '"/>';
-      extra = '<ellipse cx="100" cy="126.5" rx="4.6" ry="3.2" fill="' + INK + '"/>' +
-        '<path d="M50 124 L36 120 M50 131 L37 134 M150 124 L164 120 M150 131 L163 134" fill="none" ' + thin + ' opacity=".7"/>';
-    } else if (m.shape === 1) {
-      // 곤충: 더듬이, 투명한 날개, 배 줄무늬
-      back = '<g class="bugwing bw-l"><ellipse cx="36" cy="108" rx="27" ry="15" transform="rotate(-28 36 108)" fill="#fff" opacity=".8" ' + thin + '/></g>' +
-        '<g class="bugwing bw-r"><ellipse cx="164" cy="108" rx="27" ry="15" transform="rotate(28 164 108)" fill="#fff" opacity=".8" ' + thin + '/></g>';
-      ears = '<path d="M80 72 C70 54 60 46 50 48 M120 72 C130 54 140 46 150 48" fill="none" stroke="' + p.dark + '" stroke-width="5" stroke-linecap="round"/>' +
-        '<circle cx="49" cy="48" r="7" fill="' + p.shade + '" ' + thin + '/><circle cx="151" cy="48" r="7" fill="' + p.shade + '" ' + thin + '/>';
-      extra = '<path d="M72 143 Q100 152 128 143 M70 156 Q100 166 130 156" fill="none" stroke="' + p.shade + '" stroke-width="4" stroke-linecap="round" opacity=".55"/>';
-    } else {
-      // 공룡: 뿔, 등 가시, 송곳니, 비늘 무늬
-      back = '<path d="M38 118 L18 110 L36 98 Z M34 142 L15 138 L31 124 Z M162 112 L182 104 L164 94 Z" fill="' + p.shade + '" ' + o + '/>';
-      ears = '<path d="M54 94 C42 78 40 62 46 50 C60 56 72 68 78 82 Z" fill="#fff3d6" ' + o + '/><path d="M146 94 C158 78 160 62 154 50 C140 56 128 68 122 82 Z" fill="#fff3d6" ' + o + '/>';
-      extra = '<circle cx="134" cy="96" r="5.5" fill="' + p.shade + '" opacity=".7"/><circle cx="144" cy="110" r="3.8" fill="' + p.shade + '" opacity=".7"/><circle cx="62" cy="100" r="4.2" fill="' + p.shade + '" opacity=".7"/>' +
-        (opts.expr && opts.expr !== 'normal' ? '' : '<path d="M92.5 132.5 L95.5 139 L98.5 133.5 Z M101.5 133.5 L104.5 139 L107.5 132.5 Z" fill="#fff" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>');
-    }
-    var silhouette = opts.silhouette;
-    var svg = '<svg class="mon mon-wild' + (silhouette ? ' is-shadow' : '') + '" viewBox="0 0 200 200" aria-hidden="true">' +
+    var t = template(m.shape || 0, p, o, thin, opts.expr), b = BODY[t.b];
+    var arms = t.arms != null ? t.arms :
+      '<ellipse cx="42" cy="134" rx="10" ry="14" transform="rotate(22 42 134)" fill="' + p.body + '" ' + o + '/>' +
+      '<ellipse cx="158" cy="134" rx="10" ry="14" transform="rotate(-22 158 134)" fill="' + p.body + '" ' + o + '/>';
+    return '<svg class="mon mon-wild' + (opts.silhouette ? ' is-shadow' : '') + '" viewBox="0 0 200 200" aria-hidden="true">' +
       '<ellipse class="mon-ground" cx="100" cy="182" rx="50" ry="9" fill="#000" opacity=".16"/>' +
       '<g class="mon-all"><g class="mon-body">' +
-      tailOrn(m.tail, p) + back +
-      '<ellipse cx="42" cy="134" rx="10" ry="14" transform="rotate(22 42 134)" fill="' + p.body + '" ' + o + '/>' +
-      '<ellipse cx="158" cy="134" rx="10" ry="14" transform="rotate(-22 158 134)" fill="' + p.body + '" ' + o + '/>' +
-      ears + headOrn(m.head, b.top - 64) +
+      tailOrn(m.tail, p) + t.back + arms + t.ears + headOrn(m.head, b.top - 64) +
       '<path d="' + b.d + '" fill="' + p.body + '" ' + o + '/>' +
       '<ellipse cx="100" cy="148" rx="33" ry="24" fill="' + p.belly + '"/>' +
       '<ellipse cx="74" cy="' + (b.top + 26) + '" rx="17" ry="8" transform="rotate(-28 74 ' + (b.top + 26) + ')" fill="#fff" opacity=".32"/>' +
+      t.pre +
       '<ellipse cx="78" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>' +
       '<ellipse cx="122" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>' +
-      face(116, opts.expr || 'normal', m.eyes) + extra +
+      face(t.fy, opts.expr || 'normal', m.eyes) + t.extra +
       '</g></g></svg>';
-    return svg;
   }
 
   /* ---------- 짝꿍 (배우는 AI 말랑몬) ---------- */
@@ -326,7 +428,7 @@
   function speciesName(m) { return SPECIES[m.type][m.shape || 0]; }
 
   root.MMArt = {
-    TYPE: TYPE, SPECIES: SPECIES, KIND: KIND, EGGS: EGGS, STAR: STAR, INK: INK, FLAME: FLAME,
+    TYPE: TYPE, SPECIES: SPECIES, KIND: KIND, SHAPES: SHAPES, STEMS: STEMS, EGGS: EGGS, STAR: STAR, INK: INK, FLAME: FLAME,
     wild: wild, partner: partner, egg: egg, typeIcon: typeIcon,
     setFace: setFace, speciesName: speciesName, pal: pal
   };

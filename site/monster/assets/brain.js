@@ -6,6 +6,7 @@
   'use strict';
 
   var TYPES = ['fire', 'water', 'grass'];
+  var SHAPES = 18; // 생김새 가짓수 (동물 6 · 곤충 6 · 공룡 6). 타입을 맞히는 데는 쓰이지 않아요
 
   // 타입마다 몸 색(색상환 각도)의 범위. clear = 수업용(뚜렷함), wild = 야생(다양함)
   var HUE = {
@@ -54,7 +55,7 @@
     return {
       id: 'm' + Date.now().toString(36) + (uid++),
       type: type,
-      shape: opts.shape != null ? opts.shape : Math.floor(r() * 3),
+      shape: opts.shape != null ? opts.shape : Math.floor(r() * SHAPES),
       hue: Math.round((hue + 360) % 360),
       head: head,
       tail: tail,
@@ -149,7 +150,7 @@
   var COUNTER = { fire: 'water', water: 'grass', grass: 'fire' };
 
   var api = {
-    TYPES: TYPES, HUE: HUE, COUNTER: COUNTER,
+    TYPES: TYPES, SHAPES: SHAPES, HUE: HUE, COUNTER: COUNTER,
     rng: rng, pick: pick, makeMonster: makeMonster,
     weights: weights, distance: distance, guess: guess, smartness: smartness, knowsHeadMatters: knowsHeadMatters
   };

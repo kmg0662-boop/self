@@ -218,8 +218,15 @@
     return list;
   }
 
+  // 동네 이웃이 서 있는 자리
+  var npcSpots = {
+    guard: [1200, 1296], diver: [560, 272], fisher: [1820, 256], keeper: [2190, 262], farmer: [200, 770], teacher: [1240, 888],
+    bugdoc: [330, 1250], dinodoc: [1660, 1425], vet: [2060, 1010], painter: [2310, 770], granny: [2030, 470], jogger: [1500, 392],
+    shop: [700, 1392], courier: [1470, 1398], mom: [1260, 728], kid1: [960, 905], kid2: [1470, 950], kid3: [780, 738]
+  };
+
   root.MMWorld = {
-    W: W, H: H, solids: solids, bounds: bounds, spots: spots, start: start, wildHomes: wildHomes,
+    W: W, H: H, solids: solids, bounds: bounds, spots: spots, start: start, wildHomes: wildHomes, npcSpots: npcSpots,
     ground: ground, objects: objects
   };
 })(window);

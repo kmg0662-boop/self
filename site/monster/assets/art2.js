@@ -1,5 +1,5 @@
 /* 말랑몬 선생님 — 그림 공장 2
-   전설 말랑몬 세 마리(공룡·바다 용·장수풍뎅이)와 주인공 아이를 그려요.
+   전설 말랑몬 세 마리(공룡·바다 용·장수풍뎅이)를 그려요.
    전설도 머리 장식(불꽃·지느러미·잎)은 진짜 타입을 알려 주고, 몸 색은 변신할 때마다 바뀌어요. */
 (function (root) {
   'use strict';
@@ -125,69 +125,6 @@
       '<g class="mon-all"><g class="mon-body">' + body + '</g></g></svg>';
   }
 
-  /* ---------- 주인공 아이 ---------- */
-  var SKIN = ['#ffe0c4', '#f6c9a0', '#dba77c'];
-  var HAIR = ['#2b2330', '#4a3226', '#7a4a2a'];
-  var OUTFIT = ['#ff5a5a', '#3fa9f5', '#52c443', '#ffb629', '#8a5cf6', '#2d2440'];
-  var HAIR_NAMES = ['삐죽 머리', '바가지 머리', '옆가르마', '짧은 머리'];
-  var HAT_NAMES = ['없음', '야구 모자', '탐험 모자'];
-
-  function defaultLook(i) {
-    return { skin: 0, hair: i % 4, hairColor: 0, outfit: [1, 0, 2, 3][i % 4], hat: i % 2 ? 1 : 2, glasses: 0 };
-  }
-
-  function avatar(look, opts) {
-    opts = opts || {};
-    look = look || defaultLook(0);
-    var skin = SKIN[look.skin] || SKIN[0], hc = HAIR[look.hairColor] || HAIR[0], fit = OUTFIT[look.outfit] || OUTFIT[0];
-    var o = 'stroke="' + INK + '" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"';
-    var hair = [
-      'M23 50 C20 22 44 7 62 9 C85 9 100 26 97 50 C92 42 88 36 82 31 L80 42 L71 29 L65 42 L57 28 L51 42 L43 31 C36 37 29 43 23 50 Z',
-      'M23 54 C18 22 42 7 60 7 C80 7 102 22 97 54 C97 46 93 41 89 39 L31 39 C27 41 23 46 23 54 Z',
-      'M23 52 C20 22 44 7 62 8 C85 9 100 26 97 52 C93 41 87 33 77 31 C62 42 44 43 30 37 C26 41 24 46 23 52 Z',
-      'M26 46 C27 22 44 11 60 11 C76 11 93 22 94 46 C86 31 74 25 60 25 C46 25 34 31 26 46 Z'
-    ][look.hair] || '';
-    var hat = '';
-    if (look.hat === 1) {
-      hat = '<path d="M22 40 C24 17 42 5 60 5 C78 5 96 17 98 40 Z" fill="' + fit + '" ' + o + '/>' +
-        '<path d="M20 39 Q62 29 108 44 C108 50 104 52 100 51 Q60 40 20 46 Z" fill="' + fit + '" ' + o + '/>' +
-        '<circle cx="60" cy="6" r="4" fill="#fff" stroke="' + INK + '" stroke-width="3"/>';
-    } else if (look.hat === 2) {
-      hat = '<ellipse cx="60" cy="36" rx="52" ry="11" fill="#d9b06a" ' + o + '/>' +
-        '<path d="M33 35 C33 10 87 10 87 35 Z" fill="#e8c583" ' + o + '/>' +
-        '<path d="M34 30 Q60 38 86 30 L86 35 Q60 43 34 35 Z" fill="#8a5a3a"/>';
-    }
-    var glasses = look.glasses ? '<circle cx="46" cy="55" r="11" fill="#fff" fill-opacity=".3" stroke="' + INK + '" stroke-width="3.2"/><circle cx="74" cy="55" r="11" fill="#fff" fill-opacity=".3" stroke="' + INK + '" stroke-width="3.2"/><path d="M57 55 L63 55" stroke="' + INK + '" stroke-width="3.2"/>' : '';
-    var happy = opts.expr === 'happy';
-    var eyes = happy
-      ? '<path d="M40 57 Q46 49 52 57 M68 57 Q74 49 80 57" fill="none" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>'
-      : '<ellipse cx="46" cy="55" rx="5" ry="6.5" fill="' + INK + '"/><ellipse cx="74" cy="55" rx="5" ry="6.5" fill="' + INK + '"/><circle cx="44.3" cy="52.6" r="2" fill="#fff"/><circle cx="72.3" cy="52.6" r="2" fill="#fff"/>';
-    var mouth = happy ? '<path d="M51 67 Q60 80 69 67 Z" fill="#8a2f45" stroke="' + INK + '" stroke-width="2.6" stroke-linejoin="round"/>'
-      : '<path d="M52 68 Q60 75 68 68" fill="none" stroke="' + INK + '" stroke-width="3.2" stroke-linecap="round"/>';
-
-    return '<svg class="kid' + (opts.walking ? ' walking' : '') + '" viewBox="0 0 120 170" aria-hidden="true">' +
-      '<ellipse cx="60" cy="162" rx="30" ry="6" fill="#000" opacity=".18"/>' +
-      '<g class="kid-all">' +
-      '<g class="leg leg-l"><rect x="43" y="116" width="14" height="34" rx="6" fill="#39445e" ' + o + '/><ellipse cx="48" cy="152" rx="11" ry="7" fill="#fff" ' + o + '/></g>' +
-      '<g class="leg leg-r"><rect x="63" y="116" width="14" height="34" rx="6" fill="#39445e" ' + o + '/><ellipse cx="72" cy="152" rx="11" ry="7" fill="#fff" ' + o + '/></g>' +
-      '<g class="kid-top">' +
-      '<rect x="40" y="84" width="40" height="30" rx="8" fill="#8a5a3a" ' + o + ' transform="translate(0 2)"/>' +
-      '<g class="arm arm-l"><rect x="26" y="86" width="14" height="30" rx="7" fill="' + fit + '" ' + o + '/><circle cx="33" cy="117" r="6.5" fill="' + skin + '" ' + o + '/></g>' +
-      '<g class="arm arm-r"><rect x="80" y="86" width="14" height="30" rx="7" fill="' + fit + '" ' + o + '/><circle cx="87" cy="117" r="6.5" fill="' + skin + '" ' + o + '/></g>' +
-      '<path d="M38 88 Q60 78 82 88 L84 122 Q60 130 36 122 Z" fill="' + fit + '" ' + o + '/>' +
-      '<path d="M46 86 L50 124 M74 86 L70 124" stroke="#8a5a3a" stroke-width="5" stroke-linecap="round"/>' +
-      '<path transform="translate(60 106) scale(.62)" d="' + A.STAR + '" fill="#ffd84a" stroke="' + INK + '" stroke-width="3.5" stroke-linejoin="round"/>' +
-      '<circle cx="24" cy="54" r="7" fill="' + skin + '" ' + o + '/><circle cx="96" cy="54" r="7" fill="' + skin + '" ' + o + '/>' +
-      '<circle cx="60" cy="48" r="37" fill="' + skin + '" ' + o + '/>' +
-      '<path d="' + hair + '" fill="' + hc + '" stroke="' + INK + '" stroke-width="3.5" stroke-linejoin="round"/>' +
-      '<ellipse cx="34" cy="66" rx="6.5" ry="4" fill="#ff7d9c" opacity=".5"/><ellipse cx="86" cy="66" rx="6.5" ry="4" fill="#ff7d9c" opacity=".5"/>' +
-      eyes + mouth + glasses + hat +
-      '</g></g></svg>';
-  }
-
   A.LEGEND = LEGEND;
   A.legend = legend;
-  A.avatar = avatar;
-  A.defaultLook = defaultLook;
-  A.LOOK = { SKIN: SKIN, HAIR: HAIR, OUTFIT: OUTFIT, HAIR_NAMES: HAIR_NAMES, HAT_NAMES: HAT_NAMES };
 })(window);
