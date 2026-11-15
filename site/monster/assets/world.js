@@ -163,7 +163,8 @@
       '<path d="M85 30 L85 4" stroke="' + INK + '" stroke-width="5" stroke-linecap="round"/><path class="sway" d="M85 4 L116 13 L85 24 Z" fill="#ff4f6d" stroke="' + INK + '" stroke-width="4" stroke-linejoin="round"/>' +
       '<path d="M66 164 L66 122 Q85 104 104 122 L104 164 Z" fill="#8a5a3a" stroke="' + INK + '" stroke-width="4.5" stroke-linejoin="round"/>' +
       '<rect x="30" y="98" width="26" height="24" rx="4" fill="#a9d8f5" stroke="' + INK + '" stroke-width="4"/><rect x="114" y="98" width="26" height="24" rx="4" fill="#a9d8f5" stroke="' + INK + '" stroke-width="4"/>' +
-      '<g transform="translate(85 62)"><path transform="scale(1.1)" d="' + A.STAR + '" fill="#ffd84a" stroke="' + INK + '" stroke-width="3.2" stroke-linejoin="round"/></g></svg>';
+      '<g transform="translate(85 62)"><path transform="scale(1.1)" d="' + A.STAR + '" fill="#ffd84a" stroke="' + INK + '" stroke-width="3.2" stroke-linejoin="round"/></g>' +
+      '<g transform="translate(85 92)"><rect x="-34" y="-12" width="68" height="22" rx="11" fill="#fff" stroke="' + INK + '" stroke-width="3.5"/><text x="0" y="5" text-anchor="middle" font-size="16" fill="#ff5e7e" font-family="Jua, sans-serif">시험장</text></g></svg>';
     return { x: 1020, y: 842, w: 170, h: 170, html: s, id: 'school' };
   }
 

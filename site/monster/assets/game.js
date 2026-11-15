@@ -19,7 +19,7 @@
     return {
       name: name, look: look, egg: null, xp: 0, memory: [], dex: {}, legends: {}, review: [], phase: 'new',
       lessons: 0, battles: 0, sinceLesson: 0, friends: 0, seenTricky: false, aha: false, hearts: 3, pos: null, mapTut: false,
-      met: {}, sv: 2
+      met: {}, sv: 2, badges: 0, cards: {}, taughtN: 0, checkedN: 0, tests: 0
     };
   }
   function loadStore() {
@@ -49,6 +49,7 @@
     (p.memory || []).concat(p.review || []).forEach(function (m) { if (mapShape[m.shape] != null) m.shape = mapShape[m.shape]; });
     p.met = p.met || {}; p.sv = 2;
   });
+  store.profiles.forEach(function (p) { p.cards = p.cards || {}; p.badges = p.badges || 0; p.taughtN = p.taughtN || 0; p.checkedN = p.checkedN || 0; if (p.phase === 'needTeach') p.phase = 'hatched'; });
   var state = store.profiles[store.cur] || null;
   function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { /* 저장이 막혀도 놀 수는 있음 */ } }
   S.setMuted(store.muted);
@@ -139,6 +140,7 @@
     arrow: '<svg viewBox="0 0 70 70"><path d="M35 64 L10 30 L24 30 L24 6 L46 6 L46 30 L60 30 Z" fill="#ffc93c" stroke="#2d2440" stroke-width="5" stroke-linejoin="round"/></svg>',
     edge: '<svg viewBox="0 0 84 84"><path d="M42 2 L60 22 A30 30 0 1 1 24 22 Z" fill="#ffc93c" stroke="#2d2440" stroke-width="5" stroke-linejoin="round"/><circle cx="42" cy="44" r="23" fill="#fff" stroke="#2d2440" stroke-width="3"/></svg>',
     paw: '<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="10" fill="#ff8fb3" stroke="#2d2440" stroke-width="3.5"/><circle cx="10" cy="20" r="5" fill="#ff8fb3" stroke="#2d2440" stroke-width="3"/><circle cx="20" cy="11" r="5" fill="#ff8fb3" stroke="#2d2440" stroke-width="3"/><circle cx="32" cy="12" r="5" fill="#ff8fb3" stroke="#2d2440" stroke-width="3"/><circle cx="40" cy="22" r="5" fill="#ff8fb3" stroke="#2d2440" stroke-width="3"/></svg>',
+    medal: '<svg viewBox="0 0 48 48"><path d="M14 4 L22 22 L26 22 L34 4 L27 4 L24 12 L21 4 Z" fill="#3fa9f5" stroke="#2d2440" stroke-width="3" stroke-linejoin="round"/><circle cx="24" cy="30" r="13" fill="#ffd84a" stroke="#2d2440" stroke-width="3.5"/><path transform="translate(24 30) scale(.55)" d="' + A.STAR + '" fill="#fff" stroke="#2d2440" stroke-width="3.5" stroke-linejoin="round"/></svg>',
     berry: '<svg viewBox="0 0 100 100"><path d="M50 24 C74 14 94 34 86 58 C80 78 62 93 50 95 C38 93 20 78 14 58 C6 34 26 14 50 24 Z" fill="#ff4f6d" stroke="#2d2440" stroke-width="5" stroke-linejoin="round"/><path d="M50 26 C40 10 26 12 22 20 C34 20 42 28 50 26 C58 28 66 20 78 20 C74 12 60 10 50 26 Z" fill="#52c443" stroke="#2c8a2a" stroke-width="4" stroke-linejoin="round"/><g fill="#ffe24a"><ellipse cx="36" cy="48" rx="3" ry="4.5"/><ellipse cx="54" cy="44" rx="3" ry="4.5"/><ellipse cx="70" cy="52" rx="3" ry="4.5"/><ellipse cx="44" cy="66" rx="3" ry="4.5"/><ellipse cx="62" cy="68" rx="3" ry="4.5"/></g><ellipse cx="32" cy="40" rx="7" ry="4" transform="rotate(-30 32 40)" fill="#fff" opacity=".5"/></svg>'
   };
 
@@ -182,26 +184,6 @@
       flowers([[640, 560, '#fff'], [720, 610, '#ff8fb3'], [1180, 560, '#ffb04d'], [560, 500, '#b99bff']]) +
       '</svg>';
   }
-
-  var ZONE_ART = {
-    fire: '<svg class="zone-art" viewBox="0 0 384 244" preserveAspectRatio="none"><rect width="384" height="244" fill="#ffc48a"/><circle cx="318" cy="52" r="30" fill="#ffe9a8" opacity=".8"/>' +
-      '<circle cx="222" cy="46" r="14" fill="#fff" opacity=".55"/><circle cx="238" cy="26" r="10" fill="#fff" opacity=".45"/>' +
-      '<path d="M-10 244 L96 126 C104 118 116 118 124 124 L152 146 L196 84 C204 74 220 74 228 84 L400 244 Z" fill="#8a4a3a"/>' +
-      '<path class="lava" d="M196 86 C204 74 220 74 228 86 L238 112 C230 104 224 120 214 108 C208 102 200 118 188 104 Z" fill="#ffd23c"/>' +
-      '<path class="lava" d="M0 244 C60 210 130 224 200 216 C270 208 330 202 384 218 L384 244 Z" fill="#ff7a3c"/>' +
-      '<path d="M0 244 C80 230 150 238 220 232 C290 226 340 226 384 234 L384 244 Z" fill="#ffd23c"/></svg>',
-    water: '<svg class="zone-art" viewBox="0 0 384 244" preserveAspectRatio="none"><rect width="384" height="244" fill="#cdf1ff"/>' +
-      '<path transform="translate(200 20) scale(.6)" d="' + CLOUD + '" fill="#fff"/>' +
-      '<path class="wave" d="M-40 132 C0 112 40 152 80 132 C120 112 160 152 200 132 C240 112 280 152 320 132 C360 112 400 152 440 132 L440 260 L-40 260 Z" fill="#8ad9ff"/>' +
-      '<path class="wave w2" d="M-40 168 C0 148 40 188 80 168 C120 148 160 188 200 168 C240 148 280 188 320 168 C360 148 400 188 440 168 L440 260 L-40 260 Z" fill="#4dbaf6"/>' +
-      '<path class="wave" d="M-40 206 C0 186 40 226 80 206 C120 186 160 226 200 206 C240 186 280 226 320 206 C360 186 400 226 440 206 L440 260 L-40 260 Z" fill="#2a93e0"/>' +
-      '<circle cx="300" cy="96" r="9" fill="none" stroke="#fff" stroke-width="4"/><circle cx="330" cy="70" r="6" fill="none" stroke="#fff" stroke-width="3.5"/></svg>',
-    grass: '<svg class="zone-art" viewBox="0 0 384 244" preserveAspectRatio="none"><rect width="384" height="244" fill="#e3f9cf"/>' +
-      '<path d="M-10 244 C40 150 130 150 190 200 C240 150 330 140 400 220 L400 244 Z" fill="#9be283"/>' +
-      '<rect x="290" y="130" width="16" height="70" rx="6" fill="#8a5a3a"/><g class="sway"><circle cx="298" cy="104" r="48" fill="#4fb848"/><circle cx="278" cy="90" r="12" fill="#7ad66a" opacity=".7"/></g>' +
-      '<rect x="222" y="160" width="12" height="46" rx="5" fill="#8a5a3a"/><g class="sway" style="animation-delay:-1.2s"><circle cx="228" cy="142" r="32" fill="#62c257"/></g>' +
-      '<path d="M0 244 C100 200 280 212 384 224 L384 244 Z" fill="#62c257"/></svg>'
-  };
 
   /* ---------- 화면 틀 ---------- */
   function setScreen(name, html, opts) {
@@ -460,7 +442,6 @@
     if (!state) return profiles();
     if (!state.egg || state.phase === 'new') return eggScreen();
     if (state.phase === 'hatched') return firstBattle();
-    if (state.phase === 'needTeach') return lesson();
     return map();
   }
 
@@ -568,11 +549,20 @@
   }
 
   /* ================================================================
-     3. 배틀 화면
+     3. 배틀: 선생님(아이)이 직접 판단하고, 직접 쏘고, 직접 잡는다
+        ① 짝꿍이 "왜 그렇게 생각하는지" 보여 준다 (닮은 기억 + 어떤 단서가 닮았는지)
+        ② 아이가 맞는지 보고 타입을 고른다 → 짝꿍이 틀렸으면 그 자리에서 가르치게 된다
+        ③ 타이밍을 맞춰 공격한다  ④ 타이밍을 맞춰 친구가 된다
+        ⑤ 친구가 된 말랑몬은 곧바로 짝꿍의 기억(학습 예시)이 된다
      ================================================================ */
   var ME = { x: 150, y: 300, size: 320, cx: 310, cy: 470 };
   var FOE = { x: 820, y: 190, size: 270, cx: 955, cy: 330 };
   var BIG = { x: 730, y: 60, size: 420, cx: 940, cy: 290 };
+  var HEAD_HINT = ['불꽃', '지느러미', '새싹'];
+  var combo = 0;
+
+  function hueFamily(h) { return h >= 340 || h < 62 ? 'fire' : h < 168 ? 'grass' : 'water'; }
+  function buzz(ms) { try { if (navigator.vibrate && !store.muted) navigator.vibrate(ms); } catch (e) { /* 진동이 없는 기기 */ } }
 
   function heartsHtml(n, max) {
     var s = '';
@@ -580,15 +570,48 @@
     return s;
   }
 
+  // 짝꿍이 지금 어떤 단서를 얼마나 믿는지 (색·머리·꼬리)
+  function cueBars(w, id) {
+    var rows = [['hue', '색'], ['head', '머리'], ['tail', '꼬리']];
+    return '<div class="cues"' + (id ? ' id="' + id + '"' : '') + '>' + rows.map(function (r) {
+      return '<div class="cue-row"><span>' + r[1] + '</span><div class="bar cue"><i data-c="' + r[0] + '" style="width:' + Math.round(Math.sqrt(w[r[0]]) * 100) + '%"></i></div></div>';
+    }).join('') + '</div>';
+  }
+
+  // 짝꿍의 생각을 풀어서 설명한다: 누구랑 닮았다고 봤고, 무엇이 닮았는지
+  function explain(m) {
+    var g = B.guess(state.memory, m);
+    if (!g) return null;
+    var n = g.nearest, total = g.votes.fire + g.votes.water + g.votes.grass;
+    return {
+      type: g.ranked[0], near: n, conf: total ? g.votes[g.ranked[0]] / total : 0,
+      match: { hue: hueFamily(n.hue) === hueFamily(m.hue), head: n.head === m.head, tail: n.tail === m.tail }
+    };
+  }
+  function explainHtml(ex) {
+    function chip(ok, name) { return '<div class="chip ' + (ok ? 'ok' : 'no') + '">' + name + ' <b>' + (ok ? '닮음' : '다름') + '</b></div>'; }
+    var dots = '';
+    for (var i = 0; i < 3; i++) dots += '<i class="' + (ex.conf > [0.34, 0.55, 0.78][i] ? 'on' : '') + '"></i>';
+    return mini(A.wild(ex.near)) + '<div class="chips">' + chip(ex.match.hue, '색') + chip(ex.match.head, '머리') + chip(ex.match.tail, '꼬리') + '</div>' +
+      '<span class="arrow">▶</span><div class="guess"><span class="ticon">' + A.typeIcon(ex.type) + '</span><div class="conf">' + dots + '</div></div>';
+  }
+  function explainLine(ex) {
+    var same = [];
+    if (ex.match.hue) same.push('색'); if (ex.match.head) same.push('머리'); if (ex.match.tail) same.push('꼬리');
+    var what = same.length ? same.join('랑 ') + josa(same[same.length - 1], '이', '가') + ' 닮았어!' : '어딘가 닮은 것 같아…';
+    var sure = ex.conf > 0.78 ? '분명히 ' : ex.conf > 0.55 ? '아마 ' : '잘 모르겠지만 ';
+    return '기억 속 이 친구랑 ' + what + ' ' + sure + tname(ex.type) + '!';
+  }
+
   function battleScreen(o) {
     o = o || {};
     var F = o.big ? BIG : FOE;
-    setScreen('battle', sceneBattle(o.big) +
+    setScreen('battle', sceneBattle(o.big || o.dark) +
       '<div class="hud me" style="left:26px"><div class="nm">' + me_() + '의 짝꿍 · Lv.' + level(state.xp) + '</div><div class="hearts" id="hearts"></div></div>' +
       '<div class="hud foe"><div class="nm" id="foe-nm">???</div><div class="hpbar"><i id="foe-hp"></i></div></div>' +
-      '<div class="think" id="think" style="left:70px;top:128px;height:176px"></div>' +
+      '<div class="think" id="think"></div>' +
       mw(partnerSvg('normal'), ME.x, ME.y, ME.size, 'me') +
-      '<div class="bubble battle-bubble tail-none" style="left:50px;right:400px;bottom:30px"></div>');
+      '<div class="bubble battle-bubble tail-none"></div>');
     var max = maxHearts();
     var bs = {
       me: q('.me'), foe: null, F: F, max: max, hearts: Math.max(0, Math.min(max, state.hearts == null ? max : state.hearts)),
@@ -603,7 +626,7 @@
         bs.foe = el(mw(svg, F.x, F.y, F.size, 'foe'));
         root.appendChild(bs.foe);
         S.sfx(o.big ? 'bighit' : 'pop');
-        if (o.big) shakeScreen();
+        if (o.big) { shakeScreen(); buzz(120); }
         await anim(bs.foe, [
           { transform: 'translate(360px,-40px) scale(.6)', opacity: 0 },
           { transform: 'translate(-20px,0) scale(1.08,.92)', opacity: 1, offset: 0.7 },
@@ -620,7 +643,7 @@
           { transform: 'translate(' + (-26 * dir) + 'px,8px) scale(1.08,.9)', offset: 0.3 },
           { transform: 'translate(' + (70 * dir) + 'px,' + (-24 * dir) + 'px) scale(.95,1.06)', offset: 0.6 },
           { transform: 'translate(0,0) scale(1)' }
-        ], { duration: 420, easing: 'ease-in-out' });
+        ], { duration: 360, easing: 'ease-in-out' });
         var s = el('<div class="shot" style="left:' + (a.cx - 48) + 'px;top:' + (a.cy - 48) + 'px">' + A.typeIcon(type) + '</div>');
         root.appendChild(s);
         S.sfx('whoosh');
@@ -629,16 +652,16 @@
           { transform: 'translate(0,0) scale(.4) rotate(0deg)' },
           { transform: 'translate(' + dx / 2 + 'px,' + (dy / 2 - 110) + 'px) scale(1.25) rotate(' + 300 * dir + 'deg)', offset: 0.5 },
           { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + (strong ? 1.7 : 0.8) + ') rotate(' + 600 * dir + 'deg)' }
-        ], { duration: 480, easing: 'ease-in' });
+        ], { duration: 420, easing: 'ease-in' });
         s.remove();
         burst(b.cx, b.cy, { colors: [T[type].color, '#fff', T[type].soft, T[type].color], n: strong ? 24 : 7, dist: strong ? 240 : 90, size: strong ? 22 : 12 });
         S.sfx(strong ? 'bighit' : (mine ? 'weak' : 'hit'));
-        if (strong || !mine) { flashOf(target); shakeScreen(); }
+        if (strong || !mine) { flashOf(target); shakeScreen(); buzz(strong ? 50 : 90); }
         await anim(target, [
           { transform: 'translate(0,0)' },
           { transform: 'translate(' + (strong ? 34 : 12) * dir + 'px,-6px) rotate(' + (strong ? 8 : 3) * dir + 'deg)', offset: 0.3 },
           { transform: 'translate(0,0)' }
-        ], { duration: 320, easing: 'ease-out' });
+        ], { duration: 300, easing: 'ease-out' });
       },
       callout: function (text, cls) {
         var c = el('<div class="callout ' + (cls || '') + '">' + text + '</div>');
@@ -657,301 +680,295 @@
     return A.wild(m, { expr: expr }).replace('<svg ', '<svg data-eyes="' + m.eyes + '" data-face-y="116" ');
   }
 
-  function attackTap() {
+  /* ---- 아이가 하는 일 ①: 타입 고르기 ---- */
+  function pickType(guess, off, truth) {
     var t = token, r = root;
     return new Promise(function (res) {
-      var btn = el('<button class="btn yellow btn-attack pulse" style="left:auto;right:44px;margin:0;width:320px">가라!</button>');
-      r.appendChild(btn);
-      popIn(btn);
-      btn.addEventListener('click', function () { if (t !== token) return; S.sfx('pop'); btn.remove(); res(); }, { once: true });
-      if (FAST) setTimeout(function () { btn.click(); }, 30);
+      var box = el('<div class="tpick">' + TYPES.map(function (ty) {
+        return '<button class="tbtn t-' + ty + (off.indexOf(ty) >= 0 ? ' off' : '') + '" data-t="' + ty + '"' + (off.indexOf(ty) >= 0 ? ' disabled' : '') + '>' +
+          (ty === guess ? '<span class="tag">짝꿍 생각</span>' : '') + A.typeIcon(ty) + '<span>' + T[ty].name + '</span></button>';
+      }).join('') + '</div>');
+      r.appendChild(box);
+      popIn(box);
+      Array.prototype.forEach.call(box.querySelectorAll('.tbtn'), function (b) {
+        b.addEventListener('click', function () { if (t !== token || b.disabled) return; S.sfx('pick'); buzz(15); box.remove(); res(b.getAttribute('data-t')); });
+      });
+      if (FAST) setTimeout(function () { var b = box.querySelector('[data-t="' + truth + '"]'); if (b) b.click(); }, 30);
     });
   }
 
-  /* 맨 처음 배틀: 배운 게 없어서 져 본다 → "가르쳐 줘!" (왜 배워야 하는지 먼저 느끼기) */
+  /* ---- 아이가 하는 일 ②: 타이밍 맞춰 쏘기 (초록 칸에서 누르면 세다) ---- */
+  function timing(label) {
+    var tk = token, r = root;
+    return new Promise(function (res) {
+      var box = el('<div class="gauge-box"><div class="gauge"><i class="zone good"></i><i class="zone perfect"></i><b class="mark"></b></div><button class="btn yellow fire">' + label + '</button></div>');
+      r.appendChild(box);
+      popIn(box);
+      var mark = box.querySelector('.mark'), t0 = performance.now(), pos = 0, done = false;
+      var spd = 3.0 + (state.badges || 0) * 0.35;
+      (function loop(now) {
+        if (tk !== token || done) return;
+        pos = 0.5 + 0.5 * Math.sin((now - t0) / 1000 * spd);
+        mark.style.left = (pos * 100) + '%';
+        requestAnimationFrame(loop);
+      })(t0);
+      function fire(e) {
+        if (done || tk !== token) return;
+        if (e) e.preventDefault();
+        done = true;
+        var d = Math.abs(pos - 0.5), qy = d < 0.09 ? 'perfect' : d < 0.26 ? 'good' : 'weak';
+        box.classList.add(qy);
+        S.sfx(qy === 'weak' ? 'tap' : 'pop'); buzz(qy === 'perfect' ? 40 : 15);
+        setTimeout(function () { box.remove(); if (tk === token) res(qy); }, 240 * speed);
+      }
+      box.addEventListener('pointerdown', fire);
+      if (FAST) setTimeout(function () { pos = 0.5; fire(); }, 30);
+    });
+  }
+
+  /* ---- 아이가 하는 일 ③: 동그라미가 딱 맞을 때 눌러 친구 되기 ---- */
+  function ringCatch(F) {
+    var tk = token, r = root;
+    return new Promise(function (res) {
+      var box = el('<div class="ring-wrap"><div class="ring-box" style="left:' + F.cx + 'px;top:' + F.cy + 'px"><i class="ring-in"></i><i class="ring-out"></i></div>' +
+        '<button class="btn green catch">친구 되자!</button></div>');
+      r.appendChild(box);
+      var out = box.querySelector('.ring-out'), t0 = performance.now(), sc = 2.4, done = false;
+      (function loop(now) {
+        if (tk !== token || done) return;
+        sc = 2.5 - (((now - t0) % 1400) / 1400) * 2.0;
+        out.style.transform = 'scale(' + sc.toFixed(3) + ')';
+        requestAnimationFrame(loop);
+      })(t0);
+      function tap(e) {
+        if (done || tk !== token) return;
+        if (e) e.preventDefault();
+        done = true;
+        var d = Math.abs(sc - 1), stars = d < 0.16 ? 3 : d < 0.42 ? 2 : 1;
+        box.classList.add('s' + stars);
+        S.sfx('good'); buzz(stars === 3 ? 60 : 20);
+        setTimeout(function () { box.remove(); if (tk === token) res(stars); }, 260 * speed);
+      }
+      box.addEventListener('pointerdown', tap);
+      if (FAST) setTimeout(function () { sc = 1; tap(); }, 30);
+    });
+  }
+
+  /* 한 판. o.solo = 짝꿍 혼자 판단(시험·전설). 돌려주는 값: won, aiRight(짝꿍 판단이 맞았나), taught(아이가 고쳐 줬나) */
+  async function duel(bs, m, o) {
+    o = o || {};
+    var res = { won: false, aiRight: null, taught: false, kidMiss: 0 };
+    var first = !o.solo && state.battles === 0;
+    var ex = explain(m);
+    setFace(bs.me, 'think'); bs.me.classList.add('glow'); S.sfx('think');
+    bs.think('<div class="dotty"><i></i><i></i><i></i></div>');
+    await wait(700);
+    if (!ex) {
+      bs.think('<span class="q">?</span><span class="q" style="animation-delay:.15s">?</span><span class="q" style="animation-delay:.3s">?</span>');
+      setFace(bs.me, 'ouch');
+      await talk('나는 아직 <b>아무것도 몰라…</b> 선생님이 알려 줘!', { hold: 2300 });
+    } else {
+      bs.think(explainHtml(ex));
+      await talk(explainLine(ex), { hold: 2400 });
+    }
+    bs.me.classList.remove('glow');
+
+    var type;
+    if (o.solo) {
+      type = ex ? ex.type : TYPES[Math.floor(rnd() * 3)];
+      setFace(bs.me, 'happy');
+      await talk('혼자 해 볼게! <b>' + T[B.COUNTER[type]].move + '!</b>', { hold: 900 });
+    } else {
+      var off = [];
+      bs.foe.classList.add('look-head');
+      for (;;) {
+        setFace(bs.me, 'normal');
+        talk(first || !ex ? '머리 장식을 봐! <b>불꽃</b>은 불, <b>지느러미</b>는 물, <b>새싹</b>은 풀이야.' : '선생님, 내 생각이 맞아? <b>머리</b>를 보고 골라 줘!');
+        var pick = await pickType(ex && ex.type, off, m.type);
+        if (pick === m.type) break;
+        // 선생님이 잘못 골랐다 → 공격이 안 통하고 한 대 맞는다
+        res.kidMiss++; off.push(pick);
+        hideTalk();
+        await bs.shoot(B.COUNTER[pick], true, false);
+        bs.callout('어라? 안 통해…', 'meh');
+        await bs.shoot(m.type, false, false);
+        setFace(bs.me, 'ouch');
+        bs.setHearts(bs.hearts - 1);
+        if (bs.hearts <= 0) { await talk('으앙, 힘이 다 빠졌어…', { hold: 1900 }); await bs.leave(); return res; }
+        await talk('아야! 이건 ' + T[m.type].name + ' 공격이야. 머리를 다시 보자!', { hold: 2000 });
+      }
+      bs.foe.classList.remove('look-head');
+      type = m.type;
+      res.aiRight = !!ex && ex.type === m.type;
+      if (res.aiRight) {
+        combo++;
+        bs.callout(combo >= 2 ? '찰떡 콤보 ' + combo + '!' : '짝꿍이 맞혔어!', 'good');
+        setFace(bs.me, 'happy'); hop(bs.me, 40);
+        await talk('내 생각이 맞았어! 헤헤', { hold: 1000 });
+      } else {
+        combo = 0; res.taught = true;
+        bs.callout('가르쳐 줬어!', 'good');
+        setFace(bs.me, 'wow');
+        await talk(ex ? '앗, 내가 틀렸네! <b>가르쳐 줘서 고마워!</b>' : '아하! ' + tname(m.type) + '이구나!', { hold: 1600 });
+      }
+    }
+    bs.unthink();
+
+    if (type !== m.type) { // 혼자 판단했는데 틀림
+      res.aiRight = false;
+      await bs.shoot(B.COUNTER[type], true, false);
+      bs.callout('어라? 안 통해…', 'meh');
+      setFace(bs.me, 'wow');
+      await talk('앗, <b>잘못 봤나 봐!</b>', { hold: 1300 });
+      await bs.shoot(m.type, false, false);
+      setFace(bs.me, 'ouch');
+      if (!o.noHearts) bs.setHearts(bs.hearts - 1);
+      return res;
+    }
+    if (res.aiRight == null) res.aiRight = true;
+
+    // 타이밍 공격
+    var move = B.COUNTER[type], max = o.hp || 3, hp = max;
+    setFace(bs.me, 'happy');
+    if (first) await talk('이제 공격! 막대가 <b>초록 칸</b>에 왔을 때 눌러!', { hold: 200 });
+    else talk('<b>' + T[move].move + '</b> 준비! 초록 칸에서 눌러!');
+    while (hp > 0) {
+      var qy = await timing('발사!');
+      hp = Math.max(0, hp - (qy === 'perfect' ? 3 : qy === 'good' ? 2 : 1));
+      hideTalk();
+      await bs.shoot(move, true, qy !== 'weak');
+      bs.callout(qy === 'perfect' ? '완벽해!' : qy === 'good' ? '좋아!' : '살짝 빗나갔어', qy === 'weak' ? 'meh' : 'good');
+      bs.setHp(hp / max * 100);
+      if (hp > 0) await wait(600);
+    }
+    res.won = true;
+    return res;
+  }
+
+  /* ---- 배움 카드: 진짜로 그 일이 일어났을 때만 한 장씩 얻는다 ---- */
+  var CARDS = [
+    { id: 'know', icon: '🥚', title: '보여 준 만큼만 알아', kid: '짝꿍은 처음엔 아무것도 몰라. 내가 알려 준 친구만 기억해.', adult: 'AI는 사람이 준 예시(학습 데이터)에서만 배웁니다.' },
+    { id: 'similar', icon: '🔍', title: '닮은 친구를 떠올려', kid: '짝꿍은 기억 속에서 제일 닮은 친구를 찾아서 맞혀.', adult: '새로운 것을 기존 예시와 비교해 판단합니다(유사도 기반 분류).' },
+    { id: 'fooled', icon: '🎭', title: '겉모습에 속기도 해', kid: '색이 닮았다고 같은 타입은 아니야. 짝꿍도 속을 수 있어.', adult: 'AI는 우연히 겹친 특징(색)을 근거로 틀린 답을 내기도 합니다.' },
+    { id: 'fix', icon: '🛠️', title: '틀리면 고쳐 주면 돼', kid: '짝꿍이 틀리면 내가 바로 알려 줘. 그러면 다음엔 더 잘해.', adult: '사람이 오답을 바로잡으면 모델이 개선됩니다(휴먼 인 더 루프).' },
+    { id: 'more', icon: '📚', title: '많이 볼수록 똑똑해', kid: '친구를 많이 만날수록 짝꿍이 더 잘 맞혀.', adult: '예시가 많고 다양할수록 정확도가 올라갑니다.' },
+    { id: 'cue', icon: '💡', title: '무엇을 봐야 할지도 배워', kid: '짝꿍이 알아챘어. 색보다 머리 장식이 진짜 단서야!', adult: '어떤 특징이 중요한지도 데이터에서 스스로 학습합니다(특징 가중치).' },
+    { id: 'test', icon: '🏅', title: '혼자 하는 시험', kid: '시험장에서는 내가 도와줄 수 없어. 가르친 만큼만 해내.', adult: '학습과 평가는 분리합니다. 처음 보는 문제로 실력을 확인합니다(테스트).' },
+    { id: 'check', icon: '✅', title: '믿기 전에 확인해', kid: '짝꿍 말이 맞는지 내가 확인했어. 똑똑한 AI도 틀릴 수 있거든.', adult: 'AI의 답을 그대로 믿지 않고 확인하는 습관이 AI 리터러시의 핵심입니다.' }
+  ];
+  function cardDue(ev) {
+    var c = state.cards;
+    if (!c.know && state.memory.length >= 1) return 'know';
+    if (!c.similar && ev.explained) return 'similar';
+    if (!c.fooled && ev.fooled) return 'fooled';
+    if (!c.cue && state.aha) return 'cue';
+    if (!c.fix && state.taughtN >= 3) return 'fix';
+    if (!c.more && state.memory.length >= 10) return 'more';
+    if (!c.test && ev.tested) return 'test';
+    if (!c.check && state.checkedN >= 8) return 'check';
+    return null;
+  }
+  async function giveCard(id) {
+    if (!id || state.cards[id]) return;
+    var c = CARDS.filter(function (x) { return x.id === id; })[0];
+    state.cards[id] = true; state.xp += 1; save();
+    var n = Object.keys(state.cards).length;
+    var veil = el('<div class="veil"><div class="panel lcard"><div class="lc-top">배움 카드 ' + n + ' / ' + CARDS.length + '</div><div class="lc-icon">' + c.icon + '</div>' +
+      '<h2>' + c.title + '</h2><p>' + c.kid + '</p><p class="adult">어른에게: ' + c.adult + '</p></div></div>');
+    root.appendChild(veil);
+    S.sfx('fanfare'); S.say(c.title + '. ' + c.kid);
+    burst(640, 300, { n: 18, star: true, size: 28, dist: 300, host: veil });
+    await wait(900);
+    var t = token;
+    await new Promise(function (res) {
+      var btn = el('<button class="btn green pulse">알았어!</button>');
+      veil.querySelector('.panel').appendChild(btn);
+      btn.addEventListener('click', function () { if (t === token) { S.sfx('tap'); res(); } }, { once: true });
+      if (FAST) setTimeout(function () { btn.click(); }, 30);
+    });
+    veil.remove();
+  }
+
+  /* 야생 말랑몬과 한 판 → 이기면 잡기 → 잡은 친구는 짝꿍의 기억이 된다 */
+  async function catchFlow(bs, m) {
+    var first = state.battles === 0, wBefore = B.weights(state.memory), smartBefore = B.smartness(state.memory), hadMemory = state.memory.length > 0;
+    var ex0 = explain(m);
+    var r = await duel(bs, m, {});
+    var out = { friend: false, isNew: false, taught: r.taught, fainted: bs.hearts <= 0 };
+    if (!r.won) return out;
+
+    // 쓰러뜨렸다 → 친구 되기
+    A.setFace(bs.foe.querySelector('svg'), 'ouch');
+    await anim(bs.foe, [{ transform: 'rotate(0)' }, { transform: 'rotate(-10deg) translateY(6px)' }, { transform: 'rotate(8deg)' }, { transform: 'rotate(0)' }], { duration: 500, easing: 'ease-in-out' });
+    if (first) await talk('동그라미가 <b>딱 맞을 때</b> 눌러서 친구가 되자!', { hold: 200 });
+    else talk('지금이야! 동그라미가 <b>딱 맞을 때</b> 눌러!');
+    var stars = await ringCatch(bs.F);
+    hideTalk();
+    A.setFace(bs.foe.querySelector('svg'), 'happy');
+    S.sfx('heart');
+    burst(bs.F.cx, bs.F.cy - 40, { n: 6 + stars * 3, heart: true, size: 42, dist: 170, up: 100 });
+    if (stars === 3) burst(bs.F.cx, bs.F.cy, { n: 18, star: true, size: 30, dist: 260 });
+    bs.callout(stars === 3 ? '별 셋! 완벽해!' : stars === 2 ? '별 둘! 좋아!' : '별 하나!', 'good');
+    hop(bs.foe); hop(bs.me);
+    var nm = A.speciesName(m), key = m.type + '-' + m.shape;
+    q('#foe-nm').innerHTML = A.typeIcon(m.type) + nm;
+    out.isNew = !state.dex[key];
+    if (!state.dex[key]) state.dex[key] = { m: look(m), n: 0 };
+    state.dex[key].n++;
+    state.friends++; state.xp += 1 + stars + (combo >= 3 ? 1 : 0);
+    // 잡은 친구 = 새 학습 예시
+    state.memory.push(look(m));
+    if (state.memory.length > 160) state.memory.shift();
+    if (r.taught) state.taughtN = (state.taughtN || 0) + 1;
+    state.checkedN = (state.checkedN || 0) + 1;
+    save();
+    out.friend = true;
+    await talk('<b>' + nm + '</b>' + josa(nm, '이', '가') + ' 친구가 됐어!' + (out.isNew ? ' 도감에 쏙!' : ''), { hold: 1700 });
+
+    // 짝꿍이 방금 무엇을 배웠는지 보여 준다
+    var wAfter = B.weights(state.memory), smartAfter = B.smartness(state.memory);
+    bs.think('<div class="learned"><div class="lt">기억 주머니 <b>' + state.memory.length + '</b>개 <span class="up">+1</span></div>' +
+      '<div class="cue-row"><span>똑똑함</span><div class="bar smart cue"><i id="ls" style="width:' + smartBefore + '%"></i></div><b id="lsn">' + smartBefore + '</b></div>' +
+      cueBars(wBefore, 'lc') + '</div>');
+    setFace(bs.me, 'wow'); bs.me.classList.add('glow'); S.sfx('learn');
+    await wait(500);
+    q('#ls').style.width = smartAfter + '%'; q('#lsn').textContent = smartAfter;
+    each('#lc i', function (i) { i.style.width = Math.round(Math.sqrt(wAfter[i.getAttribute('data-c')]) * 100) + '%'; });
+    S.sfx('gauge');
+    var said = false;
+    if (!state.aha && B.knowsHeadMatters(state.memory)) {
+      state.aha = true; save(); said = true;
+      S.sfx('fanfare'); hop(bs.me);
+      await talk('아하! 알았다! <b>색보다 머리</b>를 봐야 하는구나!', { hold: 3200 });
+    }
+    if (!said) {
+      await talk(!hadMemory ? '기억했어! 이 친구는 ' + tname(m.type) + '!'
+        : r.taught ? '이 친구를 기억해 둘게. 다음엔 안 틀릴 거야!'
+          : smartAfter > smartBefore ? '친구를 볼수록 내가 똑똑해져!'
+            : smartAfter < smartBefore ? '새 친구가 낯설어서 조금 헷갈려. 더 만나면 정리될 거야!' : '기억 주머니에 쏙 넣었어!', { hold: 2300 });
+    }
+    bs.me.classList.remove('glow'); bs.unthink();
+    S.sfx('whoosh');
+    await anim(bs.foe, [{ transform: 'translate(0,0)', opacity: 1 }, { transform: 'translate(-300px,160px) scale(.3)', opacity: 0 }], { duration: 440, easing: 'ease-in', fill: 'forwards' });
+    await giveCard(cardDue({ explained: !!ex0, fooled: r.taught && !!ex0 && ex0.match.hue && !ex0.match.head }));
+    return out;
+  }
+
+  /* 맨 처음 배틀: 짝꿍은 아무것도 모른다 → 아이가 처음으로 알려 준다 (왜 가르쳐야 하는지 먼저 느끼기) */
   async function firstBattle() {
     state.hearts = maxHearts();
+    var beforeXp = state.xp;
     var bs = battleScreen();
     var m = B.makeMonster(rnd, { type: 'fire', shape: 12, mode: 'clear' });
     await wait(400);
     await bs.spawn(wildSvg(m));
     setFace(bs.me, 'wow');
     await talk('야생 말랑몬이야! 친구가 되고 싶어!', { next: true });
-    await talk('<b>딱 맞는 공격</b>을 하면 친구가 될 수 있대.', { next: true });
-    hideTalk();
-    await attackTap();
-    setFace(bs.me, 'think'); bs.me.classList.add('glow'); S.sfx('think');
-    bs.think('<div class="dotty"><i></i><i></i><i></i></div>');
-    await wait(1100);
-    bs.think('<span class="q">?</span><span class="q" style="animation-delay:.15s">?</span><span class="q" style="animation-delay:.3s">?</span>');
-    bs.me.classList.remove('glow');
-    setFace(bs.me, 'ouch');
-    await talk('으앙… 무슨 타입인지 <b>하나도 모르겠어!</b>', { hold: 2400 });
-    bs.unthink();
-    await bs.shoot(m.type, false, false);
-    bs.setHearts(bs.hearts - 1);
-    await wait(500);
-    S.sfx('whoosh');
-    await bs.leave();
-    await talk('아야… 나는 아직 <b>배운 게 없어서</b> 몰랐어.', { next: true });
-    setFace(bs.me, 'normal');
-    await talk(me_() + ' 선생님! 나한테 <b>타입</b>을 가르쳐 줘!', { next: true });
-    state.phase = 'needTeach'; state.hearts = maxHearts(); save();
-    go(lesson);
-  }
-
-  /* ================================================================
-     4. 수업: 말랑몬을 타입별 집으로 끌어다 놓으면, 짝꿍이 그걸 보고 기억한다
-     ================================================================ */
-  var ZONES = [{ type: 'fire', x: 40 }, { type: 'water', x: 448 }, { type: 'grass', x: 856 }];
-  var HEAD_HINT = ['불꽃', '지느러미', '새싹'];
-
-  function hueFamily(h) { return h >= 340 || h < 62 ? 'fire' : h < 168 ? 'grass' : 'water'; }
-
-  function buildCards(first) {
-    var cards = [];
-    if (first) {
-      TYPES.forEach(function (t) { cards.push({ m: B.makeMonster(rnd, { type: t, mode: 'clear' }), labeled: false }); });
-      return shuffle(cards);
-    }
-    // 배틀에서 헷갈렸던 친구를 먼저 가르친다 (틀린 문제 다시 보기)
-    while (state.review.length && cards.length < 2) cards.push({ m: state.review.shift(), labeled: true });
-    var types = shuffle(TYPES.slice());
-    var i = 0;
-    while (cards.length < 4) { cards.push({ m: B.makeMonster(rnd, { type: types[i % 3], mode: 'wild' }), labeled: false }); i++; }
-    return shuffle(cards);
-  }
-
-  async function lesson() {
-    var first = state.memory.length === 0;
-    var cards = buildCards(first);
-    var before = { xp: state.xp, smart: B.smartness(state.memory) };
-    var html = sceneSky();
-    ZONES.forEach(function (z) {
-      var have = state.memory.filter(function (e) { return e.type === z.type; }).slice(-5);
-      html += '<div class="zone" data-t="' + z.type + '" style="left:' + z.x + 'px">' + ZONE_ART[z.type] +
-        '<div class="shelf">' + have.map(function (e) { return mini(A.wild(e)); }).join('') + '</div>' +
-        '<div class="zone-label">' + A.typeIcon(z.type) + T[z.type].name + '</div></div>';
-    });
-    html += mw(partnerSvg('normal'), 24, 96, 210, 'me') +
-      '<div class="bubble tail-left" style="left:262px;top:112px;width:700px"></div>' +
-      '<div class="dots">' + cards.map(function () { return '<i></i>'; }).join('') + '</div>' +
-      '<div class="pill lesson-smart">' + ICON.bulb + '<div class="bar smart"><i id="sm-bar" style="width:' + before.smart + '%"></i></div><span class="num" id="sm-num">' + before.smart + '</span></div>';
-    setScreen('lesson', html, { home: state.phase === 'free' });
-    var me = q('.me');
-    await wait(400);
-    if (first) await talk('여기는 말랑몬 학교야! 친구들이 사는 곳을 알려 줘.', { hold: 3000 });
-
-    for (var i = 0; i < cards.length; i++) {
-      await teachOne(cards[i], i, me, first && i === 0);
-      root.querySelectorAll('.dots i')[i].classList.add('done');
-    }
-
-    state.lessons++; state.sinceLesson = 0;
-    state.phase = 'free';
-    state.hearts = maxHearts();
-    save();
-    setFace(me, 'happy'); hop(me);
-    await talk('수업 끝! 나 <b>더 똑똑해졌어!</b>', { hold: 1600 });
-    var after_ = B.smartness(state.memory);
-    await reward({
-      title: '수업 끝!', before: before,
-      lines: first ? ['많이 보여 줄수록 짝꿍이 똑똑해져요!']
-        : after_ < before.smart ? ['새 친구가 낯설어서 조금 헷갈리나 봐. 더 보여 주면 정리돼요!']
-          : after_ >= 100 && before.smart < 100 ? ['우와, 100점! 정말 훌륭한 선생님이에요!'] : []
-    });
+    await talk('<b>딱 맞는 공격</b>을 해야 친구가 될 수 있대.', { next: true });
+    var r = await catchFlow(bs, m);
+    state.battles++; state.phase = 'free'; save();
+    after = { xp: beforeXp, fainted: r.fainted, friend: r.friend ? m : null, isNew: r.isNew, taught: r.taught };
     go(map);
-  }
-
-  function zoneAt(x, y) {
-    if (y < 470) return null;
-    return x < 436 ? ZONES[0] : x < 844 ? ZONES[1] : ZONES[2];
-  }
-
-  async function teachOne(c, idx, me, showHow) {
-    var m = c.m, HOME_X = 505, HOME_Y = 252, headName = HEAD_HINT[TYPES.indexOf(m.type)];
-    var card = el('<div class="card" style="left:' + HOME_X + 'px;top:' + HOME_Y + 'px">' + mw(A.wild(m), 0, 0, 270) +
-      (c.labeled ? '<div class="tag">' + A.typeIcon(m.type) + T[m.type].name + '</div>' : '') + '</div>');
-    root.appendChild(card);
-    S.sfx('pop');
-    await popIn(card);
-    if (c.labeled) talk('아까 헷갈린 친구야! 이름표를 보고 알려 줘.');
-    else if (showHow) talk('이 친구는 어디에 살까? <b>끌어서</b> 집에 데려다 줘!');
-    else talk(['이 친구는 어디에 살까?', '이 친구는 무슨 타입일까?', '머리를 잘 보고 알려 줘!'][idx % 3]);
-    if (showHow) hand(HOME_X + 135, HOME_Y + 170, 'dragging', 0, 260);
-
-    var tries = 0, busy = false, picked = false;
-    var zoneEls = root.querySelectorAll('.zone');
-    function clearHot() { Array.prototype.forEach.call(zoneEls, function (z) { z.classList.remove('hot'); }); }
-    function zel(type) { return root.querySelector('.zone[data-t="' + type + '"]'); }
-
-    await new Promise(function (res) {
-      function judge(z) {
-        clearHot(); clearHand();
-        card.classList.remove('picked'); picked = false;
-        if (z.type === m.type) { busy = true; res(z); return; }
-        tries++;
-        S.sfx('bad');
-        var ze = zel(z.type); ze.classList.remove('nope'); void ze.offsetWidth; ze.classList.add('nope');
-        glide(card, HOME_X, HOME_Y, 380).catch(function () { /* 화면이 바뀜 */ });
-        setFace(me, 'think');
-        talk(c.labeled ? '이름표를 다시 볼까? <b>' + T[m.type].name + '</b>이라고 써 있어!' : '머리를 봐! <b>' + headName + '</b>' + josa(headName, '이', '가') + ' 있어.');
-        if (tries >= 2) zel(m.type).classList.add('hint');
-      }
-      draggable(card, {
-        locked: function () { return busy; },
-        start: function () { clearHand(); S.sfx('pick'); },
-        move: function (x, y) { clearHot(); var z = zoneAt(x, y); if (z) zel(z.type).classList.add('hot'); },
-        drop: function (x, y, moved) {
-          var z = zoneAt(x, y);
-          if (z) return judge(z);
-          if (!moved) { // 끌기가 어려우면: 톡 누르고 → 집을 톡 눌러도 돼요
-            picked = !picked;
-            card.classList.toggle('picked', picked);
-            if (picked) talk('이제 <b>집</b>을 눌러 봐!');
-          }
-          glide(card, HOME_X, HOME_Y, 300).catch(function () { /* 화면이 바뀜 */ });
-        }
-      });
-      Array.prototype.forEach.call(zoneEls, function (ze) {
-        ze.onclick = function () { if (picked && !busy) judge({ type: ze.getAttribute('data-t') }); };
-      });
-      if (FAST) setTimeout(function () { judge({ type: m.type }); }, 30);
-    });
-
-    // 맞혔다 → 집으로 쏙, 짝꿍은 기억!
-    var ze = zel(m.type), zx = ZONES[TYPES.indexOf(m.type)].x;
-    Array.prototype.forEach.call(zoneEls, function (z) { z.classList.remove('hint'); z.onclick = null; });
-    S.sfx('good');
-    card.style.transition = 'left ' + 420 * speed + 'ms cubic-bezier(.5,0,.3,1), top ' + 420 * speed + 'ms cubic-bezier(.5,0,.3,1), transform ' + 420 * speed + 'ms';
-    card.style.left = (zx + 180) + 'px'; card.style.top = '520px'; card.style.transform = 'scale(.34)';
-    await wait(420);
-    card.remove();
-    var shelf = ze.querySelector('.shelf');
-    var mn = el(mini(A.wild(m)));
-    shelf.appendChild(mn);
-    while (shelf.children.length > 5) shelf.removeChild(shelf.firstChild);
-    popIn(mn);
-    ze.classList.remove('yes'); void ze.offsetWidth; ze.classList.add('yes');
-    burst(zx + 192, 640, { n: 12, star: true, size: 24, dist: 150 });
-
-    state.memory.push(look(m));
-    if (state.memory.length > 160) state.memory.shift();
-    state.xp += 1;
-    save();
-
-    // 짝꿍이 배우는 모습
-    me.classList.add('glow'); setFace(me, 'wow'); S.sfx('learn');
-    var smart = B.smartness(state.memory);
-    q('#sm-bar').style.width = smart + '%'; q('#sm-num').textContent = smart;
-    hop(me, 46);
-    var tricky = hueFamily(m.hue) !== m.type;
-    var line;
-    if (tricky && !state.seenTricky) {
-      state.seenTricky = true; save();
-      line = '색은 달라도 머리에 <b>' + headName + '</b>' + josa(headName, '이', '가') + ' 있으면 ' + tname(m.type) + '이구나!';
-      await talk(line, { hold: 3600 });
-    } else {
-      line = [tname(m.type) + '은 이렇게 생겼구나. 기억했어!', '아하! ' + tname(m.type) + ' 하나 더 배웠어!', '기억 주머니에 쏙! ' + tname(m.type) + '!'][idx % 3];
-      await talk(line, { hold: 1900 });
-    }
-    // 진짜로 알아챈 순간에만 말한다 (두뇌가 머리 장식을 가장 믿게 됐을 때)
-    if (!state.aha && B.knowsHeadMatters(state.memory)) {
-      state.aha = true; save();
-      S.sfx('fanfare'); hop(me);
-      burst(130, 190, { n: 16, star: true, size: 26, dist: 200 });
-      await talk('아하! 알았다! <b>색보다 머리</b>를 봐야 하는구나!', { hold: 3600 });
-    }
-    me.classList.remove('glow'); setFace(me, 'normal');
-  }
-
-  /* ================================================================
-     5. 배틀: 짝꿍이 기억을 떠올려 타입을 맞히고, 딱 맞는 공격을 한다
-     ================================================================ */
-  // 생각하기 → 어떤 타입이라고 봤는지 돌려준다
-  async function thinkAbout(bs, m, explain) {
-    var g = B.guess(state.memory, m), gt = g.ranked[0];
-    setFace(bs.me, 'think'); bs.me.classList.add('glow'); S.sfx('think');
-    bs.think('<div class="dotty"><i></i><i></i><i></i></div>');
-    await wait(900);
-    bs.think(mini(A.wild(g.nearest)) + '<span class="arrow">▶</span><span class="ticon">' + A.typeIcon(gt) + '</span>');
-    await talk('기억 속 이 친구랑 닮았어! ' + tname(gt) + ' 같아!', { hold: 2500 });
-    bs.me.classList.remove('glow');
-    var move = B.COUNTER[gt];
-    setFace(bs.me, 'happy');
-    await talk((explain ? T[gt].name + '에는 ' + T[move].name + '! ' : '') + '<b>' + T[move].move + '!</b>', { hold: explain ? 1700 : 800 });
-    bs.unthink();
-    return gt;
-  }
-
-  async function encounter(bs, m, explain) {
-    var result = { friend: false, missed: false };
-    setFace(bs.me, 'normal');
-    await bs.spawn(wildSvg(m));
-    talk('야생 말랑몬이 나타났어!');
-    await attackTap();
-    hideTalk();
-
-    var gt = await thinkAbout(bs, m, explain);
-    if (gt === m.type) {
-      await bs.shoot(B.COUNTER[gt], true, true);
-      bs.callout('딱 맞았어!', 'good');
-      bs.setHp(0);
-    } else {
-      // 잘못 봤다 → 공격이 안 통하고, 한 대 맞는다
-      result.missed = true;
-      await bs.shoot(B.COUNTER[gt], true, false);
-      bs.callout('어라? 안 통해…', 'meh');
-      bs.setHp(78);
-      setFace(bs.me, 'wow');
-      await talk('앗, <b>잘못 봤나 봐!</b>', { hold: 1500 });
-      await bs.shoot(m.type, false, false);
-      setFace(bs.me, 'ouch');
-      bs.setHearts(bs.hearts - 1);
-      state.review.push(look(m));
-      if (state.review.length > 6) state.review.shift();
-      save();
-      if (bs.hearts <= 0) {
-        await talk('으앙, 힘이 다 빠졌어…', { hold: 1900 });
-        await bs.leave();
-        return result;
-      }
-      await talk('아야! 이건 ' + T[m.type].name + ' 공격… ' + tname(m.type) + '이었구나!', { hold: 2600 });
-      setFace(bs.me, 'happy');
-      var right = B.COUNTER[m.type];
-      await talk('이번엔 진짜! <b>' + T[right].move + '!</b>', { hold: 900 });
-      await bs.shoot(right, true, true);
-      bs.callout('딱 맞았어!', 'good');
-      bs.setHp(0);
-    }
-
-    // 쓰러졌다가 → 친구가 된다
-    A.setFace(bs.foe.querySelector('svg'), 'ouch');
-    await anim(bs.foe, [
-      { transform: 'translate(0,0) rotate(0)' },
-      { transform: 'translate(30px,-30px) rotate(20deg)', offset: 0.4 },
-      { transform: 'translate(40px,10px) rotate(84deg) scale(.9)' }
-    ], { duration: 520, easing: 'ease-in', fill: 'forwards' });
-    await wait(450);
-    bs.foe.getAnimations().forEach(function (a) { a.cancel(); });
-    A.setFace(bs.foe.querySelector('svg'), 'happy');
-    S.sfx('heart');
-    burst(bs.F.cx, bs.F.cy - 40, { n: 9, heart: true, size: 42, dist: 170, up: 100 });
-    hop(bs.foe); hop(bs.me);
-    var nm = A.speciesName(m);
-    q('#foe-nm').innerHTML = A.typeIcon(m.type) + nm;
-    var key = m.type + '-' + m.shape;
-    var isNew = !state.dex[key];
-    if (!state.dex[key]) state.dex[key] = { m: look(m), n: 0 };
-    state.dex[key].n++;
-    state.friends++; state.xp += 2;
-    save();
-    result.friend = true; result.isNew = isNew;
-    await talk('<b>' + nm + '</b>' + josa(nm, '이', '가') + ' 친구가 됐어!' + (isNew ? ' 도감에 쏙!' : ''), { hold: 2300 });
-    if (result.missed) await talk('이 친구는 헷갈렸어. 학교에서 <b>가르쳐 줘!</b>', { hold: 2200 });
-    S.sfx('whoosh');
-    await anim(bs.foe, [{ transform: 'translate(0,0)', opacity: 1 }, { transform: 'translate(-300px,160px) scale(.3)', opacity: 0 }], { duration: 480, easing: 'ease-in', fill: 'forwards' });
-    return result;
   }
 
   // 동네에서 야생 말랑몬과 마주쳤을 때
@@ -959,15 +976,75 @@
     var beforeXp = state.xp;
     var bs = battleScreen();
     await wait(300);
-    var r = await encounter(bs, wild.m, state.battles === 0);
-    state.battles++; state.sinceLesson++;
+    await bs.spawn(wildSvg(wild.m));
+    talk('야생 말랑몬이 나타났어!');
+    await wait(700);
+    var r = await catchFlow(bs, wild.m);
+    state.battles++;
     save();
     if (mapMem) mapMem.wilds = mapMem.wilds.filter(function (w) { return w !== wild; });
-    after = { xp: beforeXp, fainted: bs.hearts <= 0, friend: r.friend ? wild.m : null, isNew: r.isNew, missed: r.missed };
+    after = { xp: beforeXp, fainted: r.fainted, friend: r.friend ? wild.m : null, isNew: r.isNew, taught: r.taught };
     go(map);
   }
 
-  /* 전설 배틀: 세 번 맞혀야 한다. 맞을 때마다 몸 색을 바꿔서 속이려 든다 (머리 장식은 그대로) */
+  /* ================================================================
+     4. 시험장: 짝꿍 혼자 다섯 마리를 맞힌다. 아이는 타입을 알려 줄 수 없고 힘만 모아 준다
+        (가르친 것과 시험 보는 것은 다르다 = 학습과 평가)
+     ================================================================ */
+  var BADGES = ['새싹 배지', '잎새 배지', '열매 배지'];
+  function testMonster(lv) {
+    if (lv <= 0) return B.makeMonster(rnd, { mode: 'clear' });
+    var m = B.makeMonster(rnd, { mode: 'wild' });
+    if (lv >= 2) for (var i = 0; i < 40 && hueFamily(m.hue) === m.type; i++) m = B.makeMonster(rnd, { mode: 'wild' }); // 색이 속이는 친구만
+    return m;
+  }
+  async function arena() {
+    var lv = Math.min(2, state.badges || 0), before = { xp: state.xp, smart: B.smartness(state.memory) };
+    var bs = battleScreen({ dark: true });
+    q('#hearts').parentNode.querySelector('.nm').textContent = '시험: ' + BADGES[lv];
+    q('#hearts').innerHTML = '<span class="tdots">' + [0, 1, 2, 3, 4].map(function () { return '<i></i>'; }).join('') + '</span>';
+    await wait(400);
+    setFace(bs.me, 'wow');
+    await talk('여기는 <b>시험장</b>! 타입은 내가 <b>혼자</b> 맞혀야 해.', { next: true });
+    await talk(me_() + ' 선생님은 힘만 모아 줘! 다섯 마리 중 <b>네 마리</b>를 맞히면 합격!', { next: true });
+    var score = 0;
+    for (var i = 0; i < 5; i++) {
+      var m = testMonster(lv);
+      await bs.spawn(wildSvg(m));
+      q('#foe-nm').innerHTML = (i + 1) + ' / 5';
+      var r = await duel(bs, m, { solo: true, noHearts: true, hp: 1 });
+      var dot = root.querySelectorAll('.tdots i')[i];
+      if (r.won) {
+        score++; dot.className = 'ok';
+        q('#foe-nm').innerHTML = A.typeIcon(m.type) + A.speciesName(m);
+        A.setFace(bs.foe.querySelector('svg'), 'happy'); hop(bs.foe);
+        await wait(700);
+      } else {
+        dot.className = 'no';
+        q('#foe-nm').innerHTML = A.typeIcon(m.type) + T[m.type].name + ' 타입이었어';
+        await wait(1100);
+      }
+      await bs.leave();
+    }
+    var pass = score >= 4, newBadge = pass && (state.badges || 0) < 3;
+    if (newBadge) state.badges = (state.badges || 0) + 1;
+    state.xp += pass ? 6 : 2; state.tests = (state.tests || 0) + 1;
+    save();
+    setFace(bs.me, pass ? 'happy' : 'ouch');
+    await reward({
+      title: pass ? '합격! ' + score + '마리 맞혔어!' : score + '마리 맞혔어',
+      before: before,
+      lines: pass ? [newBadge ? '<b>' + BADGES[state.badges - 1] + '</b>를 받았어요!' : '시험을 또 통과했어요!']
+        : ['짝꿍 혼자서는 아직 어려워요. 친구를 더 만나 <b>가르쳐 주고</b> 다시 와요!']
+    });
+    await giveCard(cardDue({ tested: true }));
+    after = { xp: before.xp, tested: true, pass: pass };
+    go(map);
+  }
+
+  /* ================================================================
+     5. 전설 배틀: 짝꿍 혼자 세 번 맞혀야 한다. 맞을 때마다 몸 색을 바꿔 속이려 든다 (머리 장식은 그대로)
+     ================================================================ */
   async function legendBattle(type) {
     var L = A.LEGEND[type], beforeXp = state.xp, t = TYPES.indexOf(type);
     var bs = battleScreen({ big: true });
@@ -975,66 +1052,54 @@
     var fams = [type, others[0], others[1]];
     function lookOf(round) {
       var r = B.HUE[fams[round]].clear;
-      return { type: type, hue: Math.round(r[0] + rnd() * (r[1] - r[0])), head: t, tail: t, shape: 2, eyes: 0 };
+      return { type: type, hue: Math.round(r[0] + rnd() * (r[1] - r[0])), head: t, tail: t, shape: 12, eyes: 0 };
     }
     var hp = 3, round = 0, m = lookOf(0), won = false;
     await wait(500);
     await bs.spawn(A.legend(type, m.hue));
     setFace(bs.me, 'wow');
     await talk('전설의 말랑몬 <b>' + L.name + '</b>' + josa(L.name, '이', '가') + ' 깨어났어!', { next: true });
-    await talk('세 번 맞혀야 친구가 될 수 있대. 힘내자!', { next: true });
+    await talk('전설 앞에서는 <b>내가 혼자</b> 맞혀야 해. 세 번 맞히면 이겨!', { next: true });
 
     while (hp > 0 && bs.hearts > 0) {
-      hideTalk();
-      await attackTap();
-      var gt = await thinkAbout(bs, m, false);
-      if (gt === type) {
-        await bs.shoot(B.COUNTER[gt], true, true);
-        bs.callout('딱 맞았어!', 'good');
+      var r = await duel(bs, m, { solo: true, hp: 1 });
+      if (r.won) {
         hp--; bs.setHp(hp / 3 * 100);
         if (hp > 0) {
           round++; m = lookOf(Math.min(round, 2));
-          await wait(700);
-          S.sfx('evolve'); flashOf(bs.foe);
           await wait(500);
+          S.sfx('evolve'); flashOf(bs.foe); buzz(100);
+          await wait(450);
           bs.foe.innerHTML = A.legend(type, m.hue);
           popIn(bs.foe);
-          await talk('<b>' + L.name + '</b>' + josa(L.name, '이', '가') + ' 몸 색을 바꿨어! 속지 마!', { hold: 2400 });
+          await talk('<b>' + L.name + '</b>' + josa(L.name, '이', '가') + ' 몸 색을 바꿨어! 속지 마!', { hold: 2000 });
         }
-      } else {
-        await bs.shoot(B.COUNTER[gt], true, false);
-        bs.callout('어라? 안 통해…', 'meh');
-        setFace(bs.me, 'wow');
-        await talk('앗, <b>색에 속았나 봐!</b>', { hold: 1500 });
-        await bs.shoot(type, false, false);
-        setFace(bs.me, 'ouch');
-        bs.setHearts(bs.hearts - 1);
-        state.review.push(look(m));
-        if (state.review.length > 6) state.review.shift();
-        save();
-        if (bs.hearts > 0) await talk('아야! 다시 잘 보자…', { hold: 1500 });
+      } else if (bs.hearts > 0) {
+        await talk('아야! 색에 속았어… 다시 해 볼게!', { hold: 1500 });
       }
     }
 
     if (hp <= 0) {
       won = true;
       bs.foe.innerHTML = A.legend(type, m.hue, { expr: 'ouch' });
-      await anim(bs.foe, [{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg) translateY(10px)' }, { transform: 'rotate(5deg)' }, { transform: 'rotate(0)' }], { duration: 900, easing: 'ease-in-out' });
+      await anim(bs.foe, [{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg) translateY(10px)' }, { transform: 'rotate(5deg)' }, { transform: 'rotate(0)' }], { duration: 800, easing: 'ease-in-out' });
+      talk('지금이야! 동그라미가 <b>딱 맞을 때</b> 눌러!');
+      var stars = await ringCatch(bs.F);
       var own = B.HUE[type].clear;
       bs.foe.innerHTML = A.legend(type, (own[0] + own[1]) / 2);
-      S.sfx('fanfare');
+      S.sfx('fanfare'); buzz(200);
       burst(bs.F.cx, bs.F.cy, { n: 30, star: true, size: 34, dist: 340 });
       burst(bs.F.cx, bs.F.cy - 60, { n: 10, heart: true, size: 44, dist: 200, up: 110 });
       hop(bs.foe, 40); hop(bs.me);
       setFace(bs.me, 'happy');
       q('#foe-nm').innerHTML = A.typeIcon(type) + L.name;
-      state.legends[type] = true; state.xp += 10; state.friends++;
+      state.legends[type] = true; state.xp += 8 + stars; state.friends++;
       save();
       await talk(L.title + ' <b>' + L.name + '</b>' + josa(L.name, '이', '가') + ' 친구가 됐어!', { next: true });
     } else {
-      await talk('으앙, 힘이 다 빠졌어… 더 배우고 다시 오자!', { hold: 2400 });
+      await talk('으앙, 힘이 다 빠졌어… 친구를 더 만나 배우고 다시 오자!', { hold: 2600 });
     }
-    state.battles++; state.sinceLesson++; save();
+    state.battles++; save();
     after = { xp: beforeXp, fainted: !won && bs.hearts <= 0, legend: won ? type : null };
     go(map);
   }
@@ -1122,7 +1187,7 @@
     fisher: ['물고기도 색만 봐서는 몰라. 지느러미를 봐야지!', '짝꿍도 머리 장식을 잘 보면 안 속을 거야.'],
     keeper: ['등대는 길을 알려 주지. 노란 화살표도 그렇단다.', '길을 잃으면 화살표를 따라가 보렴.'],
     farmer: ['저 큰 팽나무에 숲의 장수가 산단다.', '풀 타입 친구를 여섯 종 모아 보렴.'],
-    teacher: ['많이 보여 줄수록 짝꿍이 똑똑해져요.', '틀린 친구를 다시 가르치면 다음엔 맞혀요!'],
+    teacher: ['시험장에서는 짝꿍 혼자 맞혀야 해요. 가르친 만큼만 해낸답니다.', '짝꿍이 틀리면 바로 알려 주세요. 그게 가르치는 거예요!'],
     painter: ['색은 바뀔 수 있어. 하지만 머리 장식은 그대로야!', '전설은 몸 색을 바꿔서 속인대. 조심해!'],
     granny: ['짝꿍은 네가 보여 준 것만 안단다.', '천천히 하나씩 가르쳐 주렴.'],
     jogger: ['짝꿍이 틀려도 괜찮아. 가르쳐 주면 되니까!', '나도 처음엔 다 틀렸어. 연습하면 돼!'],
@@ -1228,8 +1293,10 @@
       '<div class="gedge" id="gedge" style="display:none">' + ICON.edge + '<div class="ic" id="gic"></div></div>' +
       '<div class="status" style="left:26px">' +
       '<div class="pill"><span class="lv">' + lv + '</span><span>' + me_() + '</span><span class="hearts" id="hearts" style="display:flex;gap:3px">' + heartsHtml(state.hearts, maxH) + '</span></div>' +
-      '<div class="pill">' + ICON.bulb + '<div class="bar smart" style="width:140px"><i style="width:' + smart + '%"></i></div><span class="num">' + smart + '</span></div>' +
+      '<div class="pill">' + ICON.bulb + '<div class="bar smart" style="width:120px"><i style="width:' + smart + '%"></i></div><span class="num">' + smart + '</span>' +
+      '<span class="medals">' + [0, 1, 2].map(function (i) { return '<i class="' + (i < (state.badges || 0) ? 'on' : '') + '">' + ICON.medal + '</i>'; }).join('') + '</span></div>' +
       '</div>' +
+      '<div class="joy" id="joy" style="display:none"><i></i></div>' +
       '<button class="ico-btn ico-dex" id="dexbtn" aria-label="도감">' + ICON.dex + '</button>' +
       '<div class="bubble map-bubble tail-none"></div>');
     var world = q('#world'), plEl = q('#pl'), palEl = q('#pal'), kid = plEl.querySelector('.kid');
@@ -1275,25 +1342,41 @@
       setTimeout(function () { if (t === token && n.el.isConnected) n.el.querySelector('.flip').innerHTML = A.person(d.look); }, 2600);
     }
 
-    /* ---- 조작: 누른 곳으로 걸어간다. 누르고 있으면 손가락을 따라간다 ---- */
-    var cam = { x: 0, y: 0 }, held = false, busy = false, moved = 0;
-    function toWorld(e) { var p = pt(e); return { x: p.x + cam.x, y: p.y + cam.y }; }
-    function aim(e, fx) {
-      var w = toWorld(e);
+    /* ---- 조작: 화면을 누른 채 끌면 조이스틱처럼 그 방향으로 달린다. 톡 누르면 그 자리로 걸어간다 ---- */
+    var cam = { x: 0, y: 0 }, busy = false, moved = 0, joy = null, joyEl = q('#joy'), knob = joyEl.firstChild;
+    function toWorld(p) { return { x: p.x + cam.x, y: p.y + cam.y }; }
+    function walkHere(p) {
+      var w = toWorld(p);
       P.tx = Math.max(WD.bounds.x0, Math.min(WD.bounds.x1, w.x));
       P.ty = Math.max(WD.bounds.y0, Math.min(WD.bounds.y1, w.y));
       P.sideX = P.sideY = 0;
-      if (fx) {
-        var f = el('<div class="tapfx" style="left:' + w.x + 'px;top:' + w.y + 'px"></div>');
-        world.appendChild(f); setTimeout(function () { f.remove(); }, 520);
-      }
+      var f = el('<div class="tapfx" style="left:' + w.x + 'px;top:' + w.y + 'px"></div>');
+      world.appendChild(f); setTimeout(function () { f.remove(); }, 520);
     }
     root.addEventListener('pointerdown', function (e) {
       if (busy || e.target.closest('button')) return;
-      held = true; S.unlock(); clearHand(); aim(e, true);
+      var p = pt(e);
+      joy = { id: e.pointerId, ox: p.x, oy: p.y, vx: 0, vy: 0, on: false };
+      S.unlock(); clearHand();
     });
-    root.addEventListener('pointermove', function (e) { if (held && !busy) aim(e, false); });
-    function lift() { held = false; }
+    root.addEventListener('pointermove', function (e) {
+      if (!joy || e.pointerId !== joy.id || busy) return;
+      var p = pt(e), dx = p.x - joy.ox, dy = p.y - joy.oy, d = Math.hypot(dx, dy);
+      if (!joy.on && d > 16) {
+        joy.on = true; P.tx = null;
+        joyEl.style.display = ''; joyEl.style.left = joy.ox + 'px'; joyEl.style.top = joy.oy + 'px';
+      }
+      if (joy.on && d > 0) {
+        var k = Math.min(1, d / 80);
+        joy.vx = dx / d * k; joy.vy = dy / d * k;
+        knob.style.transform = 'translate(' + (dx / d * k * 62).toFixed(1) + 'px,' + (dy / d * k * 62).toFixed(1) + 'px)';
+      }
+    });
+    function lift(e) {
+      if (!joy || (e && e.pointerId != null && e.pointerId !== joy.id)) return;
+      if (!joy.on && !busy && e && e.type === 'pointerup') walkHere(pt(e));
+      joy = null; joyEl.style.display = 'none'; knob.style.transform = '';
+    }
     root.addEventListener('pointerup', lift);
     root.addEventListener('pointercancel', lift);
     root.addEventListener('pointerleave', lift);
@@ -1306,7 +1389,8 @@
     }
     function guideTarget() {
       var awake = TYPES.filter(function (t) { return lairState(t) === 'awake'; })[0];
-      if (state.review.length > 0 || state.sinceLesson >= 4) return { x: WD.spots.school.x, y: WD.spots.school.y - 150, icon: ICON.teach, why: 'school' };
+      var bd = state.badges || 0;
+      if (bd < 3 && state.memory.length >= 4 && smart >= [78, 88, 96][bd] && !(res && res.tested && !res.pass)) return { x: WD.spots.school.x, y: WD.spots.school.y - 150, icon: ICON.medal, why: 'school' };
       if (awake && smart >= 90) { var s = WD.spots.lair[awake]; return { x: s.x, y: s.y - 170, icon: A.typeIcon(awake), why: 'lair' }; }
       var w = nearestWild();
       return w ? { x: w.x, y: w.y - 120, icon: ICON.paw, why: 'wild' } : null;
@@ -1325,7 +1409,10 @@
 
     function enter(z) {
       if (z.id === 'home') { busy = true; state.pos = { x: z.s.out[0], y: z.s.out[1] }; save(); S.sfx('pop'); go(dex); return; }
-      if (z.id === 'school') { busy = true; state.pos = { x: z.s.out[0], y: z.s.out[1] }; save(); S.sfx('pop'); go(lesson); return; }
+      if (z.id === 'school') {
+        if (state.memory.length < 3) { S.sfx('weak'); say('여기는 <b>시험장</b>이야. 친구를 세 마리 만나고 다시 오자!'); return; }
+        busy = true; state.pos = { x: z.s.out[0], y: z.s.out[1] }; save(); S.sfx('pop'); go(arena); return;
+      }
       var st = lairState(z.type), L = A.LEGEND[z.type];
       if (st === 'locked') {
         S.sfx('weak');
@@ -1351,9 +1438,17 @@
 
       // 주인공
       var walking = false;
-      if (P.tx != null && !busy) {
+      if (joy && joy.on && !busy) {
+        var jl = Math.hypot(joy.vx, joy.vy);
+        if (jl > 0.08) {
+          var sx = joy.vx * 350 * dt, sy = joy.vy * 350 * dt, wentJ = false;
+          if (!hit(P.x + sx, P.y)) { P.x += sx; wentJ = true; }
+          if (!hit(P.x, P.y + sy)) { P.y += sy; wentJ = true; }
+          if (wentJ) { walking = true; moved += Math.hypot(sx, sy); if (Math.abs(joy.vx) > 0.15) P.face = joy.vx > 0 ? 1 : -1; }
+        }
+      } else if (P.tx != null && !busy) {
         var dx = P.tx - P.x, dy = P.ty - P.y, d = Math.hypot(dx, dy);
-        if (d < 8) { if (!held) { P.tx = null; } }
+        if (d < 8) { P.tx = null; }
         else {
           var step = Math.min(d, 300 * dt), ux = dx / d, uy = dy / d, went = false;
           if (P.sideX) {
@@ -1376,7 +1471,7 @@
             if (P.sideX || P.sideY) went = true;
           }
           if (went) { walking = true; moved += step; if (Math.abs(dx) > 6 && !P.sideX) P.face = dx > 0 ? 1 : -1; }
-          else if (!held) P.tx = null;
+          else P.tx = null;
         }
       }
       if (walking !== P.walking) { P.walking = walking; kid.classList.toggle('walking', walking); }
@@ -1391,8 +1486,22 @@
 
       // 야생 말랑몬은 제 자리 근처를 어슬렁거린다
       for (var i = 0; i < mapMem.wilds.length; i++) {
-        var w = mapMem.wilds[i];
-        if (w.tx == null) {
+        var w = mapMem.wilds[i], pdx = w.x - P.x, pdy = w.y - P.y, pdist = Math.hypot(pdx, pdy) || 1;
+        if (!w.react && pdist < 230 && !busy) {
+          w.react = rnd() < 0.5 ? 'flee' : 'come'; w.reactT = w.react === 'flee' ? 2.2 : 3;
+          var bg = el('<div class="bang">!</div>'); w.el.appendChild(bg); setTimeout(function () { bg.remove(); }, 700);
+          S.sfx('tap');
+        }
+        if (w.react === 'flee' || w.react === 'come') {
+          w.reactT -= dt; w.tx = null;
+          var dirR = w.react === 'flee' ? 1 : -1, spR = (w.react === 'flee' ? 175 : 100) * dt;
+          var rx = w.x + pdx / pdist * dirR * spR, ry = w.y + pdy / pdist * dirR * spR;
+          if (!blocked(rx, w.y)) w.x = rx;
+          if (!blocked(w.x, ry)) w.y = ry;
+          w.el.querySelector('.flip').style.transform = 'scaleX(' + (pdx * dirR > 0 ? -1 : 1) + ')';
+          if (w.reactT <= 0) { w.react = 'tired'; w.hx = w.x; w.hy = w.y; }
+        } else if (w.react === 'tired' && pdist > 330) w.react = null;
+        if (w.react === 'flee' || w.react === 'come') { /* 위에서 움직였다 */ } else if (w.tx == null) {
           w.rest -= dt;
           if (w.rest <= 0) {
             var a = rnd() * Math.PI * 2, rr = 30 + rnd() * 90, tx = w.hx + Math.cos(a) * rr, ty = w.hy + Math.sin(a) * rr * 0.6;
@@ -1461,7 +1570,7 @@
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
-    walkTo = function (x, y) { P.tx = x; P.ty = y; };
+    walkTo = function (x, y) { P.tx = x; P.ty = y; P.sideX = P.sideY = 0; };
     whereAmI = function () { return { x: P.x, y: P.y, busy: busy }; };
 
     /* ---- 돌아왔을 때 알려 줄 것들 ---- */
@@ -1476,14 +1585,16 @@
     else if (res && res.isNew) toast('도감에 새 친구!');
 
     if (fainted) {
-      say('힘이 다 빠져서 집에서 쉬었어. <b>학교</b>에서 더 가르쳐 줘!', 4200);
+      say('힘이 다 빠져서 집에서 쉬었어. 머리 장식을 잘 보고 알려 줘!', 4200);
     } else if (!state.mapTut) {
-      say('가고 싶은 곳을 <b>꾹 누르면</b> 걸어가! 친구를 찾아보자.', 5200);
-      hand(900, 470, 'tap');
+      say('화면을 누른 채 <b>끌면</b> 그쪽으로 달려가! 친구를 찾아보자.', 5600);
+      hand(760, 500, 'dragging', 150, -60);
+    } else if (res && res.tested) {
+      say(res.pass ? '시험에 합격했어! 나 혼자서도 잘하지?' : '혼자서는 아직 어려워. 친구를 더 만나서 가르쳐 줘!', 3800);
     } else if (res && res.legend) {
       say('우리가 전설을 이겼어! ' + me_() + ' 선생님 덕분이야!', 3600);
-    } else if (res && res.missed) {
-      say('헷갈린 친구가 있어. <b>학교</b>로 가서 가르쳐 줘!', 3600);
+    } else if (res && res.taught) {
+      say('아까 가르쳐 준 친구, 이제 기억했어!', 3200);
     } else if (res && res.isNew && TYPES.some(function (t) { return lairState(t) === 'awake'; })) {
       say('어디선가 <b>전설</b>이 깨어난 것 같아…!', 3600);
     } else if (!res) {
@@ -1499,13 +1610,19 @@
   function dex() {
     var tabs = TYPES.map(function (t) { return { id: t, label: A.typeIcon(t) + T[t].name + ' <small>' + dexHas(t) + '/' + SHAPES + '</small>' }; })
       .concat([{ id: 'legend', label: '전설 <small>' + Object.keys(state.legends).length + '/3</small>' },
-        { id: 'people', label: '이웃 <small>' + Object.keys(state.met).length + '/' + A.NPCS.length + '</small>' }]);
+        { id: 'people', label: '이웃 <small>' + Object.keys(state.met).length + '/' + A.NPCS.length + '</small>' },
+        { id: 'learn', label: '배움 <small>' + Object.keys(state.cards).length + '/' + CARDS.length + '</small>' }]);
     var body = '';
     if (dexTab === 'legend') {
       body = '<div class="dx-big">' + TYPES.map(function (t) {
         var own = B.HUE[t].clear, L = A.LEGEND[t];
         if (state.legends[t]) return '<button class="dx-cell big legend" data-n="' + L.title + ' ' + L.name + '">' + mini(A.legend(t, (own[0] + own[1]) / 2)) + '<span class="nm">' + L.name + '</span><span class="sub">' + L.title + '</span></button>';
         return '<div class="dx-cell big unknown">' + mini(A.legend(t, own[0]).replace('mon-legend', 'mon-legend is-shadow')) + '<span class="nm">???</span><span class="sub">' + T[t].name + ' 타입 ' + Math.min(LEGEND_NEED, dexHas(t)) + '/' + LEGEND_NEED + '종</span></div>';
+      }).join('') + '</div>';
+    } else if (dexTab === 'learn') {
+      body = '<div class="dx-cards">' + CARDS.map(function (c, i) {
+        if (state.cards[c.id]) return '<div class="lc"><div class="ic">' + c.icon + '</div><div><h4>' + (i + 1) + '. ' + c.title + '</h4><p>' + c.kid + '</p><p class="adult">' + c.adult + '</p></div></div>';
+        return '<div class="lc lock"><div class="ic">?</div><div><h4>' + (i + 1) + '. 아직 못 얻은 카드</h4><p>짝꿍과 탐험하다 보면 얻게 돼요.</p></div></div>';
       }).join('') + '</div>';
     } else if (dexTab === 'people') {
       body = '<div class="dx-row">' + A.NPCS.map(function (n) {
@@ -1536,7 +1653,8 @@
       '<button class="dex-edit" id="edit">내 모습 꾸미기</button>' +
       '<div class="dx-tabs">' + tabs.map(function (tb) { return '<button class="dx-tab' + (tb.id === dexTab ? ' on' : '') + '" data-tab="' + tb.id + '">' + tb.label + '</button>'; }).join('') + '</div>' +
       '<div class="dx-body">' + body + '</div>' +
-      '<div class="mem"><h3>짝꿍의 기억 주머니</h3><p>' + me_() + ' 선생님이 보여 준 친구들이에요</p>' + mem + '</div>' +
+      '<div class="mem"><h3>짝꿍의 기억 주머니</h3><p>' + me_() + ' 선생님이 알려 준 친구 ' + state.memory.length + '마리</p>' + mem +
+      '<h3 class="h-cue">짝꿍이 믿는 단서</h3>' + cueBars(B.weights(state.memory)) + '</div>' +
       '<button class="reset" id="reset">처음부터 다시</button>', { home: true });
     each('.dx-tab', function (b) { b.addEventListener('click', function () { S.sfx('tap'); dexTab = b.getAttribute('data-tab'); go(dex); }); });
     each('button.dx-cell', function (c) {
@@ -1571,7 +1689,7 @@
     get store() { return store; },
     set: function (patch) { for (var k in patch) state[k] = patch[k]; save(); },
     seed: function (name, patch) { createProfile(name); for (var k in patch) state[k] = patch[k]; save(); },
-    go: function (name) { go({ title: title, who: profiles, map: map, lesson: lesson, dex: dex, egg: eggScreen, first: firstBattle, maker: avatarMaker, name: nameScreen }[name]); },
+    go: function (name) { go({ title: title, who: profiles, map: map, arena: arena, dex: dex, egg: eggScreen, first: firstBattle, maker: avatarMaker, name: nameScreen }[name]); },
     wilds: function () { return mapMem ? mapMem.wilds.map(function (w) { return { x: w.x, y: w.y, type: w.m.type }; }) : []; },
     dexTab: function (t) { dexTab = t; go(dex); },
     walkTo: function (x, y) { if (walkTo) walkTo(x, y); },
