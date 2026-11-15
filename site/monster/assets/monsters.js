@@ -14,10 +14,12 @@
 
   // 종(타입 × 몸 모양) 이름
   var SPECIES = {
-    fire: ['화르롱', '불꼬미', '따끈이'],
-    water: ['퐁퐁이', '방울링', '첨벙이'],
-    grass: ['새싹이', '파릇몬', '풀잎링']
+    fire: ['화르롱', '불딱지', '불꽃룡'],
+    water: ['퐁퐁이', '물방개몬', '파도룡'],
+    grass: ['새싹이', '풀잎벌', '초록룡']
   };
+  // 몸 모양 0·1·2 = 동물·곤충·공룡
+  var KIND = ['동물', '곤충', '공룡'];
 
   function pal(h) {
     h = ((h % 360) + 360) % 360;
@@ -66,6 +68,12 @@
     } else if (expr === 'ouch') {
       eyes = '<path d="M71 107 L88 115 L71 123 M129 107 L112 115 L129 123" ' + st + '/>';
       mouth = '<path d="M89 133 Q94.5 126 100 133 Q105.5 140 111 133" ' + st + '/>';
+    } else if (expr === 'cool') {
+      eyes = '<path d="M68 107 L92 113 L92 120 Q87 128 79 128 Q69 127 68 119 Z" fill="' + INK + '"/>' +
+        '<path d="M132 107 L108 113 L108 120 Q113 128 121 128 Q131 127 132 119 Z" fill="' + INK + '"/>' +
+        '<circle cx="76" cy="116" r="3.4" fill="#fff"/><circle cx="116" cy="117" r="3.4" fill="#fff"/>' +
+        '<path d="M64 101 L93 109 M136 101 L107 109" stroke="' + INK + '" stroke-width="5" stroke-linecap="round" fill="none"/>';
+      mouth = '<path d="M91 131 Q101 138 111 129" ' + st + '/>';
     } else {
       eyes = eye(L, 114, style || 0) + eye(R, 114, style || 0);
       mouth = '<path d="M92 128 Q100 137 108 128" ' + st + '/>';
@@ -123,19 +131,33 @@
     opts = opts || {};
     var p = pal(m.hue), b = BODY[m.shape || 0];
     var o = 'stroke="' + p.dark + '" stroke-width="5" stroke-linejoin="round"';
-    var ears = '';
+    var ears = '', back = '', extra = '';
+    var thin = 'stroke="' + p.dark + '" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"';
     if (m.shape === 0) {
+      // 동물: 둥근 귀, 코, 수염
       ears = '<circle cx="60" cy="82" r="15" fill="' + p.body + '" ' + o + '/><circle cx="140" cy="82" r="15" fill="' + p.body + '" ' + o + '/>' +
         '<circle cx="60" cy="83" r="7" fill="' + p.belly + '"/><circle cx="140" cy="83" r="7" fill="' + p.belly + '"/>';
-    } else if (m.shape === 2) {
-      ears = '<path d="M50 96 L42 54 L82 76 Z" fill="' + p.body + '" ' + o + '/><path d="M150 96 L158 54 L118 76 Z" fill="' + p.body + '" ' + o + '/>' +
-        '<path d="M54 84 L50 66 L68 77 Z" fill="' + p.belly + '"/><path d="M146 84 L150 66 L132 77 Z" fill="' + p.belly + '"/>';
+      extra = '<ellipse cx="100" cy="126.5" rx="4.6" ry="3.2" fill="' + INK + '"/>' +
+        '<path d="M50 124 L36 120 M50 131 L37 134 M150 124 L164 120 M150 131 L163 134" fill="none" ' + thin + ' opacity=".7"/>';
+    } else if (m.shape === 1) {
+      // 곤충: 더듬이, 투명한 날개, 배 줄무늬
+      back = '<g class="bugwing bw-l"><ellipse cx="36" cy="108" rx="27" ry="15" transform="rotate(-28 36 108)" fill="#fff" opacity=".8" ' + thin + '/></g>' +
+        '<g class="bugwing bw-r"><ellipse cx="164" cy="108" rx="27" ry="15" transform="rotate(28 164 108)" fill="#fff" opacity=".8" ' + thin + '/></g>';
+      ears = '<path d="M80 72 C70 54 60 46 50 48 M120 72 C130 54 140 46 150 48" fill="none" stroke="' + p.dark + '" stroke-width="5" stroke-linecap="round"/>' +
+        '<circle cx="49" cy="48" r="7" fill="' + p.shade + '" ' + thin + '/><circle cx="151" cy="48" r="7" fill="' + p.shade + '" ' + thin + '/>';
+      extra = '<path d="M72 143 Q100 152 128 143 M70 156 Q100 166 130 156" fill="none" stroke="' + p.shade + '" stroke-width="4" stroke-linecap="round" opacity=".55"/>';
+    } else {
+      // 공룡: 뿔, 등 가시, 송곳니, 비늘 무늬
+      back = '<path d="M38 118 L18 110 L36 98 Z M34 142 L15 138 L31 124 Z M162 112 L182 104 L164 94 Z" fill="' + p.shade + '" ' + o + '/>';
+      ears = '<path d="M54 94 C42 78 40 62 46 50 C60 56 72 68 78 82 Z" fill="#fff3d6" ' + o + '/><path d="M146 94 C158 78 160 62 154 50 C140 56 128 68 122 82 Z" fill="#fff3d6" ' + o + '/>';
+      extra = '<circle cx="134" cy="96" r="5.5" fill="' + p.shade + '" opacity=".7"/><circle cx="144" cy="110" r="3.8" fill="' + p.shade + '" opacity=".7"/><circle cx="62" cy="100" r="4.2" fill="' + p.shade + '" opacity=".7"/>' +
+        (opts.expr && opts.expr !== 'normal' ? '' : '<path d="M92.5 132.5 L95.5 139 L98.5 133.5 Z M101.5 133.5 L104.5 139 L107.5 132.5 Z" fill="#fff" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>');
     }
     var silhouette = opts.silhouette;
     var svg = '<svg class="mon mon-wild' + (silhouette ? ' is-shadow' : '') + '" viewBox="0 0 200 200" aria-hidden="true">' +
       '<ellipse class="mon-ground" cx="100" cy="182" rx="50" ry="9" fill="#000" opacity=".16"/>' +
       '<g class="mon-all"><g class="mon-body">' +
-      tailOrn(m.tail, p) +
+      tailOrn(m.tail, p) + back +
       '<ellipse cx="42" cy="134" rx="10" ry="14" transform="rotate(22 42 134)" fill="' + p.body + '" ' + o + '/>' +
       '<ellipse cx="158" cy="134" rx="10" ry="14" transform="rotate(-22 158 134)" fill="' + p.body + '" ' + o + '/>' +
       ears + headOrn(m.head, b.top - 64) +
@@ -144,7 +166,7 @@
       '<ellipse cx="74" cy="' + (b.top + 26) + '" rx="17" ry="8" transform="rotate(-28 74 ' + (b.top + 26) + ')" fill="#fff" opacity=".32"/>' +
       '<ellipse cx="78" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>' +
       '<ellipse cx="122" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>' +
-      face(116, opts.expr || 'normal', m.eyes) +
+      face(116, opts.expr || 'normal', m.eyes) + extra +
       '</g></g></svg>';
     return svg;
   }
@@ -217,7 +239,35 @@
       faceY = 108;
     }
 
-    return '<svg class="mon mon-partner form-' + form + '" viewBox="0 0 200 200" data-face-y="' + faceY + '" aria-hidden="true">' +
+    if (form >= 4) {
+      // 전설: 왕관, 큰 날개, 망토, 가슴의 별. 눈매가 날카롭다
+      var gold = 'fill="#ffd84a" stroke="#b7791f" stroke-width="3.6" stroke-linejoin="round"';
+      antenna = '<g class="antenna"><circle cx="100" cy="16" r="20" fill="#ffd84a" opacity=".3"/>' +
+        '<path class="spark" transform="translate(100 16) scale(1.35)" d="' + STAR + '" ' + gold + '/></g>';
+      parts =
+        '<g class="wing wing-l"><path d="M54 126 C24 132 2 112 -8 82 C4 88 12 88 20 84 C4 72 -2 54 2 34 C14 48 24 54 34 56 C28 44 30 30 36 20 C56 40 68 84 66 122 Z" fill="#fff" ' + o + '/>' +
+        '<path d="M2 84 C12 96 28 106 46 108 M6 44 C16 62 30 76 48 84" fill="none" stroke="#ffd84a" stroke-width="4.5" stroke-linecap="round"/></g>' +
+        '<g class="wing wing-r"><path d="M146 126 C176 132 198 112 208 82 C196 88 188 88 180 84 C196 72 202 54 198 34 C186 48 176 54 166 56 C172 44 170 30 164 20 C144 40 132 84 134 122 Z" fill="#fff" ' + o + '/>' +
+        '<path d="M198 84 C188 96 172 106 154 108 M194 44 C184 62 170 76 152 84" fill="none" stroke="#ffd84a" stroke-width="4.5" stroke-linecap="round"/></g>' +
+        '<g class="scarf-tail"><path d="M52 132 C34 150 30 172 38 192 L62 184 L78 196 L100 186 L122 196 L138 184 L162 192 C170 172 166 150 148 132 Z" fill="#e23b3b" stroke="#7d1c1c" stroke-width="4.5" stroke-linejoin="round"/></g>' +
+        '<path d="M66 82 C40 56 40 14 60 4 C78 12 92 48 90 76 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M134 82 C160 56 160 14 140 4 C122 12 108 48 110 76 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M62 44 C54 30 56 18 61 12 C70 20 76 36 76 50 Z" fill="#ffd84a"/><path d="M138 44 C146 30 144 18 139 12 C130 20 124 36 124 50 Z" fill="#ffd84a"/>' +
+        antenna +
+        '<ellipse cx="38" cy="136" rx="12" ry="17" transform="rotate(24 38 136)" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="162" cy="136" rx="12" ry="17" transform="rotate(-24 162 136)" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M100 56 C144 56 166 90 166 124 C166 162 140 178 100 178 C60 178 34 162 34 124 C34 90 56 56 100 56 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="100" cy="156" rx="32" ry="18" fill="' + p.belly + '"/>' +
+        '<ellipse cx="70" cy="82" rx="18" ry="8" transform="rotate(-28 70 82)" fill="#fff" opacity=".4"/>' +
+        '<path d="M74 60 L84 44 L92 58 L100 40 L108 58 L116 44 L126 60 C110 54 90 54 74 60 Z" ' + gold + '/>' +
+        '<path transform="translate(100 156) scale(.95)" d="' + STAR + '" ' + gold + '/>' +
+        '<path d="M46 124 C60 114 78 120 84 132 M154 124 C140 114 122 120 116 132" fill="none" stroke="' + p.accent + '" stroke-width="4" stroke-linecap="round" opacity=".0"/>' +
+        '<ellipse cx="78" cy="177" rx="16" ry="8" fill="' + p.shade + '" ' + o + '/><ellipse cx="122" cy="177" rx="16" ry="8" fill="' + p.shade + '" ' + o + '/>';
+      faceY = 108;
+      if (!opts.expr || opts.expr === 'normal') opts.expr = 'cool';
+    }
+
+    return '<svg class="mon mon-partner form-' + form + '" viewBox="0 0 200 200" data-face-y="' + faceY + '" data-form="' + form + '" aria-hidden="true">' +
       '<ellipse class="mon-ground" cx="100" cy="182" rx="50" ry="9" fill="#000" opacity=".16"/>' +
       '<g class="mon-all"><g class="mon-body">' + parts + face(faceY, opts.expr || 'normal', 0) + '</g></g></svg>';
   }
@@ -229,6 +279,7 @@
     if (!old) return;
     var y = svgEl.getAttribute('data-face-y');
     var tmp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    if (expr === 'normal' && +svgEl.getAttribute('data-form') >= 4) expr = 'cool';
     tmp.innerHTML = face(y ? +y : 116, expr, +(svgEl.getAttribute('data-eyes') || 0));
     old.parentNode.replaceChild(tmp.firstChild, old);
   }
@@ -275,7 +326,7 @@
   function speciesName(m) { return SPECIES[m.type][m.shape || 0]; }
 
   root.MMArt = {
-    TYPE: TYPE, SPECIES: SPECIES, EGGS: EGGS, STAR: STAR,
+    TYPE: TYPE, SPECIES: SPECIES, KIND: KIND, EGGS: EGGS, STAR: STAR, INK: INK, FLAME: FLAME,
     wild: wild, partner: partner, egg: egg, typeIcon: typeIcon,
     setFace: setFace, speciesName: speciesName, pal: pal
   };
