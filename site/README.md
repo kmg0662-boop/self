@@ -142,3 +142,7 @@ AI를 이미 써본 사람은 `#placement`에서 3분 진단을 해요. 유닛 0
 ```bash
 cd site && python3 -m http.server 8000
 ```
+
+## 함께 들어 있는 것
+
+- `monster/` — 초등 저학년용 AI 교육 게임 '말랑몬 선생님'. 코스와는 별개로 동작해요. 자세한 내용은 `monster/README.md`.

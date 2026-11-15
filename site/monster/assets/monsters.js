@@ -1,0 +1,282 @@
+/* 말랑몬 선생님 — 그림 공장
+   모든 캐릭터를 SVG로 직접 그려요. 부위(꼬리·머리 장식·눈)가 따로 나뉘어 있어서
+   CSS로 숨 쉬기, 눈 깜빡임, 꼬리 흔들기 같은 움직임을 줄 수 있어요. */
+(function (root) {
+  'use strict';
+
+  var INK = '#2d2440';
+
+  var TYPE = {
+    fire: { name: '불', color: '#ff7a3c', dark: '#c2401a', soft: '#ffe3d1', move: '불꽃 슛' },
+    water: { name: '물', color: '#2fa8ef', dark: '#1670b5', soft: '#d8f1ff', move: '물방울 슛' },
+    grass: { name: '풀', color: '#52c443', dark: '#2c8a2a', soft: '#def8d4', move: '풀잎 슛' }
+  };
+
+  // 종(타입 × 몸 모양) 이름
+  var SPECIES = {
+    fire: ['화르롱', '불꼬미', '따끈이'],
+    water: ['퐁퐁이', '방울링', '첨벙이'],
+    grass: ['새싹이', '파릇몬', '풀잎링']
+  };
+
+  function pal(h) {
+    h = ((h % 360) + 360) % 360;
+    // 노랑~연두는 원래 밝아서 조금 더 진하게 잡아 줘요
+    var bright = h > 40 && h < 170;
+    var warm = h <= 40 || h >= 340;
+    return {
+      body: 'hsl(' + h + ' ' + (bright ? 72 : warm ? 94 : 84) + '% ' + (bright ? 58 : warm ? 63 : 66) + '%)',
+      shade: 'hsl(' + h + ' ' + (bright ? 66 : 72) + '% ' + (bright ? 46 : 54) + '%)',
+      dark: 'hsl(' + h + ' 48% 27%)',
+      belly: 'hsl(' + h + ' 92% 91%)'
+    };
+  }
+
+  /* ---------- 얼굴 ---------- */
+  function eye(x, y, style, big) {
+    var rx = big ? 11.5 : 9.5, ry = big ? 13.5 : 11.5;
+    if (style === 1) {
+      return '<ellipse cx="' + x + '" cy="' + y + '" rx="12" ry="13" fill="#fff" stroke="' + INK + '" stroke-width="2.5"/>' +
+        '<ellipse cx="' + (x + 1) + '" cy="' + (y + 1) + '" rx="7" ry="8.5" fill="' + INK + '"/>' +
+        '<circle cx="' + (x - 2) + '" cy="' + (y - 3) + '" r="3" fill="#fff"/>';
+    }
+    var s = '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" fill="' + INK + '"/>' +
+      '<circle cx="' + (x - 3.2) + '" cy="' + (y - 4.5) + '" r="' + (big ? 4.6 : 3.8) + '" fill="#fff"/>' +
+      '<circle cx="' + (x + 3.4) + '" cy="' + (y + 4) + '" r="' + (big ? 2.2 : 1.7) + '" fill="#fff" opacity=".85"/>';
+    if (style === 2) { // 속눈썹이 있는 눈
+      s += '<path d="M' + (x - 10) + ' ' + (y - 9) + ' l-5 -4 M' + (x + 10) + ' ' + (y - 9) + ' l5 -4" stroke="' + INK + '" stroke-width="3" stroke-linecap="round" fill="none"/>';
+    }
+    return s;
+  }
+
+  // expr: normal | happy | wow | think | ouch
+  function face(y, expr, style) {
+    var L = 80, R = 120, eyes, mouth;
+    var st = 'stroke="' + INK + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"';
+    if (expr === 'happy') {
+      eyes = '<path d="M70 118 Q80 104 90 118 M110 118 Q120 104 130 118" ' + st + '/>';
+      mouth = '<path d="M89 126 Q100 147 111 126 Z" fill="#8a2f45" stroke="' + INK + '" stroke-width="3" stroke-linejoin="round"/>' +
+        '<ellipse cx="100" cy="137" rx="5.5" ry="3.5" fill="#ff8fa3"/>';
+    } else if (expr === 'wow') {
+      eyes = eye(L, 114, 0, true) + eye(R, 114, 0, true);
+      mouth = '<ellipse cx="100" cy="134" rx="6.5" ry="8" fill="#8a2f45" stroke="' + INK + '" stroke-width="3"/>';
+    } else if (expr === 'think') {
+      eyes = eye(L + 3, 111, 0) + eye(R + 3, 111, 0);
+      mouth = '<path d="M96 132 Q102 129 109 131" ' + st + '/>';
+    } else if (expr === 'ouch') {
+      eyes = '<path d="M71 107 L88 115 L71 123 M129 107 L112 115 L129 123" ' + st + '/>';
+      mouth = '<path d="M89 133 Q94.5 126 100 133 Q105.5 140 111 133" ' + st + '/>';
+    } else {
+      eyes = eye(L, 114, style || 0) + eye(R, 114, style || 0);
+      mouth = '<path d="M92 128 Q100 137 108 128" ' + st + '/>';
+    }
+    var cheeks = '<ellipse cx="62" cy="129" rx="8.5" ry="5.5" fill="#ff7d9c" opacity=".55"/>' +
+      '<ellipse cx="138" cy="129" rx="8.5" ry="5.5" fill="#ff7d9c" opacity=".55"/>';
+    return '<g class="face" transform="translate(0 ' + (y - 114) + ')">' + cheeks +
+      '<g class="eyes' + (expr && expr !== 'normal' ? ' no-blink' : '') + '">' + eyes + '</g>' + mouth + '</g>';
+  }
+
+  /* ---------- 장식 (머리·꼬리) : 타입을 알려 주는 단서 ---------- */
+  var FLAME = '<path d="M100 14 C104 30 122 36 120 52 C119 64 110 70 100 70 C90 70 81 64 80 52 C79 42 87 38 89 28 C93 32 96 30 100 14 Z" fill="#ff8a2b" stroke="#b3401a" stroke-width="4.5" stroke-linejoin="round"/>' +
+    '<path d="M100 40 C103 48 110 50 109 58 C108 64 104 66 100 66 C96 66 92 64 91 58 C90 52 96 50 100 40 Z" fill="#ffe066"/>';
+
+  function headOrn(kind, dy) {
+    var g;
+    if (kind === 0) {
+      g = '<g class="orn orn-flame">' + FLAME + '</g>';
+    } else if (kind === 1) {
+      g = '<g class="orn orn-fin"><path d="M78 69 C80 44 96 24 126 16 C115 34 119 52 122 69 Z" fill="#7fe3f5" stroke="#1f7f9c" stroke-width="4.5" stroke-linejoin="round"/>' +
+        '<path d="M93 64 L106 34 M108 65 L115 40" stroke="#1f7f9c" stroke-width="3" stroke-linecap="round" opacity=".55"/></g>';
+    } else {
+      g = '<g class="orn orn-leaf"><path d="M100 70 L100 46" stroke="#2f7a2a" stroke-width="6" stroke-linecap="round"/>' +
+        '<path d="M100 48 C82 51 65 39 61 20 C82 17 98 30 100 48 Z" fill="#8be05a" stroke="#2f7a2a" stroke-width="4.5" stroke-linejoin="round"/>' +
+        '<path d="M100 48 C118 51 135 39 139 20 C118 17 102 30 100 48 Z" fill="#a4ec6a" stroke="#2f7a2a" stroke-width="4.5" stroke-linejoin="round"/>' +
+        '<path d="M94 42 C86 36 76 30 68 25 M106 42 C114 36 124 30 132 25" stroke="#2f7a2a" stroke-width="2.5" stroke-linecap="round" opacity=".5" fill="none"/></g>';
+    }
+    return '<g transform="translate(0 ' + dy + ')">' + g + '</g>';
+  }
+
+  function tailOrn(kind, p) {
+    var g;
+    if (kind === 0) {
+      g = '<path d="M144 154 C170 158 186 146 183 124" stroke="' + p.dark + '" stroke-width="15" stroke-linecap="round" fill="none"/>' +
+        '<path d="M144 154 C170 158 186 146 183 124" stroke="' + p.body + '" stroke-width="7" stroke-linecap="round" fill="none"/>' +
+        '<g transform="translate(131 82) scale(.52)"><g class="orn-flame">' + FLAME + '</g></g>';
+    } else if (kind === 1) {
+      g = '<path d="M142 150 C162 146 172 128 194 118 C189 136 191 150 198 168 C176 168 160 163 142 157 Z" fill="#7fe3f5" stroke="#1f7f9c" stroke-width="4.5" stroke-linejoin="round"/>' +
+        '<path d="M156 151 L184 130 M158 156 L188 156" stroke="#1f7f9c" stroke-width="3" stroke-linecap="round" opacity=".55"/>';
+    } else {
+      g = '<path d="M142 153 C155 128 178 116 198 120 C196 144 179 164 145 159 Z" fill="#8be05a" stroke="#2f7a2a" stroke-width="4.5" stroke-linejoin="round"/>' +
+        '<path d="M150 154 C164 142 178 132 191 125" stroke="#2f7a2a" stroke-width="2.5" stroke-linecap="round" opacity=".5" fill="none"/>';
+    }
+    return '<g class="tail">' + g + '</g>';
+  }
+
+  /* ---------- 야생 말랑몬 ---------- */
+  var BODY = [
+    { d: 'M100 64 C140 64 161 93 161 126 C161 160 137 178 100 178 C63 178 39 160 39 126 C39 93 60 64 100 64 Z', top: 64 },
+    { d: 'M100 56 C127 56 148 95 156 128 C163 161 135 178 100 178 C65 178 37 161 44 128 C52 95 73 56 100 56 Z', top: 57 },
+    { d: 'M100 72 C150 67 169 91 167 127 C165 165 141 178 100 178 C59 178 35 165 33 127 C31 91 50 67 100 72 Z', top: 70 }
+  ];
+
+  function wild(m, opts) {
+    opts = opts || {};
+    var p = pal(m.hue), b = BODY[m.shape || 0];
+    var o = 'stroke="' + p.dark + '" stroke-width="5" stroke-linejoin="round"';
+    var ears = '';
+    if (m.shape === 0) {
+      ears = '<circle cx="60" cy="82" r="15" fill="' + p.body + '" ' + o + '/><circle cx="140" cy="82" r="15" fill="' + p.body + '" ' + o + '/>' +
+        '<circle cx="60" cy="83" r="7" fill="' + p.belly + '"/><circle cx="140" cy="83" r="7" fill="' + p.belly + '"/>';
+    } else if (m.shape === 2) {
+      ears = '<path d="M50 96 L42 54 L82 76 Z" fill="' + p.body + '" ' + o + '/><path d="M150 96 L158 54 L118 76 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M54 84 L50 66 L68 77 Z" fill="' + p.belly + '"/><path d="M146 84 L150 66 L132 77 Z" fill="' + p.belly + '"/>';
+    }
+    var silhouette = opts.silhouette;
+    var svg = '<svg class="mon mon-wild' + (silhouette ? ' is-shadow' : '') + '" viewBox="0 0 200 200" aria-hidden="true">' +
+      '<ellipse class="mon-ground" cx="100" cy="182" rx="50" ry="9" fill="#000" opacity=".16"/>' +
+      '<g class="mon-all"><g class="mon-body">' +
+      tailOrn(m.tail, p) +
+      '<ellipse cx="42" cy="134" rx="10" ry="14" transform="rotate(22 42 134)" fill="' + p.body + '" ' + o + '/>' +
+      '<ellipse cx="158" cy="134" rx="10" ry="14" transform="rotate(-22 158 134)" fill="' + p.body + '" ' + o + '/>' +
+      ears + headOrn(m.head, b.top - 64) +
+      '<path d="' + b.d + '" fill="' + p.body + '" ' + o + '/>' +
+      '<ellipse cx="100" cy="148" rx="33" ry="24" fill="' + p.belly + '"/>' +
+      '<ellipse cx="74" cy="' + (b.top + 26) + '" rx="17" ry="8" transform="rotate(-28 74 ' + (b.top + 26) + ')" fill="#fff" opacity=".32"/>' +
+      '<ellipse cx="78" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>' +
+      '<ellipse cx="122" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>' +
+      face(116, opts.expr || 'normal', m.eyes) +
+      '</g></g></svg>';
+    return svg;
+  }
+
+  /* ---------- 짝꿍 (배우는 AI 말랑몬) ---------- */
+  var EGGS = {
+    berry: { name: '딸기 알', hue: 338, body: 'hsl(338 90% 76%)', shade: 'hsl(338 76% 64%)', dark: 'hsl(338 45% 30%)', belly: 'hsl(338 100% 94%)', accent: '#ff5e7e' },
+    grape: { name: '포도 알', hue: 266, body: 'hsl(266 84% 76%)', shade: 'hsl(266 66% 64%)', dark: 'hsl(266 42% 30%)', belly: 'hsl(266 100% 95%)', accent: '#8a5cf6' },
+    cloud: { name: '구름 알', hue: 205, body: 'hsl(205 80% 93%)', shade: 'hsl(205 62% 80%)', dark: 'hsl(215 38% 34%)', belly: '#ffffff', accent: '#43b4ff' }
+  };
+
+  var STAR = 'M0 -13 L3.8 -4.6 L12.8 -3.6 L6 2.6 L7.9 11.6 L0 7 L-7.9 11.6 L-6 2.6 L-12.8 -3.6 L-3.8 -4.6 Z';
+
+  function partner(egg, form, opts) {
+    opts = opts || {};
+    var p = EGGS[egg] || EGGS.berry;
+    var o = 'stroke="' + p.dark + '" stroke-width="5" stroke-linejoin="round"';
+    var parts = '', faceY, antenna;
+
+    if (form <= 1) {
+      // 아기: 동글동글, 작은 더듬이
+      antenna = '<g class="antenna"><path d="M100 80 C100 66 104 60 110 54" stroke="' + p.dark + '" stroke-width="5" stroke-linecap="round" fill="none"/>' +
+        '<circle class="spark" cx="112" cy="50" r="9" fill="#ffd84a" stroke="#b7791f" stroke-width="4"/></g>';
+      parts = antenna +
+        '<path d="M100 76 C138 76 157 102 157 132 C157 163 134 178 100 178 C66 178 43 163 43 132 C43 102 62 76 100 76 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="100" cy="151" rx="30" ry="21" fill="' + p.belly + '"/>' +
+        '<ellipse cx="76" cy="100" rx="16" ry="8" transform="rotate(-28 76 100)" fill="#fff" opacity=".4"/>' +
+        '<ellipse cx="80" cy="177" rx="13" ry="7" fill="' + p.shade + '" ' + o + '/><ellipse cx="120" cy="177" rx="13" ry="7" fill="' + p.shade + '" ' + o + '/>';
+      faceY = 124;
+    } else if (form === 2) {
+      // 어린이: 귀와 별 더듬이, 작은 팔
+      antenna = '<g class="antenna"><path d="M100 70 C100 54 103 46 108 40" stroke="' + p.dark + '" stroke-width="5" stroke-linecap="round" fill="none"/>' +
+        '<path class="spark" transform="translate(111 30)" d="' + STAR + '" fill="#ffd84a" stroke="#b7791f" stroke-width="4" stroke-linejoin="round"/></g>';
+      parts =
+        '<g class="tail"><circle cx="160" cy="158" r="13" fill="' + p.belly + '" ' + o + '/></g>' +
+        '<path d="M70 86 C52 64 52 34 66 30 C82 30 90 56 88 80 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M130 86 C148 64 148 34 134 30 C118 30 110 56 112 80 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M70 72 C62 58 62 44 67 40 C75 42 79 58 79 72 Z" fill="' + p.belly + '"/>' +
+        '<path d="M130 72 C138 58 138 44 133 40 C125 42 121 58 121 72 Z" fill="' + p.belly + '"/>' +
+        antenna +
+        '<ellipse cx="42" cy="136" rx="10" ry="15" transform="rotate(24 42 136)" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="158" cy="136" rx="10" ry="15" transform="rotate(-24 158 136)" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M100 66 C140 66 161 96 161 128 C161 162 137 178 100 178 C63 178 39 162 39 128 C39 96 60 66 100 66 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="100" cy="150" rx="33" ry="23" fill="' + p.belly + '"/>' +
+        '<ellipse cx="74" cy="92" rx="17" ry="8" transform="rotate(-28 74 92)" fill="#fff" opacity=".4"/>' +
+        '<ellipse cx="78" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/><ellipse cx="122" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>';
+      faceY = 118;
+    } else {
+      // 챔피언: 큰 귀, 날개, 목도리, 반짝이는 별
+      antenna = '<g class="antenna"><path d="M100 62 C100 44 103 36 108 30" stroke="' + p.dark + '" stroke-width="5" stroke-linecap="round" fill="none"/>' +
+        '<circle cx="111" cy="20" r="19" fill="#ffd84a" opacity=".28"/>' +
+        '<path class="spark" transform="translate(111 20) scale(1.25)" d="' + STAR + '" fill="#ffd84a" stroke="#b7791f" stroke-width="3.4" stroke-linejoin="round"/></g>';
+      parts =
+        '<g class="wing wing-l"><path d="M52 128 C30 130 10 118 4 96 C12 98 18 98 24 96 C12 88 6 76 8 62 C18 70 26 74 34 76 C28 68 28 58 32 50 C50 62 62 92 62 122 Z" fill="#fff" ' + o + '/></g>' +
+        '<g class="wing wing-r"><path d="M148 128 C170 130 190 118 196 96 C188 98 182 98 176 96 C188 88 194 76 192 62 C182 70 174 74 166 76 C172 68 172 58 168 50 C150 62 138 92 138 122 Z" fill="#fff" ' + o + '/></g>' +
+        '<g class="tail"><path transform="translate(168 160) scale(1.1)" d="' + STAR + '" fill="#ffd84a" stroke="#b7791f" stroke-width="3.4" stroke-linejoin="round"/></g>' +
+        '<path d="M68 84 C44 62 40 22 58 14 C78 16 92 50 90 78 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M132 84 C156 62 160 22 142 14 C122 16 108 50 110 78 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M66 66 C54 48 54 30 60 24 C72 28 80 50 80 68 Z" fill="' + p.accent + '" opacity=".85"/>' +
+        '<path d="M134 66 C146 48 146 30 140 24 C128 28 120 50 120 68 Z" fill="' + p.accent + '" opacity=".85"/>' +
+        antenna +
+        '<ellipse cx="40" cy="138" rx="11" ry="16" transform="rotate(24 40 138)" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="160" cy="138" rx="11" ry="16" transform="rotate(-24 160 138)" fill="' + p.body + '" ' + o + '/>' +
+        '<path d="M100 60 C142 60 164 92 164 126 C164 162 139 178 100 178 C61 178 36 162 36 126 C36 92 58 60 100 60 Z" fill="' + p.body + '" ' + o + '/>' +
+        '<ellipse cx="100" cy="158" rx="30" ry="16" fill="' + p.belly + '"/>' +
+        '<ellipse cx="72" cy="86" rx="18" ry="8" transform="rotate(-28 72 86)" fill="#fff" opacity=".4"/>' +
+        '<path d="M42 136 Q100 160 158 136 L160 150 Q100 175 40 150 Z" fill="#ff5a4e" stroke="#9c2a22" stroke-width="4.5" stroke-linejoin="round"/>' +
+        '<g class="scarf-tail"><path d="M140 150 C150 160 152 176 146 190 L132 184 C136 172 134 164 128 156 Z" fill="#ff5a4e" stroke="#9c2a22" stroke-width="4.5" stroke-linejoin="round"/></g>' +
+        '<ellipse cx="78" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/><ellipse cx="122" cy="177" rx="15" ry="8" fill="' + p.shade + '" ' + o + '/>';
+      faceY = 108;
+    }
+
+    return '<svg class="mon mon-partner form-' + form + '" viewBox="0 0 200 200" data-face-y="' + faceY + '" aria-hidden="true">' +
+      '<ellipse class="mon-ground" cx="100" cy="182" rx="50" ry="9" fill="#000" opacity=".16"/>' +
+      '<g class="mon-all"><g class="mon-body">' + parts + face(faceY, opts.expr || 'normal', 0) + '</g></g></svg>';
+  }
+
+  // 이미 그려진 말랑몬의 표정만 바꾼다
+  function setFace(svgEl, expr) {
+    if (!svgEl) return;
+    var old = svgEl.querySelector('.face');
+    if (!old) return;
+    var y = svgEl.getAttribute('data-face-y');
+    var tmp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    tmp.innerHTML = face(y ? +y : 116, expr, +(svgEl.getAttribute('data-eyes') || 0));
+    old.parentNode.replaceChild(tmp.firstChild, old);
+  }
+
+  /* ---------- 알 ---------- */
+  function egg(kind, crack) {
+    var p = EGGS[kind];
+    var cracks = [
+      '',
+      '<path d="M96 60 L104 74 L94 84" />',
+      '<path d="M96 60 L104 74 L94 84 L108 98 L98 108" /><path d="M134 104 L122 110 L128 122" />',
+      '<path d="M96 60 L104 74 L94 84 L108 98 L98 108 L110 122" /><path d="M134 104 L122 110 L128 122 L116 130" /><path d="M62 112 L74 118 L68 130 L80 136" />',
+      '<path d="M96 60 L104 74 L94 84 L108 98 L98 108 L110 122 L100 136" /><path d="M140 100 L122 110 L128 122 L116 130 L122 144" /><path d="M58 108 L74 118 L68 130 L80 136 L74 150" />'
+    ][crack || 0];
+    return '<svg class="egg" viewBox="0 0 200 200" aria-hidden="true">' +
+      '<ellipse cx="100" cy="182" rx="46" ry="9" fill="#000" opacity=".16"/>' +
+      '<g class="egg-body">' +
+      '<path d="M100 26 C138 26 158 84 158 122 C158 158 134 180 100 180 C66 180 42 158 42 122 C42 84 62 26 100 26 Z" fill="#fff8ec" stroke="' + p.dark + '" stroke-width="5"/>' +
+      '<path d="M46 108 C60 96 74 120 90 106 C106 92 118 120 134 106 C142 99 150 100 156 106 C158 112 158 118 158 122 C158 158 134 180 100 180 C66 180 42 158 42 122 C42 117 43 112 46 108 Z" fill="' + p.body + '"/>' +
+      '<circle cx="80" cy="64" r="9" fill="' + p.body + '"/><circle cx="118" cy="52" r="6" fill="' + p.body + '"/><circle cx="124" cy="82" r="8" fill="' + p.body + '"/>' +
+      '<circle cx="72" cy="146" r="8" fill="' + p.belly + '" opacity=".8"/><circle cx="118" cy="154" r="10" fill="' + p.belly + '" opacity=".8"/><circle cx="136" cy="132" r="5" fill="' + p.belly + '" opacity=".8"/>' +
+      '<path d="M100 26 C138 26 158 84 158 122 C158 158 134 180 100 180 C66 180 42 158 42 122 C42 84 62 26 100 26 Z" fill="none" stroke="' + p.dark + '" stroke-width="5"/>' +
+      '<ellipse cx="74" cy="60" rx="10" ry="20" transform="rotate(24 74 60)" fill="#fff" opacity=".7"/>' +
+      '<g fill="none" stroke="' + p.dark + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">' + cracks + '</g>' +
+      '</g></svg>';
+  }
+
+  /* ---------- 타입 아이콘 ---------- */
+  function typeIcon(type) {
+    var inner;
+    if (type === 'fire') {
+      inner = '<path d="M24 4 C27 14 38 18 38 30 C38 39 32 45 24 45 C16 45 10 39 10 30 C10 23 15 20 17 13 C20 16 22 14 24 4 Z" fill="#ff7a2b" stroke="#b3401a" stroke-width="2.5" stroke-linejoin="round"/>' +
+        '<path d="M24 24 C26 29 31 31 31 36 C31 41 28 43 24 43 C20 43 17 41 17 36 C17 31 22 29 24 24 Z" fill="#ffd95a"/>';
+    } else if (type === 'water') {
+      inner = '<path d="M24 4 C30 14 39 22 39 31 C39 40 32 45 24 45 C16 45 9 40 9 31 C9 22 18 14 24 4 Z" fill="#39b6f2" stroke="#1670b5" stroke-width="2.5" stroke-linejoin="round"/>' +
+        '<path d="M16 30 C16 25 19 21 21 18" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".8"/>';
+    } else {
+      inner = '<path d="M7 41 C6 20 20 6 42 6 C43 28 30 43 7 41 Z" fill="#5fcf4a" stroke="#2c8a2a" stroke-width="2.5" stroke-linejoin="round"/>' +
+        '<path d="M10 38 C20 28 30 18 39 9" stroke="#2c8a2a" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".6"/>';
+    }
+    return '<svg class="type-icon" viewBox="0 0 48 48" aria-hidden="true">' + inner + '</svg>';
+  }
+
+  function speciesName(m) { return SPECIES[m.type][m.shape || 0]; }
+
+  root.MMArt = {
+    TYPE: TYPE, SPECIES: SPECIES, EGGS: EGGS, STAR: STAR,
+    wild: wild, partner: partner, egg: egg, typeIcon: typeIcon,
+    setFace: setFace, speciesName: speciesName, pal: pal
+  };
+})(window);

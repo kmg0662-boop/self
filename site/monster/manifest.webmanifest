@@ -1,0 +1,10 @@
+{
+  "name": "말랑몬 선생님",
+  "short_name": "말랑몬",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#8fd6ff",
+  "theme_color": "#8fd6ff",
+  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
