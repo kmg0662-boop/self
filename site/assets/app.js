@@ -779,11 +779,24 @@
       (g.mcp && g.mcp.length ? '<div class="card ig-box"><p class="eyebrow">연결(MCP·커넥터) 넣기 · 열쇠 맡기기</p>' + steps(g.mcp) + '<p class="muted">유료 생성 서비스는 다시 만들 때마다 크레딧이 닳아요. 가장 낮은 화질로 1개만 먼저 시험해요.</p></div>' : "") + "</div>" +
       (g.check ? '<div class="ig-after"><p><b>잘 들어갔나요?</b> ' + esc(g.check) + "</p><p><b>빼고 싶다면</b> " + esc(g.remove) + '</p><p><b>설치 전에 5초만</b> 만든 사람이 분명한지, 최근에도 관리되는지(archived 아님), 별 수, 설명서에 API 키나 결제가 필요한지, 무엇을 할 수 있는 권한인지 확인해요.</p></div>' : "") + "</section>";
   }
+  var skillQ = "";
+  function skillCatsNow() { return C.skillCats.filter(function (c) { return (skillTrack === "all" || c.track === skillTrack) && (skillCat === "all" || c.id === skillCat); }); }
+  function skillListHtml(cats) {
+    if (skillQ.trim()) {
+      var q = skillQ.trim().toLowerCase();
+      var hits = [].concat.apply([], C.skillCats.map(function (c) { return c.items.filter(function (it) { return [it.name, it.by, it.what, it.when, (it.feat || []).join(" "), it.vs || "", c.title].join(" ").toLowerCase().indexOf(q) !== -1; }); }));
+      return '<section class="section skill-cat"><h2>\'' + esc(skillQ.trim()) + '\' 찾은 결과 ' + hits.length + '개</h2><p class="muted">분류와 트랙 필터와 상관없이 전체 ' + [].concat.apply([], C.skillCats.map(function (c) { return c.items; })).length + '개에서 찾았어요.</p>' + (hits.length ? '<div class="skill-table">' + hits.map(skillCard).join("") + "</div>" : '<p class="muted">없어요. 다른 말로 찾아보거나, 위 분류를 눌러 둘러보세요.</p>') + "</section>";
+    }
+    return (cats.some(function (c) { return VIDEO_CATS.indexOf(c.id) !== -1; }) ? videoGuideHtml() : "") +
+      cats.map(function (c) {
+        return '<section class="section skill-cat"><h2>' + esc(c.title) + '</h2><p class="muted">' + esc(c.desc) + '</p><div class="skill-table">' + c.items.map(skillCard).join("") + "</div>" + (c.id === "video" ? mediaMapHtml() : "") + "</section>";
+      }).join("");
+  }
   function viewSkills() {
     var all = [].concat.apply([], C.skillCats.map(function (c) { return c.items; }));
     var starter = C.skillStarter.map(function (n) { return all.filter(function (s) { return s.name === n; })[0]; });
     var inTrack = C.skillCats.filter(function (c) { return skillTrack === "all" || c.track === skillTrack; });
-    var cats = inTrack.filter(function (c) { return skillCat === "all" || c.id === skillCat; });
+    var cats = skillCatsNow();
     return '<div class="page wide"><header class="hello"><p class="eyebrow">도구 · 유닛 08에서 써요</p><h1>스킬 가이드</h1><p class="lead">스킬은 고수가 정리한 업무 매뉴얼을 AI에게 장착하는 거예요. 처음에는 별 셋짜리 두세 개만 쓰세요. 장비를 다 껴도 레벨이 낮으면 못 쓰거든요.</p></header>' +
       '<section class="starter"><p class="eyebrow">처음이라면 이 3개만</p><div class="starter-row">' + starter.map(function (s, i) {
         return '<div><b>' + (i + 1) + "</b><span>" + esc(s.name) + "</span><small>" + esc(s.when) + "</small></div>";
@@ -792,10 +805,8 @@
       '<div class="filters" role="group" aria-label="트랙별"><button type="button" class="filter" data-strack="all" aria-pressed="' + (skillTrack === "all") + '">모든 트랙</button>' + Object.keys(TRACK_LABEL).map(function (k) { return '<button type="button" class="filter" data-strack="' + k + '" aria-pressed="' + (skillTrack === k) + '">' + TRACK_LABEL[k] + "</button>"; }).join("") + "</div>" +
       '<div class="filters" role="group" aria-label="스킬 분류"><button type="button" class="filter" data-scat="all" aria-pressed="' + (skillCat === "all") + '">전체 ' + [].concat.apply([], inTrack.map(function (c) { return c.items; })).length + "</button>" +
       inTrack.map(function (c) { return '<button type="button" class="filter" data-scat="' + c.id + '" aria-pressed="' + (skillCat === c.id) + '">' + esc(c.title) + " " + c.items.length + "</button>"; }).join("") + "</div>" +
-      (cats.some(function (c) { return VIDEO_CATS.indexOf(c.id) !== -1; }) ? videoGuideHtml() : "") +
-      cats.map(function (c) {
-        return '<section class="section skill-cat"><h2>' + esc(c.title) + '</h2><p class="muted">' + esc(c.desc) + '</p><div class="skill-table">' + c.items.map(skillCard).join("") + "</div>" + (c.id === "video" ? mediaMapHtml() : "") + "</section>";
-      }).join("") +
+      '<div class="skill-search"><label for="skq">이름으로 찾기</label><input type="search" id="skq" data-skq placeholder="예: OpenMontage, 자막, 네이버" value="' + esc(skillQ) + '" autocomplete="off"></div>' +
+      '<div id="skill-list">' + skillListHtml(cats) + "</div>" +
       installGuideHtml() +
       '<section class="section"><h2>스킬을 설치할 수 없는 도구라면</h2><p class="muted">웹앱 빌더(Lovable 등)에는 스킬을 설치할 수 없어요. 대신 아래 원칙을 프로젝트 지침에 붙여넣으면 비슷한 효과가 나요.</p>' + promptBox(C.builderRules, "프로젝트 지침에 붙여넣기") + "</section>" +
       '<p class="muted" style="font-size:.88rem">스킬은 인터넷에서 받는 지시문이자 코드예요. 출처가 분명한 것만 설치하고, 설치 전에 내용을 한 번 읽어보세요. 별점(★★★)은 이 코스의 초급 추천도이고, ★ 6.3k 같은 숫자는 GitHub 별 수(2026년 10월 기준)예요. 별 수는 계속 바뀌어요. 전·후 예시는 이해를 돕기 위해 만든 문장이에요.</p></div>';
@@ -1003,9 +1014,9 @@
       return;
     }
     var stk = t.closest("[data-strack]");
-    if (stk) { skillTrack = stk.getAttribute("data-strack"); skillCat = "all"; $("#view").innerHTML = viewSkills(); return; }
+    if (stk) { skillQ = ""; skillTrack = stk.getAttribute("data-strack"); skillCat = "all"; $("#view").innerHTML = viewSkills(); return; }
     var scat = t.closest("[data-scat]");
-    if (scat) { skillCat = scat.getAttribute("data-scat"); $("#view").innerHTML = viewSkills(); return; }
+    if (scat) { skillQ = ""; skillCat = scat.getAttribute("data-scat"); $("#view").innerHTML = viewSkills(); return; }
     var itab = t.closest("[data-itab]");
     if (itab) { installTab = itab.getAttribute("data-itab"); var y = window.scrollY; $("#view").innerHTML = viewSkills(); window.scrollTo(0, y); return; }
     var jump = t.closest("[data-jump]");
@@ -1035,6 +1046,7 @@
   });
 
   document.addEventListener("input", function (e) {
+    if (e.target.matches && e.target.matches("[data-skq]")) { skillQ = e.target.value; var sl = document.getElementById("skill-list"); if (sl) sl.innerHTML = skillListHtml(skillCatsNow()); return; }
     var t = e.target;
     var g = t.getAttribute("data-goal");
     if (g) { state.goal[g] = t.value; save(); return; }
